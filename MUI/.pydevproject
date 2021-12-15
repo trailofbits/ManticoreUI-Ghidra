@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?eclipse-pydev version="1.0"?><pydev_project>
+            
+    
     <pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
         <path>/home/kr-kal/Desktop/ghidra_10.1_PUBLIC/Ghidra/Processors/68000/lib/68000.jar</path>
         <path>/home/kr-kal/Desktop/ghidra_10.1_PUBLIC/Ghidra/Processors/8051/lib/8051.jar</path>
@@ -124,6 +126,12 @@
         <path>/home/kr-kal/Desktop/ghidra_10.1_PUBLIC/Ghidra/Processors/tricore/lib/tricore.jar</path>
         <path>/home/kr-kal/Desktop/ghidra_10.1_PUBLIC/Ghidra/Processors/x86/lib/x86.jar</path>
     </pydev_pathproperty>
+            
+    
     <pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">jython 2.7</pydev_property>
+            
+    
     <pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">jython_ghidra_10.1_PUBLIC</pydev_property>
+        
+
 </pydev_project>

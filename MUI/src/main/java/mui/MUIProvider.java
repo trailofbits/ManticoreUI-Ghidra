@@ -5,6 +5,9 @@ import javax.swing.border.TitledBorder;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 import docking.*;
 import docking.action.DockingAction;
@@ -30,11 +33,12 @@ public class MUIProvider extends ComponentProviderAdapter {
 	private String programPath = "";
 	private JButton runBtn;
 	private JButton stopBtn;
-	
-	private String manticoreCommand;
-	
+		
 	private JPanel outputPanel;
 	private GridBagConstraints outputPanelConstraints;
+	private JTextArea outputArea;
+	private StringBuilder logText;
+
 	
 	
 	public MUIProvider(PluginTool tool, String name, Program p) {
@@ -42,7 +46,7 @@ public class MUIProvider extends ComponentProviderAdapter {
 		buildMainPanel();
 		setIcon(ResourceManager.loadImage("images/erase16.png"));
 		setTitle("MUI Component");
-		setDefaultWindowPosition(WindowPosition.RIGHT);
+		setDefaultWindowPosition(WindowPosition.WINDOW);
 		setVisible(true);
 		createActions(tool);
 		Msg.info(this, "MUI init complete!");
@@ -101,16 +105,16 @@ public class MUIProvider extends ComponentProviderAdapter {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Msg.info(borderInp, "clicked run congrats");
+				Msg.info(borderInp, "clicked run congrats"); 
+				callManticore("lol");
 			}
         	
         });
 		inputPanelConstraints.gridx=0;
         inputPanelConstraints.gridy=3;
+		inputPanelConstraints.weightx=0.9;
         inputPanelConstraints.ipady=0;
-        inputPanelConstraints.weightx=1.0;
-        inputPanelConstraints.gridwidth=2;
-        inputPanelConstraints.anchor = GridBagConstraints.PAGE_END;
+        inputPanelConstraints.gridwidth=4;
         inputPanelConstraints.insets = new Insets(10,0,0,0);
         inputPanel.add(runBtn, inputPanelConstraints);
         
@@ -123,16 +127,35 @@ public class MUIProvider extends ComponentProviderAdapter {
 			}
         	
         });
-		inputPanelConstraints.gridx=2;
-		inputPanelConstraints.gridy=3;
-        inputPanelConstraints.weightx=1.0;
-        inputPanelConstraints.gridwidth=2;
-        inputPanelConstraints.anchor = GridBagConstraints.PAGE_END;
-        inputPanelConstraints.insets = new Insets(10,0,0,0);
+		inputPanelConstraints.gridx=0;
+		inputPanelConstraints.gridy=4;
+		inputPanelConstraints.weightx=0.9;
+        inputPanelConstraints.gridwidth=4;
+        inputPanelConstraints.anchor = GridBagConstraints.SOUTH;
+        inputPanelConstraints.insets = new Insets(0,0,0,0);
         inputPanel.add(stopBtn, inputPanelConstraints);
+        
+		
+        
+		outputPanel = new JPanel(new GridBagLayout());
+        TitledBorder borderOut = BorderFactory.createTitledBorder("Output");
+        borderOut.setTitleFont(new Font("SansSerif", Font.PLAIN, 12));
+        outputPanel.setBorder(borderOut);        
+        outputPanelConstraints = new GridBagConstraints();
+        outputPanelConstraints.fill = GridBagConstraints.BOTH;
+        
+        outputPanelConstraints.gridx=0;
+        outputPanelConstraints.gridy=0;
+        outputPanelConstraints.weightx=1.0;
+        
+		outputArea = new JTextArea();
+		outputArea.setEditable(false);
+		outputArea.setLineWrap(true);
+		outputArea.setWrapStyleWord(true);
+        outputPanel.add(outputArea, outputPanelConstraints);
 
-
-		mainPanel.add(inputPanel, mainPanelConstraints);
+        mainPanel.add(inputPanel, mainPanelConstraints);
+        mainPanel.add(outputPanel, mainPanelConstraints);
 	}
 	
 	private void createActions(PluginTool tool){
@@ -146,7 +169,43 @@ public class MUIProvider extends ComponentProviderAdapter {
 
 		tool.addAction(action);
 	}
+	
+	protected void callManticore(String commandArgs) {
+		// TODO: get nice input from manticore
+		
+		Msg.info(this, "in callmanticore");
+		SwingWorker sw = new SwingWorker() {
 
+			@Override
+			protected Object doInBackground() throws Exception {
+				ProcessBuilder pb = new ProcessBuilder("manticore", programPath);
+           	 	try {
+                    Process p = pb.start();
+                    p.waitFor();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                    String line = "";
+                    while ((line = reader.readLine()) != null){
+                    	Msg.info(this, line); 
+                    	logText.append(line);
+                    }      
+                    
+                    reader.close();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }           
+
+				return null;
+			}
+			@Override
+			protected void done() {
+				Msg.info(this, "done executing");
+            	outputArea.setText(logText.toString());
+
+			}
+		};
+
+		sw.execute();
+	}
 	
     public void setProgram(Program p) {
         program = p;
