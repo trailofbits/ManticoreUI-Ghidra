@@ -32,7 +32,6 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		setTitle("MUI Log");
 		setDefaultWindowPosition(WindowPosition.BOTTOM);
 		setVisible(true);
-		Msg.info(this, "created muilog");
 	}
 
 	public void setMainProvider(MUIProvider provider) {
@@ -48,8 +47,8 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		logArea.setEditable(false);
 		logArea.setLineWrap(true);
 		logArea.setWrapStyleWord(true);
-		logScrollPane = new JScrollPane(logArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		logScrollPane = new JScrollPane(logArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
 		logPanel.add(logScrollPane, BorderLayout.CENTER);
 
@@ -85,7 +84,6 @@ public class MUILogProvider extends ComponentProviderAdapter {
 	}
 
 	public void appendLog(String s) {
-		Msg.info(this, s);
 		logStringBuf.append(System.lineSeparator());
 		logStringBuf.append(s);
 		logArea.setText(logStringBuf.toString());

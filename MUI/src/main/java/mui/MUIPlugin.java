@@ -37,7 +37,6 @@ public class MUIPlugin extends ProgramPlugin {
 
 	public MUIProvider provider;
 	public MUILogProvider log;
-	private Program program;
 
 	public MUIPlugin(PluginTool tool) {
 		super(tool, true, true);
@@ -51,7 +50,6 @@ public class MUIPlugin extends ProgramPlugin {
 
 	@Override
 	protected void programActivated(Program p) {
-		program = p;
 		provider.setProgram(p);
 	}
 

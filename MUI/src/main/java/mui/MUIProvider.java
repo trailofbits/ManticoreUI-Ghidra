@@ -43,8 +43,6 @@ public class MUIProvider extends ComponentProviderAdapter {
 		setTitle("MUI");
 		setDefaultWindowPosition(WindowPosition.WINDOW);
 		setVisible(true);
-		createActions(tool);
-		Msg.info(this, "MUI init complete!");
 	}
 
 	private void setLogProvider(MUILogProvider log) {
@@ -104,7 +102,6 @@ public class MUIProvider extends ComponentProviderAdapter {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Msg.info(borderInp, "clicked run congrats");
 				callManticore(parseCommand("manticore ".concat(manticoreArgsArea.getText())));
 			}
 
@@ -124,29 +121,12 @@ public class MUIProvider extends ComponentProviderAdapter {
 
 	}
 
-	private void createActions(PluginTool tool) {
-		action = new DockingAction("MUI", getName()) {
-			@Override
-			public void actionPerformed(ActionContext context) {
-				Msg.info(this, "menu item test");
-			}
-		};
-		action.setMenuBarData(new MenuData(new String[] { "MUI", "placeholder" }));
-
-		tool.addAction(action);
-	}
-
 	public void stopManticore() {
-		Msg.info(this, "manticore stopped!");
-
 		logProvider.updateButtonStatus(false);
 		isStopped = true;
-
 	}
 
 	private void callManticore(String[] manticoreArgs) {
-		Msg.info(this, "in callmanticore");
-
 		isStopped = false;
 		logProvider.updateButtonStatus(true);
 		SwingWorker sw = new SwingWorker() {
@@ -157,14 +137,9 @@ public class MUIProvider extends ComponentProviderAdapter {
 					Process p = pb.start();
 					BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 					String line = "";
-					int lol = 0;
 					while ((line = reader.readLine()) != null && !isStopped) {
 						logProvider.appendLog(line);
-						Msg.info(this, line);
-						lol++;
-						Msg.info(this, lol);
 					}
-					Msg.info(this, Integer.toString(lol));
 					if (isStopped) {
 						p.destroy();
 					} else {
@@ -180,12 +155,11 @@ public class MUIProvider extends ComponentProviderAdapter {
 
 			@Override
 			protected void done() {
-				Msg.info(this, "done executing");
 				logProvider.updateButtonStatus(false);
 				if (isStopped) {
 					logProvider.appendLog("Manticore stopped by user.");
 				} else {
-					logProvider.appendLog("Manticore finished!");
+					logProvider.appendLog("Manticore execution complete.");
 				}
 
 			}
@@ -200,7 +174,6 @@ public class MUIProvider extends ComponentProviderAdapter {
 		if (programPathLbl != null) { // if mainPanel built before program activated
 			programPathLbl.setText(programPath);
 		}
-		Msg.info(this, "program set!!!");
 		manticoreArgsArea.setText("--workspace tmpMUI ".concat(programPath));
 
 	}
