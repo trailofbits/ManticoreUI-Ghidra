@@ -68,7 +68,13 @@ public class MUILogProvider extends ComponentProviderAdapter {
 
 		clearButton = new JButton();
 		clearButton.setIcon(ResourceManager.loadImage("images/erase16.png"));
+		clearButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				clearLog();
+			}
 
+		});
 		logToolBar.add(Box.createGlue()); // shifts buttons to the right
 		logToolBar.add(stopButton);
 		logToolBar.add(clearButton);
