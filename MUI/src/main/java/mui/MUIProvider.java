@@ -42,7 +42,6 @@ public class MUIProvider extends ComponentProviderAdapter {
 		super(tool, name, name);
 		setLogProvider(log);
 		buildMainPanel();
-		setIcon(ResourceManager.loadImage("images/erase16.png"));
 		setTitle("MUI");
 		setDefaultWindowPosition(WindowPosition.WINDOW);
 		setVisible(true);
@@ -65,7 +64,7 @@ public class MUIProvider extends ComponentProviderAdapter {
 		mainPanelConstraints.weighty=0.9;
 		
 		inputPanel = new JPanel(new GridBagLayout());
-        TitledBorder borderInp = BorderFactory.createTitledBorder("Manticore Options");
+        TitledBorder borderInp = BorderFactory.createTitledBorder("MUI Setup");
         borderInp.setTitleFont(new Font("SansSerif", Font.PLAIN, 12));
         inputPanel.setBorder(borderInp);        
         inputPanelConstraints = new GridBagConstraints();
@@ -84,7 +83,7 @@ public class MUIProvider extends ComponentProviderAdapter {
         inputPanelConstraints.gridwidth=3;
         inputPanel.add(programPathLbl, inputPanelConstraints);
         
-        JLabel commandArgsLbl = new JLabel("Command Args:");
+        JLabel commandArgsLbl = new JLabel("Manticore Args:");
         inputPanelConstraints.gridx=0;
         inputPanelConstraints.gridy=1;
         inputPanelConstraints.weightx=0.0;
@@ -108,7 +107,7 @@ public class MUIProvider extends ComponentProviderAdapter {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Msg.info(borderInp, "clicked run congrats"); 
-				callManticore(commandArgsArea.getText());
+				callManticore(parseCommand("manticore ".concat(commandArgsArea.getText())));
 			}
         	
         });
@@ -127,7 +126,6 @@ public class MUIProvider extends ComponentProviderAdapter {
         isStopped = false;
 
 	}
-	
 	
 	
 	private void createActions(PluginTool tool){
@@ -150,7 +148,7 @@ public class MUIProvider extends ComponentProviderAdapter {
 		
 	}
 	
-	protected void callManticore(String commandArgs) {
+	private void callManticore(String[] manticoreArgs) {
 		Msg.info(this, "in callmanticore");
 		
 		isStopped = false;
@@ -158,7 +156,7 @@ public class MUIProvider extends ComponentProviderAdapter {
 		SwingWorker sw = new SwingWorker() {
 			@Override
 			protected Object doInBackground() throws Exception {
-				ProcessBuilder pb = new ProcessBuilder("manticore",  programPath);
+				ProcessBuilder pb = new ProcessBuilder(manticoreArgs);
 		   	 	try {
 		            Process p = pb.start();
 		            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -209,15 +207,15 @@ public class MUIProvider extends ComponentProviderAdapter {
             programPathLbl.setText(programPath);
         }
         Msg.info(this, "program set!!!");
+        commandArgsArea.setText("--workspace tmpMUI ".concat(programPath));
         
     }
 
-	@Override
-	public JComponent getComponent() {
-		return mainPanel;
-	}
-	
-	public String[] parseCommand(String string) {
+	/**
+	* Tokenizes a string by spaces, but takes into account spaces embedded in quotes
+	* or escaped spaces. Should no longer be required once UI for args is implemented.
+	*/
+	public String[] parseCommand(String string) { 
 	    final List<Character> WORD_DELIMITERS = Arrays.asList(' ', '\t');
 	    final List<Character> QUOTE_CHARACTERS = Arrays.asList('"', '\'');
 	    final char ESCAPE_CHARACTER = '\\';
@@ -250,6 +248,10 @@ public class MUIProvider extends ComponentProviderAdapter {
 
         return words.toArray(new String[0]);
     }
+	@Override
+	public JComponent getComponent() {
+		return mainPanel;
+	}
 
 
 
