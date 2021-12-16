@@ -28,7 +28,7 @@ public class MUIProvider extends ComponentProviderAdapter {
 
 	private JPanel inputPanel;
 	private GridBagConstraints inputPanelConstraints;
-	private JTextArea commandArgsArea;
+	private JTextArea manticoreArgsArea;
 	private JLabel programPathLbl;
 	private String programPath = "";
 	private JButton runBtn;
@@ -81,23 +81,23 @@ public class MUIProvider extends ComponentProviderAdapter {
 		inputPanelConstraints.gridwidth = 3;
 		inputPanel.add(programPathLbl, inputPanelConstraints);
 
-		JLabel commandArgsLbl = new JLabel("Manticore Args:");
+		JLabel manticoreArgsLbl = new JLabel("Manticore Args:");
 		inputPanelConstraints.gridx = 0;
 		inputPanelConstraints.gridy = 1;
 		inputPanelConstraints.weightx = 0.0;
 		inputPanelConstraints.gridwidth = 4;
-		inputPanel.add(commandArgsLbl, inputPanelConstraints);
+		inputPanel.add(manticoreArgsLbl, inputPanelConstraints);
 
-		commandArgsArea = new JTextArea();
-		commandArgsArea.setToolTipText("Enter arguments as you would in CLI");
-		commandArgsArea.setLineWrap(true);
-		commandArgsArea.setWrapStyleWord(true);
+		manticoreArgsArea = new JTextArea();
+		manticoreArgsArea.setToolTipText("Enter arguments as you would in CLI");
+		manticoreArgsArea.setLineWrap(true);
+		manticoreArgsArea.setWrapStyleWord(true);
 		inputPanelConstraints.gridx = 0;
 		inputPanelConstraints.gridy = 2;
 		inputPanelConstraints.ipady = 50;
 		inputPanelConstraints.weightx = 0.0;
 		inputPanelConstraints.gridwidth = 4;
-		inputPanel.add(commandArgsArea, inputPanelConstraints);
+		inputPanel.add(manticoreArgsArea, inputPanelConstraints);
 
 		runBtn = new JButton("Run");
 		runBtn.addActionListener(new ActionListener() {
@@ -105,7 +105,7 @@ public class MUIProvider extends ComponentProviderAdapter {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Msg.info(borderInp, "clicked run congrats");
-				callManticore(parseCommand("manticore ".concat(commandArgsArea.getText())));
+				callManticore(parseCommand("manticore ".concat(manticoreArgsArea.getText())));
 			}
 
 		});
@@ -201,7 +201,7 @@ public class MUIProvider extends ComponentProviderAdapter {
 			programPathLbl.setText(programPath);
 		}
 		Msg.info(this, "program set!!!");
-		commandArgsArea.setText("--workspace tmpMUI ".concat(programPath));
+		manticoreArgsArea.setText("--workspace tmpMUI ".concat(programPath));
 
 	}
 
