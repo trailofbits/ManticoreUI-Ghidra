@@ -36,13 +36,17 @@ import ghidra.program.model.listing.Program;
 public class MUIPlugin extends ProgramPlugin {
 
 	private MUIProvider provider;
+	private MUILogProvider log;
 	private Program program;
+	
 	
 	public MUIPlugin(PluginTool tool) {
 		super(tool, true, true);
 
 		String pluginName = getName();
+		log = new MUILogProvider(tool, pluginName);
 		provider = new MUIProvider(tool, pluginName, this.getCurrentProgram());
+		
 	}
 	
 
