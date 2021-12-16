@@ -30,7 +30,7 @@ import ghidra.program.model.listing.Program;
 	packageName = "MUI",
 	category = PluginCategoryNames.EXAMPLES,
 	shortDescription = "Manticore User Interface",
-	description = "Plugin long description goes here."
+	description = "GUI Plugin that allows users to easily interact with and view progress of the Manticore symbolic execution engine."
 )
 //@formatter:on
 public class MUIPlugin extends ProgramPlugin {
