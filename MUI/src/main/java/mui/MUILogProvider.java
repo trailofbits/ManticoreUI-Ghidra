@@ -30,6 +30,8 @@ public class MUILogProvider extends ComponentProviderAdapter {
 	private JButton clearButton;
 	
 	private StringBuffer logStringBuf;
+	
+	private MUIProvider mainProvider;
 
 	
 	public MUILogProvider(PluginTool tool, String name) {
@@ -39,6 +41,10 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		setDefaultWindowPosition(WindowPosition.BOTTOM);
 		setVisible(true);
 		Msg.info(this, "created muilog");
+	}
+	
+	public void setMainProvider(MUIProvider provider) {
+		mainProvider = provider;
 	}
 	
 	private void buildLogPanel() {
@@ -59,6 +65,15 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		stopButton = new JButton();
 		stopButton.setIcon(ResourceManager.loadImage("images/stopNode.png"));
 		stopButton.setEnabled(false);
+		stopButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mainProvider.stopManticore();
+			}
+			
+		});
+		
 		clearButton = new JButton();
 		clearButton.setIcon(ResourceManager.loadImage("images/erase16.png"));
 		
@@ -67,6 +82,8 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		logToolBar.add(clearButton);
 		
 		logPanel.add(logToolBar, BorderLayout.PAGE_START);
+		
+		logStringBuf = new StringBuffer();
 	}
 
 	public void clearLog() {
@@ -75,6 +92,7 @@ public class MUILogProvider extends ComponentProviderAdapter {
 	}
 	
 	public void appendLog(String s) {
+		Msg.info(this, s);
 		logStringBuf.append(System.lineSeparator());
 		logStringBuf.append(s);
 		logArea.setText(logStringBuf.toString());

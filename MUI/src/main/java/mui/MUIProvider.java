@@ -6,8 +6,9 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.*;
+import java.util.List;
 
 import docking.*;
 import docking.action.DockingAction;
@@ -32,19 +33,25 @@ public class MUIProvider extends ComponentProviderAdapter {
 	private JLabel programPathLbl;
 	private String programPath = "";
 	private JButton runBtn;
-
-
+	
+	private MUILogProvider logProvider;
+	private Boolean isStopped; // stopped meaning forcefully stopped by user
 	
 	
-	public MUIProvider(PluginTool tool, String name, Program p) {
+	public MUIProvider(PluginTool tool, String name, MUILogProvider log) {
 		super(tool, name, name);
+		setLogProvider(log);
 		buildMainPanel();
 		setIcon(ResourceManager.loadImage("images/erase16.png"));
-		setTitle("MUI Component");
+		setTitle("MUI");
 		setDefaultWindowPosition(WindowPosition.WINDOW);
 		setVisible(true);
 		createActions(tool);
 		Msg.info(this, "MUI init complete!");
+	}
+	
+	private void setLogProvider(MUILogProvider log) {
+		logProvider = log;
 	}
 	
 	private void buildMainPanel() {
@@ -101,7 +108,7 @@ public class MUIProvider extends ComponentProviderAdapter {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Msg.info(borderInp, "clicked run congrats"); 
-				callManticore("lol");
+				callManticore(commandArgsArea.getText());
 			}
         	
         });
@@ -116,8 +123,12 @@ public class MUIProvider extends ComponentProviderAdapter {
         
      
         mainPanel.add(inputPanel, mainPanelConstraints);
+        
+        isStopped = false;
 
 	}
+	
+	
 	
 	private void createActions(PluginTool tool){
 		action = new DockingAction("MUI",getName()) {
@@ -131,39 +142,64 @@ public class MUIProvider extends ComponentProviderAdapter {
 		tool.addAction(action);
 	}
 	
-	protected void callManticore(String commandArgs) {
-		// TODO: get nice input from manticore
+	public void stopManticore() {
+		Msg.info(this, "manticore stopped!");
 		
+		logProvider.updateButtonStatus(false);
+		isStopped = true;
+		
+	}
+	
+	protected void callManticore(String commandArgs) {
 		Msg.info(this, "in callmanticore");
+		
+		isStopped = false;
+		logProvider.updateButtonStatus(true);
 		SwingWorker sw = new SwingWorker() {
-
 			@Override
 			protected Object doInBackground() throws Exception {
-				ProcessBuilder pb = new ProcessBuilder("manticore", programPath);
-           	 	try {
-                    Process p = pb.start();
-                    p.waitFor();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                    String line = "";
-                    while ((line = reader.readLine()) != null){
-                    	Msg.info(this, line); 
-                    }      
-                    
-                    reader.close();
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }           
-
-				return null;
+				ProcessBuilder pb = new ProcessBuilder("manticore",  programPath);
+		   	 	try {
+		            Process p = pb.start();
+		            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+		            String line = "";
+		            int lol = 0;
+		            while ((line = reader.readLine()) != null && !isStopped){
+		            	logProvider.appendLog(line);
+		            	Msg.info(this,line);
+		            	lol++;
+		            	Msg.info(this, lol);
+		            }      
+		            Msg.info(this, Integer.toString(lol));
+		            if (isStopped) {
+		       	 		p.destroy();
+		       	 	} else {
+		       	 		p.waitFor();
+		       	 	}
+		   	 		reader.close();
+		   	 		
+		        } catch (Exception e1) {
+		            e1.printStackTrace();
+		        }    
+		   	 	return null;
 			}
 			@Override
 			protected void done() {
-				Msg.info(this, "done executing");
+		   	 	Msg.info(this, "done executing");
+				logProvider.updateButtonStatus(false);
+				if(isStopped) {
+					logProvider.appendLog("Manticore stopped by user.");
+				} else {
+				logProvider.appendLog("Manticore finished!");
+				}
+
 
 			}
 		};
-
 		sw.execute();
+
+		
+   	 	
 	}
 	
     public void setProgram(Program p) {
@@ -173,13 +209,49 @@ public class MUIProvider extends ComponentProviderAdapter {
             programPathLbl.setText(programPath);
         }
         Msg.info(this, "program set!!!");
-        action.setEnabled(true);       
+        
     }
 
 	@Override
 	public JComponent getComponent() {
 		return mainPanel;
 	}
+	
+	public String[] parseCommand(String string) {
+	    final List<Character> WORD_DELIMITERS = Arrays.asList(' ', '\t');
+	    final List<Character> QUOTE_CHARACTERS = Arrays.asList('"', '\'');
+	    final char ESCAPE_CHARACTER = '\\';
+
+        StringBuilder wordBuilder = new StringBuilder();
+        List<String> words = new ArrayList<>();
+        char quote = 0;
+
+        for (int i = 0; i < string.length(); i++) {
+            char c = string.charAt(i);
+
+            if (c == ESCAPE_CHARACTER && i + 1 < string.length()) {
+                wordBuilder.append(string.charAt(++i));
+            } else if (WORD_DELIMITERS.contains(c) && quote == 0) {
+                words.add(wordBuilder.toString());
+                wordBuilder.setLength(0);
+            } else if (quote == 0 && QUOTE_CHARACTERS.contains(c)) {
+                quote = c;
+            } else if (quote == c) {
+                quote = 0;
+            } else {
+                wordBuilder.append(c);
+            }
+        }
+
+        if (wordBuilder.length() > 0) {
+            words.add(wordBuilder.toString());
+        }
+        
+
+        return words.toArray(new String[0]);
+    }
+
+
 
 	
 }
