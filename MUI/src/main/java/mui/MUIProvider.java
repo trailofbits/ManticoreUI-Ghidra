@@ -129,6 +129,7 @@ public class MUIProvider extends ComponentProviderAdapter {
 	private void callManticore(String[] manticoreArgs) {
 		isStopped = false;
 		logProvider.updateButtonStatus(true);
+		runBtn.setEnabled(false);
 		SwingWorker sw = new SwingWorker() {
 			@Override
 			protected Object doInBackground() throws Exception {
@@ -156,6 +157,7 @@ public class MUIProvider extends ComponentProviderAdapter {
 			@Override
 			protected void done() {
 				logProvider.updateButtonStatus(false);
+				runBtn.setEnabled(true);
 				if (isStopped) {
 					logProvider.appendLog("Manticore stopped by user.");
 				} else {
