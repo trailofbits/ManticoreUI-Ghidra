@@ -32,12 +32,7 @@ public class MUIProvider extends ComponentProviderAdapter {
 	private JLabel programPathLbl;
 	private String programPath = "";
 	private JButton runBtn;
-	private JButton stopBtn;
-		
-	private JPanel outputPanel;
-	private GridBagConstraints outputPanelConstraints;
-	private JTextArea outputArea;
-	private StringBuilder logText;
+
 
 	
 	
@@ -113,49 +108,15 @@ public class MUIProvider extends ComponentProviderAdapter {
 		inputPanelConstraints.gridx=0;
         inputPanelConstraints.gridy=3;
 		inputPanelConstraints.weightx=0.9;
+        inputPanelConstraints.anchor = GridBagConstraints.SOUTH;
         inputPanelConstraints.ipady=0;
         inputPanelConstraints.gridwidth=4;
         inputPanelConstraints.insets = new Insets(10,0,0,0);
         inputPanel.add(runBtn, inputPanelConstraints);
         
-        stopBtn = new JButton("Stop");
-        stopBtn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Msg.info(borderInp, "clicked stop sadge");
-			}
-        	
-        });
-		inputPanelConstraints.gridx=0;
-		inputPanelConstraints.gridy=4;
-		inputPanelConstraints.weightx=0.9;
-        inputPanelConstraints.gridwidth=4;
-        inputPanelConstraints.anchor = GridBagConstraints.SOUTH;
-        inputPanelConstraints.insets = new Insets(0,0,0,0);
-        inputPanel.add(stopBtn, inputPanelConstraints);
-        
-		
-        
-		outputPanel = new JPanel(new GridBagLayout());
-        TitledBorder borderOut = BorderFactory.createTitledBorder("Output");
-        borderOut.setTitleFont(new Font("SansSerif", Font.PLAIN, 12));
-        outputPanel.setBorder(borderOut);        
-        outputPanelConstraints = new GridBagConstraints();
-        outputPanelConstraints.fill = GridBagConstraints.BOTH;
-        
-        outputPanelConstraints.gridx=0;
-        outputPanelConstraints.gridy=0;
-        outputPanelConstraints.weightx=1.0;
-        
-		outputArea = new JTextArea();
-		outputArea.setEditable(false);
-		outputArea.setLineWrap(true);
-		outputArea.setWrapStyleWord(true);
-        outputPanel.add(outputArea, outputPanelConstraints);
-
+     
         mainPanel.add(inputPanel, mainPanelConstraints);
-        mainPanel.add(outputPanel, mainPanelConstraints);
+
 	}
 	
 	private void createActions(PluginTool tool){
@@ -186,7 +147,6 @@ public class MUIProvider extends ComponentProviderAdapter {
                     String line = "";
                     while ((line = reader.readLine()) != null){
                     	Msg.info(this, line); 
-                    	logText.append(line);
                     }      
                     
                     reader.close();
@@ -199,7 +159,6 @@ public class MUIProvider extends ComponentProviderAdapter {
 			@Override
 			protected void done() {
 				Msg.info(this, "done executing");
-            	outputArea.setText(logText.toString());
 
 			}
 		};
