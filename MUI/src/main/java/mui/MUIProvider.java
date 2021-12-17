@@ -13,6 +13,9 @@ import java.util.List;
 import docking.*;
 import docking.action.DockingAction;
 import docking.action.MenuData;
+import ghidra.GhidraApplicationLayout;
+import ghidra.framework.Application;
+import ghidra.framework.ApplicationConfiguration;
 import ghidra.framework.plugintool.ComponentProviderAdapter;
 import ghidra.framework.plugintool.PluginTool;
 import ghidra.program.model.listing.Program;
@@ -30,8 +33,9 @@ public class MUIProvider extends ComponentProviderAdapter {
 	private GridBagConstraints inputPanelConstraints;
 	private JTextArea manticoreArgsArea;
 	private JLabel programPathLbl;
-	private String programPath = "";
+	private String programPath;
 	private JButton runBtn;
+	private String manticoreExePath;
 
 	private MUILogProvider logProvider;
 	private Boolean isStopped; // stopped meaning forcefully stopped by user
@@ -72,6 +76,9 @@ public class MUIProvider extends ComponentProviderAdapter {
 		inputPanelConstraints.gridwidth = 1;
 		inputPanel.add(new JLabel("Program Path:"), inputPanelConstraints);
 
+		if (programPath == null) {
+			programPath = "";
+		}
 		programPathLbl = new JLabel(programPath);
 		inputPanelConstraints.gridx = 1;
 		inputPanelConstraints.gridy = 0;
@@ -97,12 +104,25 @@ public class MUIProvider extends ComponentProviderAdapter {
 		inputPanelConstraints.gridwidth = 4;
 		inputPanel.add(manticoreArgsArea, inputPanelConstraints);
 
+		try {
+			if (!Application.isInitialized()) {
+				Application.initializeApplication(new GhidraApplicationLayout(), new ApplicationConfiguration());
+			}
+			manticoreExePath = Application.getOSFile("manticore").getAbsolutePath().concat(" ");
+		} catch (Exception e) {
+			manticoreExePath = "manticore ";
+		}
 		runBtn = new JButton("Run");
 		runBtn.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				callManticore(parseCommand("manticore ".concat(manticoreArgsArea.getText())));
+				if (manticoreExePath.length() == 0) {
+					logProvider.appendLog(
+							"ERROR: Packaged manticore binary not found! Attempting with \"manticore\" in PATH...");
+				}
+				callManticore(parseCommand(manticoreExePath.concat(manticoreArgsArea.getText())));
+
 			}
 
 		});

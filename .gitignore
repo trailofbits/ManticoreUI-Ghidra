@@ -5,3 +5,4 @@ MUI/lib/*
 MUI/.classpath
 MUI/.settings
 MUI/.gradle/
+MUI/os/.gradle/
