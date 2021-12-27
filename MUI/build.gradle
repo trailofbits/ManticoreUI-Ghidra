@@ -58,3 +58,54 @@ dependencies {
 	// Any external dependencies added here will automatically be copied to the lib/ directory when
 	// this extension is built.	
 }
+
+// The following installation helpers were copied from
+// https://github.com/cmu-sei/kaiju/blob/c00a351aa4332e8b6e2be94f6fe52418f8946b11/build.gradle
+task uninstallPreviousMUI {
+    description = "Removes a previous MUI installation, or notifies user of previous installation"
+    doFirst {
+        // check if a previous MUI installation exists
+        if (file(ghidraInstallDir + '/Ghidra/Extensions/' + 'MUI/').exists()) {
+            // automatically remove past install if user specifies
+            if (project.hasProperty('MUI_AUTO_REMOVE')) {
+                def muiDir = new File(ghidraInstallDir + '/Ghidra/Extensions/' + 'MUI/')
+                muiDir.deleteDir()
+                logger.quiet("SUCCESS! Previous standalone MUI installation was removed automatically by gradle.")
+            } else {
+                throw new GradleException("FATAL ERROR! A previous installation of MUI was detected. It is recommended that you either manually remove this installation before re-installing MUI, or re-run this gradle installation script with the -PMUI_AUTO_REMOVE option.")
+            }
+        }
+    }
+    outputs.upToDateWhen { false } // ensures never cached, always runs if user enables
+}
+
+buildHelp.dependsOn uninstallPreviousMUI
+
+task copyZip(type: Copy) {
+    group = "Installation"
+    description = "Copies zip contents into special Extensions directory so user may enable or disable easily with reinstalling from gradle each time."
+    from "$buildExtension.destinationDir/$buildExtension.baseName.$buildExtension.extension"
+    into ghidraInstallDir + '/Extensions/Ghidra'
+    dependsOn buildExtension
+}
+
+task installZip(type: Exec) {
+    group = "Installation"
+    description = "Installs the zip package in installed Ghidra's default extension directory"
+    workingDir ghidraInstallDir + '/Ghidra/Extensions'
+    commandLine 'unzip', '-o', "$buildExtension.destinationDir/$buildExtension.baseName.$buildExtension.extension"
+    dependsOn copyZip
+    mustRunAfter copyZip
+}
+
+task install() {
+    dependsOn installZip
+    group = "Installation"
+    description = "Alternate name for installZip task"
+    //title = "Install zip"
+    doLast {
+        // Empty action list
+        logger.quiet("Installed Trail of Bits MUI from zip!")
+    }
+}
+// End copy
