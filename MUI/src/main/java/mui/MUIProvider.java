@@ -44,7 +44,7 @@ public class MUIProvider extends ComponentProviderAdapter {
 		super(tool, name, name);
 		setLogProvider(log);
 		buildMainPanel();
-		setTitle("MUI");
+		setTitle("MUI Setup");
 		setDefaultWindowPosition(WindowPosition.WINDOW);
 		setVisible(true);
 	}
@@ -64,9 +64,7 @@ public class MUIProvider extends ComponentProviderAdapter {
 		mainPanelConstraints.weighty = 0.9;
 
 		inputPanel = new JPanel(new GridBagLayout());
-		TitledBorder borderInp = BorderFactory.createTitledBorder("MUI Setup");
-		borderInp.setTitleFont(new Font("SansSerif", Font.PLAIN, 12));
-		inputPanel.setBorder(borderInp);
+
 		inputPanelConstraints = new GridBagConstraints();
 		inputPanelConstraints.fill = GridBagConstraints.BOTH;
 
