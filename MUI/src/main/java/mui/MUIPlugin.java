@@ -28,7 +28,7 @@ import ghidra.program.model.listing.Program;
 @PluginInfo(
 	status = PluginStatus.UNSTABLE,
 	packageName = "MUI",
-	category = PluginCategoryNames.EXAMPLES,
+	category = PluginCategoryNames.ANALYSIS,
 	shortDescription = "Manticore User Interface",
 	description = "GUI Plugin that allows users to easily interact with and view progress of the Manticore symbolic execution engine."
 )
