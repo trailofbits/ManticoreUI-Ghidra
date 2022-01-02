@@ -8,7 +8,6 @@ import java.awt.event.*;
 import docking.*;
 import ghidra.framework.plugintool.ComponentProviderAdapter;
 import ghidra.framework.plugintool.PluginTool;
-import ghidra.util.Msg;
 import resources.ResourceManager;
 
 public class MUILogProvider extends ComponentProviderAdapter {

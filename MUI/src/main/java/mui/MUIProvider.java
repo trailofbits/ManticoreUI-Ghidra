@@ -1,7 +1,6 @@
 package mui;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -11,20 +10,16 @@ import java.util.*;
 import java.util.List;
 
 import docking.*;
-import docking.action.DockingAction;
-import docking.action.MenuData;
 import ghidra.GhidraApplicationLayout;
 import ghidra.framework.Application;
 import ghidra.framework.ApplicationConfiguration;
 import ghidra.framework.plugintool.ComponentProviderAdapter;
 import ghidra.framework.plugintool.PluginTool;
 import ghidra.program.model.listing.Program;
-import ghidra.util.Msg;
 
 public class MUIProvider extends ComponentProviderAdapter {
 
 	private Program program;
-	private DockingAction action;
 
 	private JPanel mainPanel;
 	private GridBagConstraints mainPanelConstraints;
