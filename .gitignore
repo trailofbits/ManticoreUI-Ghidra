@@ -6,3 +6,5 @@ MUI/.classpath
 MUI/.settings
 MUI/.gradle/
 MUI/os/.gradle/
+MUI/.project
+MUI/.pydevproject

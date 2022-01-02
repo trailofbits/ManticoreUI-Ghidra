@@ -31,3 +31,10 @@ GHIDRA_INSTALL_DIR=<path_to_ghidra_directory> gradle
 2. Copy the zip file to the `Extensions` folder in your Ghidra directory 
 3. Run Ghidra and select the extension in `File -> Install Extensions`
 4. Restart Ghidra 
+
+# Development
+
+1. Fork and clone the repo
+2. Install the [GhidraDev plugin](https://github.com/NationalSecurityAgency/ghidra/blob/master/GhidraBuild/EclipsePlugins/GhidraDev/GhidraDevPlugin/GhidraDev_README.html) in Eclipse
+3. Import the project via `File -> Import -> General -> Projects from Folder or Archive`
+4. Link your installation of Ghidra via `GhidraDev -> Link Ghidra`. The necessary `.project` and `.pydevproject` files will be generated for Eclipse.
