@@ -17,7 +17,7 @@ import ghidra.framework.plugintool.ComponentProviderAdapter;
 import ghidra.framework.plugintool.PluginTool;
 import ghidra.program.model.listing.Program;
 
-public class MUIProvider extends ComponentProviderAdapter {
+public class MUISetupProvider extends ComponentProviderAdapter {
 
 	private Program program;
 
@@ -35,7 +35,7 @@ public class MUIProvider extends ComponentProviderAdapter {
 	private MUILogProvider logProvider;
 	private Boolean isStopped; // stopped meaning forcefully stopped by user
 
-	public MUIProvider(PluginTool tool, String name, MUILogProvider log) {
+	public MUISetupProvider(PluginTool tool, String name, MUILogProvider log) {
 		super(tool, name, name);
 		setLogProvider(log);
 		buildMainPanel();

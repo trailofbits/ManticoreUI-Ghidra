@@ -35,7 +35,7 @@ import ghidra.program.model.listing.Program;
 //@formatter:on
 public class MUIPlugin extends ProgramPlugin {
 
-	public MUIProvider provider;
+	public MUISetupProvider provider;
 	public MUILogProvider log;
 
 	public MUIPlugin(PluginTool tool) {
@@ -43,7 +43,7 @@ public class MUIPlugin extends ProgramPlugin {
 
 		String pluginName = getName();
 		log = new MUILogProvider(tool, pluginName);
-		provider = new MUIProvider(tool, pluginName, log);
+		provider = new MUISetupProvider(tool, pluginName, log);
 		log.setMainProvider(provider);
 
 	}

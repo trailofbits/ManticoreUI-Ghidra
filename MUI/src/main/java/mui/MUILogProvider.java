@@ -23,7 +23,7 @@ public class MUILogProvider extends ComponentProviderAdapter {
 
 	private StringBuffer logStringBuf;
 
-	private MUIProvider mainProvider;
+	private MUISetupProvider mainProvider;
 
 	public MUILogProvider(PluginTool tool, String name) {
 		super(tool, name, name);
@@ -33,7 +33,7 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		setVisible(true);
 	}
 
-	public void setMainProvider(MUIProvider provider) {
+	public void setMainProvider(MUISetupProvider provider) {
 		mainProvider = provider;
 	}
 
