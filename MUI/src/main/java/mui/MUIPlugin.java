@@ -20,6 +20,7 @@ import ghidra.app.plugin.ProgramPlugin;
 import ghidra.framework.plugintool.*;
 import ghidra.framework.plugintool.util.PluginStatus;
 import ghidra.program.model.listing.Program;
+import ghidra.util.Msg;
 
 /**
  * TODO: Provide class-level documentation that describes what this plugin does.
@@ -40,12 +41,9 @@ public class MUIPlugin extends ProgramPlugin {
 
 	public MUIPlugin(PluginTool tool) {
 		super(tool, true, true);
-
 		String pluginName = getName();
 		log = new MUILogProvider(tool, pluginName);
 		provider = new MUISetupProvider(tool, pluginName, log);
-		log.setMainProvider(provider);
-
 	}
 
 	@Override

@@ -1,9 +1,16 @@
 package mui;
 
 import javax.swing.*;
+import java.util.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 import docking.*;
 import ghidra.framework.plugintool.ComponentProviderAdapter;
@@ -13,17 +20,7 @@ import resources.ResourceManager;
 public class MUILogProvider extends ComponentProviderAdapter {
 
 	private JPanel logPanel;
-
-	private JScrollPane logScrollPane;
-	private JTextArea logArea;
-
-	private JToolBar logToolBar;
-	private JButton stopButton;
-	private JButton clearButton;
-
-	private StringBuffer logStringBuf;
-
-	private MUISetupProvider mainProvider;
+	private JTabbedPane logTabPane;
 
 	public MUILogProvider(PluginTool tool, String name) {
 		super(tool, name, name);
@@ -33,70 +30,36 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		setVisible(true);
 	}
 
-	public void setMainProvider(MUISetupProvider provider) {
-		mainProvider = provider;
-	}
-
 	private void buildLogPanel() {
 		logPanel = new JPanel();
 		logPanel.setLayout(new BorderLayout());
-		logPanel.setMinimumSize(new Dimension(300, 300));
+		logPanel.setMinimumSize(new Dimension(500, 300));
 
-		logArea = new JTextArea();
-		logArea.setEditable(false);
-		logArea.setLineWrap(true);
-		logArea.setWrapStyleWord(true);
-		logScrollPane = new JScrollPane(logArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
-		logPanel.add(logScrollPane, BorderLayout.CENTER);
-
-		logToolBar = new JToolBar();
-		logToolBar.setFloatable(false);
-		stopButton = new JButton();
-		stopButton.setIcon(ResourceManager.loadImage("images/stopNode.png"));
-		stopButton.setEnabled(false);
-		stopButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				mainProvider.stopManticore();
-			}
-
-		});
-
-		clearButton = new JButton();
-		clearButton.setIcon(ResourceManager.loadImage("images/erase16.png"));
-		clearButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				clearLog();
-			}
-
-		});
-		logToolBar.add(Box.createGlue()); // shifts buttons to the right
-		logToolBar.add(stopButton);
-		logToolBar.add(clearButton);
-
-		logPanel.add(logToolBar, BorderLayout.PAGE_START);
-
-		logStringBuf = new StringBuffer();
+		logTabPane = new JTabbedPane();
+		logPanel.add(logTabPane);
 	}
 
-	public void clearLog() {
-		logArea.setText("");
-		logStringBuf.setLength(0);
+	public void runMUI(String[] manticoreArgs) {
+		MUILogContentComponent newTabContent = new MUILogContentComponent();
+		newTabContent.MUIInstance.callProc(manticoreArgs);
+		logTabPane.add(ZonedDateTime.now(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("HH:mm:ss")),
+				newTabContent);
+		logTabPane.setTabComponentAt(logTabPane.getTabCount() - 1, new MUILogTabComponent(logTabPane, this));
+		logTabPane.setSelectedIndex(logTabPane.getTabCount() - 1);
 	}
 
-	public void appendLog(String s) {
-		logStringBuf.append(System.lineSeparator());
-		logStringBuf.append(s);
-		logArea.setText(logStringBuf.toString());
+	public void noManticoreBinary() {
+		MUILogContentComponent newTabContent = new MUILogContentComponent();
+		newTabContent.logArea.append("No manticore binary found!");
+		newTabContent.stopButton.setEnabled(false);
+		logTabPane.add(Long.toString(Instant.now().getEpochSecond()), newTabContent);
+		logTabPane.setTabComponentAt(logTabPane.getTabCount() - 1, new MUILogTabComponent(logTabPane, this));
 	}
 
-	public void updateButtonStatus(Boolean isManticoreRunning) {
-		stopButton.setEnabled(isManticoreRunning);
-		clearButton.setEnabled(!isManticoreRunning);
+	public void closeLogTab(int tabIndex) {
+		MUILogContentComponent curComp = (MUILogContentComponent) logTabPane.getComponentAt(tabIndex);
+		curComp.MUIInstance.stopProc();
+		logTabPane.remove(tabIndex);
 	}
 
 	@Override

@@ -33,7 +33,6 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 	private String manticoreExePath;
 
 	private MUILogProvider logProvider;
-	private Boolean isStopped; // stopped meaning forcefully stopped by user
 
 	public MUISetupProvider(PluginTool tool, String name, MUILogProvider log) {
 		super(tool, name, name);
@@ -103,7 +102,7 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 			}
 			manticoreExePath = Application.getOSFile("manticore").getAbsolutePath().concat(" ");
 		} catch (Exception e) {
-			manticoreExePath = "manticore ";
+			manticoreExePath = "";
 		}
 		runBtn = new JButton("Run");
 		runBtn.addActionListener(new ActionListener() {
@@ -111,10 +110,10 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (manticoreExePath.length() == 0) {
-					logProvider.appendLog(
-							"ERROR: Packaged manticore binary not found! Attempting with \"manticore\" in PATH...");
+					logProvider.noManticoreBinary();
+				} else {
+					logProvider.runMUI(parseCommand(manticoreExePath.concat(manticoreArgsArea.getText())));
 				}
-				callManticore(parseCommand(manticoreExePath.concat(manticoreArgsArea.getText())));
 
 			}
 
@@ -129,57 +128,6 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 		inputPanel.add(runBtn, inputPanelConstraints);
 
 		mainPanel.add(inputPanel, mainPanelConstraints);
-
-		isStopped = false;
-
-	}
-
-	public void stopManticore() {
-		logProvider.updateButtonStatus(false);
-		isStopped = true;
-	}
-
-	private void callManticore(String[] manticoreArgs) {
-		isStopped = false;
-		logProvider.updateButtonStatus(true);
-		runBtn.setEnabled(false);
-		SwingWorker sw = new SwingWorker() {
-			@Override
-			protected Object doInBackground() throws Exception {
-				ProcessBuilder pb = new ProcessBuilder(manticoreArgs);
-				try {
-					Process p = pb.start();
-					BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-					String line = "";
-					while ((line = reader.readLine()) != null && !isStopped) {
-						logProvider.appendLog(line);
-					}
-					if (isStopped) {
-						p.destroy();
-					} else {
-						p.waitFor();
-					}
-					reader.close();
-
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-				return null;
-			}
-
-			@Override
-			protected void done() {
-				logProvider.updateButtonStatus(false);
-				runBtn.setEnabled(true);
-				if (isStopped) {
-					logProvider.appendLog("Manticore stopped by user.");
-				} else {
-					logProvider.appendLog("Manticore execution complete.");
-				}
-
-			}
-		};
-		sw.execute();
 
 	}
 
