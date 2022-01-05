@@ -27,7 +27,7 @@ GHIDRA_INSTALL_DIR=<path_to_ghidra_directory> gradle
 
 # Installation
 
-1. Manticore with native binary support must first be [installed](https://github.com/trailofbits/manticore/tree/5227be4244fe86fec3adf3a0f293553ac92bf1a4#installation) (eg. via `pip install "manticore[native]"`
+1. Ensure that Python 3.9 is installed (and that you have a `python3.9` binary). Manticore is bundled with the plugin and does not need to be separately installed, but currently requires python3.9.
 2. Copy the zip file to the `Extensions` folder in your Ghidra directory 
 3. Run Ghidra and select the extension in `File -> Install Extensions`
 4. Restart Ghidra 
