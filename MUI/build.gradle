@@ -1,24 +1,24 @@
 /* ###
- * IP: GHIDRA
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+* IP: GHIDRA
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 // Builds a Ghidra Extension for a given Ghidra installation.
 //
-// An absolute path to the Ghidra installation directory must be supplied either by setting the 
+// An absolute path to the Ghidra installation directory must be supplied either by setting the
 // GHIDRA_INSTALL_DIR environment variable or Gradle project property:
 //
-//     > export GHIDRA_INSTALL_DIR=<Absolute path to Ghidra> 
+//     > export GHIDRA_INSTALL_DIR=<Absolute path to Ghidra>
 //     > gradle
 //
 //         or
@@ -29,34 +29,35 @@
 // application.gradle.version property in <GHIDRA_INSTALL_DIR>/Ghidra/application.properties
 // for the correction version of Gradle to use for the Ghidra installation you specify.
 
+plugins {
+    id "com.diffplug.spotless" version "6.1.0"
+}
+
 //----------------------START "DO NOT MODIFY" SECTION------------------------------
 def ghidraInstallDir
 
 if (System.env.GHIDRA_INSTALL_DIR) {
-	ghidraInstallDir = System.env.GHIDRA_INSTALL_DIR
+    ghidraInstallDir = System.env.GHIDRA_INSTALL_DIR
 }
 else if (project.hasProperty("GHIDRA_INSTALL_DIR")) {
-	ghidraInstallDir = project.getProperty("GHIDRA_INSTALL_DIR")
+    ghidraInstallDir = project.getProperty("GHIDRA_INSTALL_DIR")
 }
 
 if (ghidraInstallDir) {
-	apply from: new File(ghidraInstallDir).getCanonicalPath() + "/support/buildExtension.gradle"
+    apply from: new File(ghidraInstallDir).getCanonicalPath() + "/support/buildExtension.gradle"
 }
 else {
-	throw new GradleException("GHIDRA_INSTALL_DIR is not defined!")
+    throw new GradleException("GHIDRA_INSTALL_DIR is not defined!")
 }
 //----------------------END "DO NOT MODIFY" SECTION-------------------------------
 
 repositories {
-	// Declare dependency repositories here.  This is not needed if dependencies are manually 
-	// dropped into the lib/ directory.
-	// See https://docs.gradle.org/current/userguide/declaring_repositories.html for more info.
-	// Ex: mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	// Any external dependencies added here will automatically be copied to the lib/ directory when
-	// this extension is built.	
+    // Any external dependencies added here will automatically be copied to the lib/ directory when
+    // this extension is built.
 }
 
 // The following installation helpers were copied from
@@ -79,7 +80,7 @@ task uninstallPreviousMUI {
     outputs.upToDateWhen { false } // ensures never cached, always runs if user enables
 }
 
-buildHelp.dependsOn uninstallPreviousMUI
+build.dependsOn uninstallPreviousMUI
 
 task copyZip(type: Copy) {
     group = "Installation"
@@ -109,3 +110,25 @@ task install() {
     }
 }
 // End copy
+
+// Code style formatting
+spotless {
+    // optional: limit format enforcement to just the files changed by this feature branch
+    ratchetFrom 'origin/main'
+
+    format 'misc', {
+        // define the files to apply `misc` to
+        target '*.gradle', '*.md', '.gitignore'
+
+        // define the steps to apply to those files
+        trimTrailingWhitespace()
+        indentWithSpaces(4)
+        endWithNewline()
+    }
+    java {
+        target 'src/*/java/**/*.java', 'ghidra_scripts/*.java'
+        // The Ghidra formatting file was taken from Ghidra 10.1.1 located in
+        // eclipse/GhidraEclipseFormatter.xml Ghidra repo
+        eclipse().configFile('GhidraEclipseFormatter.xml')
+    }
+}

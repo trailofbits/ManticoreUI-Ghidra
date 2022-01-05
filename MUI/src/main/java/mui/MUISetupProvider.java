@@ -1,14 +1,5 @@
 package mui;
 
-import javax.swing.*;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.*;
-import java.util.List;
-
 import docking.*;
 import ghidra.GhidraApplicationLayout;
 import ghidra.framework.Application;
@@ -16,6 +7,11 @@ import ghidra.framework.ApplicationConfiguration;
 import ghidra.framework.plugintool.ComponentProviderAdapter;
 import ghidra.framework.plugintool.PluginTool;
 import ghidra.program.model.listing.Program;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+import java.util.List;
+import javax.swing.*;
 
 public class MUISetupProvider extends ComponentProviderAdapter {
 
@@ -98,26 +94,29 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 
 		try {
 			if (!Application.isInitialized()) {
-				Application.initializeApplication(new GhidraApplicationLayout(), new ApplicationConfiguration());
+				Application.initializeApplication(
+					new GhidraApplicationLayout(), new ApplicationConfiguration());
 			}
 			manticoreExePath = Application.getOSFile("manticore").getAbsolutePath().concat(" ");
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			manticoreExePath = "";
 		}
 		runBtn = new JButton("Run");
-		runBtn.addActionListener(new ActionListener() {
+		runBtn.addActionListener(
+			new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (manticoreExePath.length() == 0) {
-					logProvider.noManticoreBinary();
-				} else {
-					logProvider.runMUI(parseCommand(manticoreExePath.concat(manticoreArgsArea.getText())));
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (manticoreExePath.length() == 0) {
+						logProvider.noManticoreBinary();
+					}
+					else {
+						logProvider.runMUI(
+							parseCommand(manticoreExePath.concat(manticoreArgsArea.getText())));
+					}
 				}
-
-			}
-
-		});
+			});
 		inputPanelConstraints.gridx = 0;
 		inputPanelConstraints.gridy = 3;
 		inputPanelConstraints.weightx = 0.9;
@@ -128,7 +127,6 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 		inputPanel.add(runBtn, inputPanelConstraints);
 
 		mainPanel.add(inputPanel, mainPanelConstraints);
-
 	}
 
 	public void setProgram(Program p) {
@@ -138,13 +136,11 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 			programPathLbl.setText(programPath);
 		}
 		manticoreArgsArea.setText("--workspace tmpMUI ".concat(programPath));
-
 	}
 
 	/**
-	 * Tokenizes a string by spaces, but takes into account spaces embedded in
-	 * quotes or escaped spaces. Should no longer be required once UI for args is
-	 * implemented.
+	 * Tokenizes a string by spaces, but takes into account spaces embedded in quotes or escaped
+	 * spaces. Should no longer be required once UI for args is implemented.
 	 */
 	public String[] parseCommand(String string) {
 		final List<Character> WORD_DELIMITERS = Arrays.asList(' ', '\t');
@@ -160,14 +156,18 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 
 			if (c == ESCAPE_CHARACTER && i + 1 < string.length()) {
 				wordBuilder.append(string.charAt(++i));
-			} else if (WORD_DELIMITERS.contains(c) && quote == 0) {
+			}
+			else if (WORD_DELIMITERS.contains(c) && quote == 0) {
 				words.add(wordBuilder.toString());
 				wordBuilder.setLength(0);
-			} else if (quote == 0 && QUOTE_CHARACTERS.contains(c)) {
+			}
+			else if (quote == 0 && QUOTE_CHARACTERS.contains(c)) {
 				quote = c;
-			} else if (quote == c) {
+			}
+			else if (quote == c) {
 				quote = 0;
-			} else {
+			}
+			else {
 				wordBuilder.append(c);
 			}
 		}
@@ -183,5 +183,4 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 	public JComponent getComponent() {
 		return mainPanel;
 	}
-
 }

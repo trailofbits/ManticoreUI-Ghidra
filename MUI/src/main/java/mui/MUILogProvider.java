@@ -1,21 +1,16 @@
 package mui;
 
-import javax.swing.*;
-import java.util.*;
-
+import docking.*;
+import ghidra.framework.plugintool.ComponentProviderAdapter;
+import ghidra.framework.plugintool.PluginTool;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-
-import docking.*;
-import ghidra.framework.plugintool.ComponentProviderAdapter;
-import ghidra.framework.plugintool.PluginTool;
-import resources.ResourceManager;
+import java.util.*;
+import javax.swing.*;
 
 public class MUILogProvider extends ComponentProviderAdapter {
 
@@ -42,9 +37,12 @@ public class MUILogProvider extends ComponentProviderAdapter {
 	public void runMUI(String[] manticoreArgs) {
 		MUILogContentComponent newTabContent = new MUILogContentComponent();
 		newTabContent.MUIInstance.callProc(manticoreArgs);
-		logTabPane.add(ZonedDateTime.now(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("HH:mm:ss")),
-				newTabContent);
-		logTabPane.setTabComponentAt(logTabPane.getTabCount() - 1, new MUILogTabComponent(logTabPane, this));
+		logTabPane.add(
+			ZonedDateTime.now(ZoneId.systemDefault())
+					.format(DateTimeFormatter.ofPattern("HH:mm:ss")),
+			newTabContent);
+		logTabPane.setTabComponentAt(
+			logTabPane.getTabCount() - 1, new MUILogTabComponent(logTabPane, this));
 		logTabPane.setSelectedIndex(logTabPane.getTabCount() - 1);
 	}
 
@@ -53,11 +51,13 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		newTabContent.logArea.append("No manticore binary found!");
 		newTabContent.stopButton.setEnabled(false);
 		logTabPane.add(Long.toString(Instant.now().getEpochSecond()), newTabContent);
-		logTabPane.setTabComponentAt(logTabPane.getTabCount() - 1, new MUILogTabComponent(logTabPane, this));
+		logTabPane.setTabComponentAt(
+			logTabPane.getTabCount() - 1, new MUILogTabComponent(logTabPane, this));
 	}
 
 	public void closeLogTab(int tabIndex) {
-		MUILogContentComponent curComp = (MUILogContentComponent) logTabPane.getComponentAt(tabIndex);
+		MUILogContentComponent curComp =
+			(MUILogContentComponent) logTabPane.getComponentAt(tabIndex);
 		curComp.MUIInstance.stopProc();
 		logTabPane.remove(tabIndex);
 	}
@@ -66,5 +66,4 @@ public class MUILogProvider extends ComponentProviderAdapter {
 	public JComponent getComponent() {
 		return logPanel;
 	}
-
 }
