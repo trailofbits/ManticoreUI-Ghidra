@@ -28,6 +28,11 @@ GHIDRA_INSTALL_DIR=<path_to_ghidra_directory> gradle
 # Installation
 
 1. Ensure that Python 3.9 is installed (and that you have a `python3.9` binary). Manticore is bundled with the plugin and does not need to be separately installed, but currently requires python3.9.
+
+  * Note: You can build this for yourself by using the [`shiv`](https://shiv.readthedocs.io/en/latest/) tool and running the following:
+```sh
+shiv --reproducible -c manticore -o ./os/linux_x86_64/manticore <path_to_local>/manticore[native]
+```
 2. Copy the zip file to the `Extensions` folder in your Ghidra directory 
 3. Run Ghidra and select the extension in `File -> Install Extensions`
 4. Restart Ghidra 
@@ -38,3 +43,4 @@ GHIDRA_INSTALL_DIR=<path_to_ghidra_directory> gradle
 2. Install the [GhidraDev plugin](https://github.com/NationalSecurityAgency/ghidra/blob/master/GhidraBuild/EclipsePlugins/GhidraDev/GhidraDevPlugin/GhidraDev_README.html) in Eclipse
 3. Import the project via `File -> Import -> General -> Projects from Folder or Archive`
 4. Link your installation of Ghidra via `GhidraDev -> Link Ghidra`. The necessary `.project` and `.pydevproject` files will be generated for Eclipse.
+5. Format your code with the included `MUI/GhidraEclipseFormatter.xml` (taken from upstream Ghidra) by running `just format` with the tool [just](https://github.com/casey/just).
