@@ -9,7 +9,7 @@ public class MUISettings {
 		Map.of(
 			"NATIVE_RUN_SETTINGS",
 			Map.of(
-				"concreteStart", new Map[] {
+				"data", new Map[] {
 					Map.of(
 						"title", "Concrete Start",
 						"description", "Initial concrete data for the input symbolic buffer",
