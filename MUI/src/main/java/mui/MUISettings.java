@@ -29,7 +29,7 @@ public class MUISettings {
 						"description", "Argv to use for manticore",
 						"type", "array",
 						"elementType", "string",
-						"default", new ArrayList<String>()),
+						"default", ""),
 					Map.of()},
 				"workspaceURL", new Map[] {
 					Map.of(
@@ -45,7 +45,7 @@ public class MUISettings {
 						"description", "Environment variables for manticore",
 						"type", "array",
 						"elementType", "string",
-						"default", new ArrayList<String>()),
+						"default", ""),
 					Map.of()},
 				"symbolicFiles", new Map[] {
 					Map.of(
@@ -53,7 +53,7 @@ public class MUISettings {
 						"description", "Symbolic input files for manticore",
 						"type", "array",
 						"elementType", "string",
-						"default", new ArrayList<String>()),
+						"default", ""),
 					Map.of()})
 			);
 

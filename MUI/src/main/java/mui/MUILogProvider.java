@@ -34,9 +34,9 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		logPanel.add(logTabPane);
 	}
 
-	public void runMUI(String[] manticoreArgs) {
+	public void runMUI(String manticoreExePath, HashMap<String, Object> formOptions) {
 		MUILogContentComponent newTabContent = new MUILogContentComponent();
-		newTabContent.MUIInstance.callProc(manticoreArgs);
+		newTabContent.MUIInstance.callProc(manticoreExePath, formOptions);
 		logTabPane.add(
 			ZonedDateTime.now(ZoneId.systemDefault())
 					.format(DateTimeFormatter.ofPattern("HH:mm:ss")),
