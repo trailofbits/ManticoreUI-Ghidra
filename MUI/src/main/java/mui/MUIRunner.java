@@ -26,29 +26,29 @@ public class MUIRunner {
 	public void stopProc() {
 		isTerminated = true;
 	}
-	
-	
-	public void constructCommand(String manticoreExePath, HashMap<String, Object> manticoreOptions) {
+
+	public void constructCommand(String manticoreExePath,
+			HashMap<String, Object> manticoreOptions) {
 		StringBuilder cmd = new StringBuilder();
 		cmd.append(manticoreExePath);
 		cmd.append(" ");
-		
-		for (Entry<String, Object> option: manticoreOptions.entrySet()) {
+
+		for (Entry<String, Object> option : manticoreOptions.entrySet()) {
 			String name = option.getKey();
-			
-			String optType = (String) MUISettings.SETTINGS.get("NATIVE_RUN_SETTINGS").get(name)[0].get("type");
-			
-			if (optType == "string" || optType=="number") {
-				
-			} else if (optType == "array") {
+
+			String optType =
+				(String) MUISettings.SETTINGS.get("NATIVE_RUN_SETTINGS").get(name)[0].get("type");
+
+			if (optType == "string" || optType == "number") {
+
+			}
+			else if (optType == "array") {
 				//TODO: implement
 			}
 		}
 
-		
-		
 	}
-	
+
 	public void callProc(String[] command) {
 
 		stopButton.setEnabled(true);

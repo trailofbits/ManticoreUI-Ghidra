@@ -39,10 +39,12 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		logPanel.add(logTabPane);
 	}
 
-	public void runMUI(String manticoreExePath, String programPath, HashMap<String, JTextField> formOptions) {
+	public void runMUI(String manticoreExePath, String programPath,
+			HashMap<String, JTextField> formOptions) {
 		MUILogContentComponent newTabContent = new MUILogContentComponent();
-	
-		newTabContent.MUIInstance.callProc(buildCommand(manticoreExePath, programPath, formOptions));
+
+		newTabContent.MUIInstance
+				.callProc(buildCommand(manticoreExePath, programPath, formOptions));
 		logTabPane.add(
 			ZonedDateTime.now(ZoneId.systemDefault())
 					.format(DateTimeFormatter.ofPattern("HH:mm:ss")),
@@ -51,25 +53,27 @@ public class MUILogProvider extends ComponentProviderAdapter {
 			logTabPane.getTabCount() - 1, new MUILogTabComponent(logTabPane, this));
 		logTabPane.setSelectedIndex(logTabPane.getTabCount() - 1);
 	}
-	
-	public String[] buildCommand(String manticoreExePath, String programPath, HashMap<String, JTextField> formOptions) {
+
+	public String[] buildCommand(String manticoreExePath, String programPath,
+			HashMap<String, JTextField> formOptions) {
 		ArrayList<String> f_command = new ArrayList<String>();
 		f_command.add(manticoreExePath);
 		String[] argv = parseCommand(formOptions.get("argv").getText());
-		for(Entry<String, JTextField> option:formOptions.entrySet()) {
-			if(option.getKey()=="argv")continue;
-			for(String arg:parseCommand(option.getValue().getText())) {
+		for (Entry<String, JTextField> option : formOptions.entrySet()) {
+			if (option.getKey() == "argv")
+				continue;
+			for (String arg : parseCommand(option.getValue().getText())) {
 				f_command.add("--".concat(option.getKey()));
 				f_command.add(arg);
-			}	
+			}
 		}
-		
+
 		f_command.add(programPath);
 		f_command.addAll(Arrays.asList(argv));
-		Msg.info(this,f_command.get(0));
+		Msg.info(this, f_command.get(0));
 		return f_command.toArray(String[]::new);
 	}
-	
+
 	public String[] parseCommand(String string) {
 		final List<Character> WORD_DELIMITERS = Arrays.asList(' ', '\t');
 		final List<Character> QUOTE_CHARACTERS = Arrays.asList('"', '\'');
