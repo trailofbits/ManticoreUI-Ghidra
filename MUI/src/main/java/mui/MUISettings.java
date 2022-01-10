@@ -16,7 +16,7 @@ public class MUISettings {
 						"type", "string",
 						"default", ""),
 					Map.of()},			
-				"stdinSize", new Map[] {
+				"native.stdin_size", new Map[] {
 					Map.of(
 						"title", "Stdin Size",
 						"description", "Stdin size to use for manticore",
@@ -31,7 +31,7 @@ public class MUISettings {
 						"elementType", "string",
 						"default", ""),
 					Map.of()},
-				"workspaceURL", new Map[] {
+				"workspace", new Map[] {
 					Map.of(
 						"title", "Workspace URL",
 						"description", "Workspace URL to use for manticore",
@@ -47,7 +47,7 @@ public class MUISettings {
 						"elementType", "string",
 						"default", ""),
 					Map.of()},
-				"symbolicFiles", new Map[] {
+				"file", new Map[] {
 					Map.of(
 						"title", "Symbolic Input Files",
 						"description", "Symbolic input files for manticore",

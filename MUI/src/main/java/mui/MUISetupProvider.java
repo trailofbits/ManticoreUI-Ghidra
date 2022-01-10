@@ -37,7 +37,7 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 
 	private JPanel formPanel;
 	
-	private HashMap<String, Object> formOptions;
+	private HashMap<String, JTextField> formOptions;
 	
 	public MUISetupProvider(PluginTool tool, String name, MUILogProvider log) {
 		super(tool, name, name);
@@ -58,7 +58,7 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 		formPanel.setLayout(new GridLayout(MUISettings.SETTINGS.get("NATIVE_RUN_SETTINGS").size(),2));
 		formPanel.setMinimumSize(new Dimension(800,500));
 		
-		formOptions = new HashMap<String, Object>();
+		formOptions = new HashMap<String, JTextField>();
 		
 		for (Entry<String, Map<String, Object>[]> option:MUISettings.SETTINGS.get("NATIVE_RUN_SETTINGS").entrySet()) {
 			String name = option.getKey();
@@ -163,9 +163,8 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 						logProvider.noManticoreBinary();
 					}
 					else {
-						formOptions.put("programPath",programPath);
 						logProvider.runMUI(
-							manticoreExePath, formOptions);
+							manticoreExePath, programPath, formOptions);
 					}
 				}
 			});
@@ -176,47 +175,6 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 	public void setProgram(Program p) {
 		program = p;
 		programPath = program.getExecutablePath();
-	}
-
-	/**
-	 * Tokenizes a string by spaces, but takes into account spaces embedded in quotes or escaped
-	 * spaces. Should no longer be required once UI for args is implemented.
-	 */
-	public String[] parseCommand(String string) {
-		final List<Character> WORD_DELIMITERS = Arrays.asList(' ', '\t');
-		final List<Character> QUOTE_CHARACTERS = Arrays.asList('"', '\'');
-		final char ESCAPE_CHARACTER = '\\';
-
-		StringBuilder wordBuilder = new StringBuilder();
-		List<String> words = new ArrayList<>();
-		char quote = 0;
-
-		for (int i = 0; i < string.length(); i++) {
-			char c = string.charAt(i);
-
-			if (c == ESCAPE_CHARACTER && i + 1 < string.length()) {
-				wordBuilder.append(string.charAt(++i));
-			}
-			else if (WORD_DELIMITERS.contains(c) && quote == 0) {
-				words.add(wordBuilder.toString());
-				wordBuilder.setLength(0);
-			}
-			else if (quote == 0 && QUOTE_CHARACTERS.contains(c)) {
-				quote = c;
-			}
-			else if (quote == c) {
-				quote = 0;
-			}
-			else {
-				wordBuilder.append(c);
-			}
-		}
-
-		if (wordBuilder.length() > 0) {
-			words.add(wordBuilder.toString());
-		}
-
-		return words.toArray(new String[0]);
 	}
 
 	@Override
