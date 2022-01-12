@@ -22,7 +22,6 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 
 	private JPanel mainPanel;
 	private String programPath;
-	private JButton runBtn;
 	private String manticoreExePath;
 
 	private MUILogProvider logProvider;
@@ -81,7 +80,7 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 			}
 		}
 	}
-	
+
 	private JTextField createStringNumberInput(String defaultStr) {
 		JTextField entry = new JTextField();
 		entry.setText(defaultStr);
@@ -89,7 +88,7 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 		formPanel.add(entry);
 		return entry;
 	}
-	
+
 	private JTextField createArrayInput() {
 		// TODO: doesn't handle default param for arrays, but not needed as part of sensible defaults for running manticore on native binaries
 		// for now, same UI as string/num, and we will parse space-separated args
@@ -98,7 +97,7 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 		formPanel.add(entry);
 		return entry;
 	}
-	
+
 	private JTextField createPathInput(String defaultStr) {
 		JTextField entry = new JTextField();
 
@@ -147,7 +146,6 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 		formPanel.add(inputRow);
 		return entry;
 	}
-	
 
 	private void buildMainPanel() {
 		mainPanel = new JPanel(new BorderLayout());
@@ -165,7 +163,17 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 		catch (Exception e) {
 			manticoreExePath = "";
 		}
-		runBtn = new JButton("Run");
+
+		JPanel bottomPanel = new JPanel(new BorderLayout());
+
+		bottomPanel.add(new JLabel("Extra Manticore Arguments:"), BorderLayout.NORTH);
+
+		JTextArea moreArgs = new JTextArea();
+		moreArgs.setLineWrap(true);
+		moreArgs.setWrapStyleWord(true);
+		bottomPanel.add(moreArgs, BorderLayout.CENTER);
+
+		JButton runBtn = new JButton("Run");
 		runBtn.addActionListener(
 			new ActionListener() {
 
@@ -176,12 +184,13 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 					}
 					else {
 						logProvider.runMUI(
-							manticoreExePath, programPath, formOptions);
+							manticoreExePath, programPath, formOptions, moreArgs.getText());
 					}
 				}
 			});
+		bottomPanel.add(runBtn, BorderLayout.SOUTH);
 
-		mainPanel.add(runBtn, BorderLayout.PAGE_END);
+		mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 	}
 
 	public void setProgram(Program p) {

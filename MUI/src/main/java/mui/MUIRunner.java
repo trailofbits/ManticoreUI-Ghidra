@@ -27,7 +27,6 @@ public class MUIRunner {
 		isTerminated = true;
 	}
 
-	
 	public void callProc(String[] command) {
 
 		stopButton.setEnabled(true);

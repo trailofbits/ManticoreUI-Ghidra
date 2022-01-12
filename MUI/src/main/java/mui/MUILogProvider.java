@@ -40,11 +40,11 @@ public class MUILogProvider extends ComponentProviderAdapter {
 	}
 
 	public void runMUI(String manticoreExePath, String programPath,
-			HashMap<String, JTextField> formOptions) {
+			HashMap<String, JTextField> formOptions, String moreArgs) {
 		MUILogContentComponent newTabContent = new MUILogContentComponent();
 
 		newTabContent.MUIInstance
-				.callProc(buildCommand(manticoreExePath, programPath, formOptions));
+				.callProc(buildCommand(manticoreExePath, programPath, formOptions, moreArgs));
 		logTabPane.add(
 			ZonedDateTime.now(ZoneId.systemDefault())
 					.format(DateTimeFormatter.ofPattern("HH:mm:ss")),
@@ -55,7 +55,7 @@ public class MUILogProvider extends ComponentProviderAdapter {
 	}
 
 	public String[] buildCommand(String manticoreExePath, String programPath,
-			HashMap<String, JTextField> formOptions) {
+			HashMap<String, JTextField> formOptions, String moreArgs) {
 		ArrayList<String> f_command = new ArrayList<String>();
 		f_command.add(manticoreExePath);
 		String[] argv = parseCommand(formOptions.get("argv").getText());
@@ -67,6 +67,8 @@ public class MUILogProvider extends ComponentProviderAdapter {
 				f_command.add(arg);
 			}
 		}
+
+		f_command.addAll(Arrays.asList(parseCommand(moreArgs)));
 
 		f_command.add(programPath);
 		f_command.addAll(Arrays.asList(argv));
