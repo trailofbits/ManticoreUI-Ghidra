@@ -7,13 +7,11 @@ import ghidra.framework.ApplicationConfiguration;
 import ghidra.framework.plugintool.ComponentProviderAdapter;
 import ghidra.framework.plugintool.PluginTool;
 import ghidra.program.model.listing.Program;
-import ghidra.util.Msg;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.*;
-import java.util.List;
 import java.util.Map.Entry;
 
 import javax.swing.*;
@@ -23,12 +21,6 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 	private Program program;
 
 	private JPanel mainPanel;
-	private GridBagConstraints mainPanelConstraints;
-
-	private JPanel inputPanel;
-	private GridBagConstraints inputPanelConstraints;
-	private JTextArea manticoreArgsArea;
-	private JLabel programPathLbl;
 	private String programPath;
 	private JButton runBtn;
 	private String manticoreExePath;
@@ -72,66 +64,14 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 			String title = (String) prop.get("title");
 			formPanel.add(new JLabel(title));
 
-			JTextField entry = new JTextField();
-
 			if (extra.containsKey("is_dir_path") && (Boolean) extra.get("is_dir_path")) {
-
-				JPanel inputRow = new JPanel(new GridBagLayout());
-				inputRow.setMinimumSize(new Dimension(800, 100));
-				GridBagConstraints inputRowConstraints = new GridBagConstraints();
-				inputRowConstraints.fill = GridBagConstraints.HORIZONTAL;
-
-				inputRowConstraints.gridx = 0;
-				inputRowConstraints.gridwidth = 3;
-				inputRowConstraints.gridy = 0;
-				inputRowConstraints.gridheight = 1;
-				inputRowConstraints.weightx = 0.75;
-
-				entry.setText((String) prop.get("default"));
-				inputRow.add(entry, inputRowConstraints);
-
-				JFileChooser chooser = new JFileChooser();
-				chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				chooser.setDialogTitle("Set Workspace Folder");
-
-				JButton selectButton = new JButton("Select...");
-				selectButton.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						int returnVal = chooser.showOpenDialog(null);
-						if (returnVal == JFileChooser.APPROVE_OPTION) {
-							try {
-								String path = chooser.getSelectedFile().getCanonicalPath();
-								entry.setText(path);
-							}
-							catch (IOException e1) {
-								e1.printStackTrace();
-							}
-						}
-					}
-
-				});
-
-				inputRowConstraints.gridx = 3;
-				inputRowConstraints.gridwidth = 1;
-				inputRowConstraints.weightx = 0.25;
-				inputRow.add(selectButton, inputRowConstraints);
-
-				formPanel.add(inputRow);
-
+				formOptions.put(name, createPathInput(prop.get("default").toString()));
 			}
 			else if (prop.get("type") == "string" || prop.get("type") == "number") {
-				entry.setText(prop.get("default").toString());
-				entry.setToolTipText("Only 1 value allowed");
-				formPanel.add(entry);
+				formOptions.put(name, createStringNumberInput(prop.get("default").toString()));
 			}
 			else if (prop.get("type") == "array") {
-				// TODO: doesn't handle default param for arrays, but not needed as part of sensible defaults for running manticore on native binaries
-				// for now, same UI as string/num, and we will parse space-separated args
-				entry.setText(prop.get("default").toString());
-				entry.setToolTipText("You can space-separate multiple arguments");
-				formPanel.add(entry);
+				formOptions.put(name, createArrayInput());
 			}
 			else {
 				// TODO: to achieve parity with Binja MUI, type==boolean must be supported, but not needed as part of sensible defaults for running manticore on native binaries
@@ -139,11 +79,75 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 					String.format("[ERROR] Cannot create input row for %s with the type %s", name,
 						prop.get("type")));
 			}
-
-			formOptions.put(name, entry);
-
 		}
 	}
+	
+	private JTextField createStringNumberInput(String defaultStr) {
+		JTextField entry = new JTextField();
+		entry.setText(defaultStr);
+		entry.setToolTipText("Only 1 value allowed");
+		formPanel.add(entry);
+		return entry;
+	}
+	
+	private JTextField createArrayInput() {
+		// TODO: doesn't handle default param for arrays, but not needed as part of sensible defaults for running manticore on native binaries
+		// for now, same UI as string/num, and we will parse space-separated args
+		JTextField entry = new JTextField();
+		entry.setToolTipText("You can space-separate multiple arguments");
+		formPanel.add(entry);
+		return entry;
+	}
+	
+	private JTextField createPathInput(String defaultStr) {
+		JTextField entry = new JTextField();
+
+		JPanel inputRow = new JPanel(new GridBagLayout());
+		inputRow.setMinimumSize(new Dimension(800, 100));
+		GridBagConstraints inputRowConstraints = new GridBagConstraints();
+		inputRowConstraints.fill = GridBagConstraints.HORIZONTAL;
+
+		inputRowConstraints.gridx = 0;
+		inputRowConstraints.gridwidth = 3;
+		inputRowConstraints.gridy = 0;
+		inputRowConstraints.gridheight = 1;
+		inputRowConstraints.weightx = 0.75;
+
+		entry.setText(defaultStr);
+		inputRow.add(entry, inputRowConstraints);
+
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		chooser.setDialogTitle("Set Workspace Folder");
+
+		JButton selectButton = new JButton("Select...");
+		selectButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int returnVal = chooser.showOpenDialog(null);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					try {
+						String path = chooser.getSelectedFile().getCanonicalPath();
+						entry.setText(path);
+					}
+					catch (IOException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+
+		});
+
+		inputRowConstraints.gridx = 3;
+		inputRowConstraints.gridwidth = 1;
+		inputRowConstraints.weightx = 0.25;
+		inputRow.add(selectButton, inputRowConstraints);
+
+		formPanel.add(inputRow);
+		return entry;
+	}
+	
 
 	private void buildMainPanel() {
 		mainPanel = new JPanel(new BorderLayout());
