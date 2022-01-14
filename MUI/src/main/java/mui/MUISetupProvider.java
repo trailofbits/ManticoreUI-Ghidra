@@ -179,6 +179,7 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					logProvider.setVisible(true);
 					if (manticoreExePath.length() == 0) {
 						logProvider.noManticoreBinary();
 					}
