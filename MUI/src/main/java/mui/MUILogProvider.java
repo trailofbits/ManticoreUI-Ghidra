@@ -27,7 +27,7 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		buildLogPanel();
 		setTitle("MUI Log");
 		setDefaultWindowPosition(WindowPosition.BOTTOM);
-		setVisible(true);
+		setVisible(false);
 	}
 
 	private void buildLogPanel() {
