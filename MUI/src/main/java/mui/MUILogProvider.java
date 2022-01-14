@@ -52,7 +52,7 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		logTabPane.setTabComponentAt(
 			logTabPane.getTabCount() - 1, new MUILogTabComponent(logTabPane, this));
 		logTabPane.setSelectedIndex(logTabPane.getTabCount() - 1);
-		
+
 		newTabContent.requestFocusInWindow();
 	}
 
