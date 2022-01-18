@@ -42,12 +42,14 @@ public class ManticoreRunner {
 		isTerminated = true;
 	}
 
-	public void callProc(String[] command) {
+	public void callProc(String[] command, int portUsed) {
 
 		stopButton.setEnabled(true);
 		logArea.append(
 			"Command: " + String.join(" ", command) + System.lineSeparator() +
 				System.lineSeparator());
+
+		port = portUsed;
 
 		SwingWorker sw =
 			new SwingWorker() {
@@ -75,14 +77,10 @@ public class ManticoreRunner {
 									InputStream stateInputStream = stateSock.getInputStream();
 									try {
 										byte[] curBytes = stateInputStream.readAllBytes();
-										//	Msg.info(this, curBytes);
-										//Msg.info(this, curBytes.toString());
 										StateOuterClass.StateList sl =
 											StateOuterClass.StateList.parseFrom(curBytes);
-										//Msg.info(this, sl);
 										List<StateOuterClass.State> states =
 											sl.getStatesList();
-										//Msg.info(this, states);
 										if (states.size() > 0) {
 											ManticoreStateListModel newModel =
 												new ManticoreStateListModel();
