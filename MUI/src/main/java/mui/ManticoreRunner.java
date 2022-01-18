@@ -26,6 +26,8 @@ public class ManticoreRunner {
 	private String host;
 	private int port;
 
+	public ManticoreStateListModel stateListModel;
+
 	public ManticoreRunner(JTextArea logArea, JButton stopButton) {
 		isTerminated = false;
 		isFinished = false;
@@ -55,19 +57,59 @@ public class ManticoreRunner {
 				protected Object doInBackground() throws Exception {
 					ProcessBuilder pb = new ProcessBuilder(command);
 					try {
+						Msg.info(this, "called doInBackground");
 						Process p = pb.start();
 						BufferedReader reader =
 							new BufferedReader(new InputStreamReader(p.getInputStream()));
 						String line = "";
-						fetchStates();
+						long prevtime = Instant.now().getEpochSecond();
+
 						while ((line = reader.readLine()) != null && !isTerminated) {
 							logArea.append(line);
 							logArea.append(System.lineSeparator());
+							if (Instant.now().getEpochSecond() - 2 > prevtime) { // >1s between updates
+								Msg.info(this, "attempting fetchstate");
+								prevtime = Instant.now().getEpochSecond();
+								try {
+									Socket stateSock = new Socket(host, port + 1); // port + 1 to get state server
+									InputStream stateInputStream = stateSock.getInputStream();
+									try {
+										byte[] curBytes = stateInputStream.readAllBytes();
+										//	Msg.info(this, curBytes);
+										//Msg.info(this, curBytes.toString());
+										StateOuterClass.StateList sl =
+											StateOuterClass.StateList.parseFrom(curBytes);
+										//Msg.info(this, sl);
+										List<StateOuterClass.State> states =
+											sl.getStatesList();
+										//Msg.info(this, states);
+										if (states.size() > 0) {
+											ManticoreStateListModel newModel =
+												new ManticoreStateListModel();
+											for (StateOuterClass.State s : states) {
+												newModel.stateList.get(s.getType()).add(s);
+											}
+											stateListModel = newModel;
+											Msg.info(this,
+												Integer.toString(stateListModel.stateList.size()));
+											updateStateList();
+										}
+
+									}
+									catch (Exception e) {
+										Msg.info(this, e.toString());
+									}
+									stateSock.close();
+								}
+								catch (IOException se) {
+									Msg.info(this, se.toString());
+								}
+							}
 						}
 						if (isTerminated) {
 							p.destroy();
 						}
-						else {							
+						else {
 							p.waitFor();
 							final int exitValue = p.waitFor();
 							if (exitValue != 0) {
@@ -113,37 +155,8 @@ public class ManticoreRunner {
 		sw.execute();
 	}
 
-	public void fetchStates() {
-		while (!isFinished) {
-			try {
-				Socket stateSock = new Socket(host, port);
-				InputStream stateInputStream = stateSock.getInputStream();
-				try {
-					List<StateOuterClass.State> stateList =
-						StateOuterClass.StateList.parseFrom(stateInputStream).getStatesList();
-					if (stateList.size() > 0) {
-						ManticoreStateListModel newModel = new ManticoreStateListModel();
-						for (StateOuterClass.State s : stateList) {
-							newModel.stateList.get(s.getType()).add(s);
-						}
-						// update ui
-					}
-				}
-				catch (Exception e) {
-					Msg.info(this, e.toString());
-				}
-				stateSock.close();
-			}
-			catch (IOException se) {
-				Msg.info(this, se.toString());
-			}
-			try {
-				Thread.sleep(1000);
-				;
-			}
-			catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
-		}
+	private void updateStateList() {
+		MUIStateListProvider.tryUpdate(this, false);
 	}
+
 }

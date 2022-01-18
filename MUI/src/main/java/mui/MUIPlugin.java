@@ -35,12 +35,14 @@ public class MUIPlugin extends ProgramPlugin {
 
 	public MUISetupProvider provider;
 	public MUILogProvider log;
+	public MUIStateListProvider stateList;
 
 	public MUIPlugin(PluginTool tool) {
 		super(tool, true, true);
 		String pluginName = getName();
 		log = new MUILogProvider(tool, pluginName);
 		provider = new MUISetupProvider(tool, pluginName, log);
+		stateList = new MUIStateListProvider(tool, pluginName);
 	}
 
 	@Override

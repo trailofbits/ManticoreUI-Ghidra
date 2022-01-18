@@ -44,7 +44,7 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		MUILogContentComponent newTabContent = new MUILogContentComponent();
 
 		newTabContent.MUIInstance
-				.callProc(buildCommand(manticoreExePath, programPath, formOptions, moreArgs));
+				.callProc(buildCommand("manticore", programPath, formOptions, moreArgs));
 		logTabPane.add(
 			ZonedDateTime.now(ZoneId.systemDefault())
 					.format(DateTimeFormatter.ofPattern("HH:mm:ss")),
@@ -52,6 +52,9 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		logTabPane.setTabComponentAt(
 			logTabPane.getTabCount() - 1, new MUILogTabComponent(logTabPane, this));
 		logTabPane.setSelectedIndex(logTabPane.getTabCount() - 1);
+
+		MUIStateListProvider.runnerDisplayed = newTabContent.MUIInstance;
+		MUIStateListProvider.tryUpdate(newTabContent.MUIInstance, true);
 	}
 
 	public String[] buildCommand(String manticoreExePath, String programPath,
