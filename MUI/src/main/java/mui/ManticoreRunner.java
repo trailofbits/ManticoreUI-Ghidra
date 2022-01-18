@@ -11,13 +11,13 @@ import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 
-public class MUIRunner {
+public class ManticoreRunner {
 
 	private Boolean isTerminated;
 	private JTextArea logArea;
 	private JButton stopButton;
 
-	public MUIRunner(JTextArea logArea, JButton stopButton) {
+	public ManticoreRunner(JTextArea logArea, JButton stopButton) {
 		isTerminated = false;
 		this.logArea = logArea;
 		this.stopButton = stopButton;
