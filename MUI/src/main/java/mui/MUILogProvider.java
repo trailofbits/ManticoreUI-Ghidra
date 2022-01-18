@@ -6,7 +6,6 @@ import ghidra.framework.plugintool.PluginTool;
 import ghidra.util.Msg;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.time.Instant;

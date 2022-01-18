@@ -19,7 +19,6 @@ import java.util.List;
 public class ManticoreRunner {
 
 	private Boolean isTerminated;
-	private Boolean isFinished;
 	private JTextArea logArea;
 	private JButton stopButton;
 
@@ -30,7 +29,6 @@ public class ManticoreRunner {
 
 	public ManticoreRunner(JTextArea logArea, JButton stopButton) {
 		isTerminated = false;
-		isFinished = false;
 		this.logArea = logArea;
 		this.stopButton = stopButton;
 
@@ -137,7 +135,6 @@ public class ManticoreRunner {
 
 				@Override
 				protected void done() {
-					isFinished = true;
 					if (isTerminated) {
 						logArea.append("Manticore stopped by user.");
 					}
