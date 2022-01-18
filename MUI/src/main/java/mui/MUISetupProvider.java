@@ -36,7 +36,7 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 		buildFormPanel();
 		buildMainPanel();
 		setTitle("MUI Setup");
-		setDefaultWindowPosition(WindowPosition.RIGHT);
+		setDefaultWindowPosition(WindowPosition.WINDOW);
 		setVisible(false);
 	}
 

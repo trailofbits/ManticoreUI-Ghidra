@@ -42,6 +42,7 @@ public class MUIPlugin extends ProgramPlugin {
 
 	private DockingAction showSetup;
 	private DockingAction showLog;
+	private DockingAction showStateList;
 
 	public MUIPlugin(PluginTool tool) {
 		super(tool, true, true);
@@ -50,7 +51,7 @@ public class MUIPlugin extends ProgramPlugin {
 		provider = new MUISetupProvider(tool, pluginName, log);
 		stateList = new MUIStateListProvider(tool, pluginName);
 
-		showSetup = new DockingAction("Show MUI Setup", pluginName) {
+		showSetup = new DockingAction("Run Manticore", pluginName) {
 
 			@Override
 			public void actionPerformed(ActionContext context) {
@@ -58,7 +59,7 @@ public class MUIPlugin extends ProgramPlugin {
 			}
 		};
 
-		showLog = new DockingAction("Show MUI Log", pluginName) {
+		showLog = new DockingAction("Show Log", pluginName) {
 
 			@Override
 			public void actionPerformed(ActionContext context) {
@@ -66,12 +67,22 @@ public class MUIPlugin extends ProgramPlugin {
 			}
 		};
 
+		showStateList = new DockingAction("Show State List", pluginName) {
+
+			@Override
+			public void actionPerformed(ActionContext context) {
+				stateList.setVisible(true);
+			}
+
+		};
+
 		showSetup.setMenuBarData(new MenuData(new String[] { "MUI", "Run Manticore" }));
-		showLog.setMenuBarData(new MenuData(new String[] { "MUI", "Show MUI Log" }));
-    
+		showLog.setMenuBarData(new MenuData(new String[] { "MUI", "Show Log" }));
+		showStateList.setMenuBarData(new MenuData(new String[] { "MUI", "Show State List" }));
 
 		tool.addAction(showSetup);
 		tool.addAction(showLog);
+		tool.addAction(showStateList);
 	}
 
 	@Override

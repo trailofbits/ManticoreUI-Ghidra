@@ -37,7 +37,7 @@ public class MUIStateListProvider extends ComponentProviderAdapter {
 		buildMainPanel();
 		setTitle("MUI State List");
 		setDefaultWindowPosition(WindowPosition.RIGHT);
-		setVisible(true);
+		setVisible(false);
 	}
 
 	private void buildMainPanel() {

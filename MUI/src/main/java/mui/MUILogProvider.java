@@ -56,7 +56,7 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		logTabPane.setTabComponentAt(
 			logTabPane.getTabCount() - 1, new MUILogTabComponent(logTabPane, this));
 		logTabPane.setSelectedIndex(logTabPane.getTabCount() - 1);
-		
+
 		MUIStateListProvider.runnerDisplayed = newTabContent.MUIInstance;
 		MUIStateListProvider.tryUpdate(newTabContent.MUIInstance, true);
 		newTabContent.requestFocusInWindow();
