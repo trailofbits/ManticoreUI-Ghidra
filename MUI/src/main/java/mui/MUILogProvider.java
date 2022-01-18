@@ -31,7 +31,7 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		buildLogPanel();
 		setTitle("MUI Log");
 		setDefaultWindowPosition(WindowPosition.BOTTOM);
-		setVisible(true);
+		setVisible(false);
 	}
 
 	private void buildLogPanel() {
@@ -56,9 +56,11 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		logTabPane.setTabComponentAt(
 			logTabPane.getTabCount() - 1, new MUILogTabComponent(logTabPane, this));
 		logTabPane.setSelectedIndex(logTabPane.getTabCount() - 1);
-
+		
 		MUIStateListProvider.runnerDisplayed = newTabContent.MUIInstance;
 		MUIStateListProvider.tryUpdate(newTabContent.MUIInstance, true);
+		newTabContent.requestFocusInWindow();
+
 	}
 
 	public String[] buildCommand(String manticoreExePath, String programPath,

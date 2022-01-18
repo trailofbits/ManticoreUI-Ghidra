@@ -15,6 +15,9 @@
  */
 package mui;
 
+import docking.ActionContext;
+import docking.action.DockingAction;
+import docking.action.MenuData;
 import ghidra.app.plugin.PluginCategoryNames;
 import ghidra.app.plugin.ProgramPlugin;
 import ghidra.framework.plugintool.*;
@@ -37,12 +40,38 @@ public class MUIPlugin extends ProgramPlugin {
 	public MUILogProvider log;
 	public MUIStateListProvider stateList;
 
+	private DockingAction showSetup;
+	private DockingAction showLog;
+
 	public MUIPlugin(PluginTool tool) {
 		super(tool, true, true);
 		String pluginName = getName();
 		log = new MUILogProvider(tool, pluginName);
 		provider = new MUISetupProvider(tool, pluginName, log);
 		stateList = new MUIStateListProvider(tool, pluginName);
+
+		showSetup = new DockingAction("Show MUI Setup", pluginName) {
+
+			@Override
+			public void actionPerformed(ActionContext context) {
+				provider.setVisible(true);
+			}
+		};
+
+		showLog = new DockingAction("Show MUI Log", pluginName) {
+
+			@Override
+			public void actionPerformed(ActionContext context) {
+				log.setVisible(true);
+			}
+		};
+
+		showSetup.setMenuBarData(new MenuData(new String[] { "MUI", "Run Manticore" }));
+		showLog.setMenuBarData(new MenuData(new String[] { "MUI", "Show MUI Log" }));
+    
+
+		tool.addAction(showSetup);
+		tool.addAction(showLog);
 	}
 
 	@Override
