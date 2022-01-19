@@ -89,7 +89,8 @@ public class MUILogProvider extends ComponentProviderAdapter {
 			f_command.add(Integer.toString(defPort));
 		}
 		else {
-			f_command.add(formOptions.get("{state_server_port}").getText());
+			f_command.add(Integer.toString(
+				Integer.parseInt(formOptions.get("{state_server_port}").getText()) - 1));
 		}
 
 		f_command.add(programPath);
