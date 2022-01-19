@@ -18,11 +18,15 @@ package mui;
 import docking.ActionContext;
 import docking.action.DockingAction;
 import docking.action.MenuData;
+import ghidra.GhidraApplicationLayout;
 import ghidra.app.plugin.PluginCategoryNames;
 import ghidra.app.plugin.ProgramPlugin;
+import ghidra.framework.Application;
+import ghidra.framework.ApplicationConfiguration;
 import ghidra.framework.plugintool.*;
 import ghidra.framework.plugintool.util.PluginStatus;
 import ghidra.program.model.listing.Program;
+import ghidra.util.Msg;
 
 /** TODO: Provide class-level documentation that describes what this plugin does. */
 // @formatter:off
@@ -48,8 +52,8 @@ public class MUIPlugin extends ProgramPlugin {
 		super(tool, true, true);
 		String pluginName = getName();
 		log = new MUILogProvider(tool, pluginName);
-		provider = new MUISetupProvider(tool, pluginName, log, stateList);
 		stateList = new MUIStateListProvider(tool, pluginName);
+		provider = new MUISetupProvider(tool, pluginName, log, stateList);
 
 		showSetup = new DockingAction("Run Manticore", pluginName) {
 
@@ -83,6 +87,7 @@ public class MUIPlugin extends ProgramPlugin {
 		tool.addAction(showSetup);
 		tool.addAction(showLog);
 		tool.addAction(showStateList);
+
 	}
 
 	@Override

@@ -22,7 +22,7 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 
 	private JPanel mainPanel;
 	private String programPath;
-	private String manticoreExePath;
+	private String bundledManticorePath;
 
 	private MUILogProvider logProvider;
 	private MUIStateListProvider stateListProvider;
@@ -57,6 +57,17 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 			new GridLayout(MUISettings.SETTINGS.get("NATIVE_RUN_SETTINGS").size(), 2));
 		formPanel.setMinimumSize(new Dimension(800, 500));
 
+		try {
+			if (!Application.isInitialized()) {
+				Application.initializeApplication(
+					new GhidraApplicationLayout(), new ApplicationConfiguration());
+			}
+			bundledManticorePath = Application.getOSFile("manticore").getCanonicalPath();
+		}
+		catch (Exception e) {
+			bundledManticorePath = "";
+		}
+
 		formOptions = new HashMap<String, JTextField>();
 
 		for (Entry<String, Map<String, Object>[]> option : MUISettings.SETTINGS
@@ -71,7 +82,9 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 			formPanel.add(new JLabel(title));
 
 			if (extra.containsKey("is_dir_path") && (Boolean) extra.get("is_dir_path")) {
-				formOptions.put(name, createPathInput(prop.get("default").toString()));
+				formOptions.put(name,
+					createPathInput((name == "{mcore_binary}" ? bundledManticorePath
+							: prop.get("default").toString())));
 			}
 			else if (prop.get("type") == "string" || prop.get("type") == "number") {
 				formOptions.put(name, createStringNumberInput(prop.get("default").toString()));
@@ -160,17 +173,6 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 
 		mainPanel.add(formPanel, BorderLayout.CENTER);
 
-		try {
-			if (!Application.isInitialized()) {
-				Application.initializeApplication(
-					new GhidraApplicationLayout(), new ApplicationConfiguration());
-			}
-			manticoreExePath = Application.getOSFile("manticore").getCanonicalPath();
-		}
-		catch (Exception e) {
-			manticoreExePath = "";
-		}
-
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 
 		bottomPanel.add(new JLabel("Extra Manticore Arguments:"), BorderLayout.NORTH);
@@ -188,14 +190,8 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 				public void actionPerformed(ActionEvent e) {
 					logProvider.setVisible(true);
 					stateListProvider.setVisible(true);
+					logProvider.runMUI(programPath, formOptions, moreArgs.getText());
 
-					if (manticoreExePath.length() == 0) {
-						logProvider.noManticoreBinary();
-					}
-					else {
-						logProvider.runMUI(
-							manticoreExePath, programPath, formOptions, moreArgs.getText());
-					}
 				}
 			});
 		bottomPanel.add(runBtn, BorderLayout.SOUTH);
