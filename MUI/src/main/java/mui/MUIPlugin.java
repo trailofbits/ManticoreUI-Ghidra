@@ -48,8 +48,8 @@ public class MUIPlugin extends ProgramPlugin {
 		super(tool, true, true);
 		String pluginName = getName();
 		log = new MUILogProvider(tool, pluginName);
-		provider = new MUISetupProvider(tool, pluginName, log, stateList);
 		stateList = new MUIStateListProvider(tool, pluginName);
+		provider = new MUISetupProvider(tool, pluginName, log, stateList);
 
 		showSetup = new DockingAction("Run Manticore", pluginName) {
 
