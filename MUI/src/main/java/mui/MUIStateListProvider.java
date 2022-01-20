@@ -120,11 +120,6 @@ public class MUIStateListProvider extends ComponentProviderAdapter {
 
 			treeModel.reload();
 
-			// expand top-level nodes
-			int curRow = stateListTree.getRowCount() - 1;
-			while (curRow-- >= 0) {
-				stateListTree.expandRow(curRow);
-			}
 		}
 	}
 
