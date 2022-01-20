@@ -28,6 +28,7 @@ public class ManticoreRunner {
 	public ManticoreStateListModel stateListModel;
 
 	public ManticoreRunner(JTextArea logArea, JButton stopButton) {
+		stateListModel = new ManticoreStateListModel();
 		isTerminated = false;
 		this.logArea = logArea;
 		this.stopButton = stopButton;
@@ -86,8 +87,6 @@ public class ManticoreRunner {
 												newModel.stateList.get(s.getType()).add(s);
 											}
 											stateListModel = newModel;
-											Msg.info(this,
-												Integer.toString(stateListModel.stateList.size()));
 											updateStateList();
 										}
 

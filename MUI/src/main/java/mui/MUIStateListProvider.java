@@ -87,36 +87,32 @@ public class MUIStateListProvider extends ComponentProviderAdapter {
 			forkedNode.removeAllChildren();
 			completeNode.removeAllChildren();
 			erroredNode.removeAllChildren();
-			try {
-				stateListModel.stateList.get(StateOuterClass.State.StateType.BUSY)
-						.forEach((st) -> activeNode.add(stateToNode(st)));
-				stateListModel.stateList.get(StateOuterClass.State.StateType.READY)
-						.forEach((st) -> waitingNode.add(stateToNode(st)));
-				stateListModel.stateList.get(StateOuterClass.State.StateType.KILLED)
-						.forEach((st) -> erroredNode.add(stateToNode(st)));
-				stateListModel.stateList.get(StateOuterClass.State.StateType.TERMINATED)
-						.forEach((st) -> completeNode.add(stateToNode(st)));
 
-				activeNode.setUserObject(String.format("Active (%d)", activeNode.getChildCount()));
-				waitingNode
-						.setUserObject(String.format("Waiting (%d)", waitingNode.getChildCount()));
-				completeNode.setUserObject(
-					String.format("Complete (%d)", completeNode.getChildCount()));
-				erroredNode
-						.setUserObject(String.format("Errored (%d)", erroredNode.getChildCount()));
+			stateListModel.stateList.get(StateOuterClass.State.StateType.BUSY)
+					.forEach((st) -> activeNode.add(stateToNode(st)));
+			stateListModel.stateList.get(StateOuterClass.State.StateType.READY)
+					.forEach((st) -> waitingNode.add(stateToNode(st)));
+			stateListModel.stateList.get(StateOuterClass.State.StateType.KILLED)
+					.forEach((st) -> erroredNode.add(stateToNode(st)));
+			stateListModel.stateList.get(StateOuterClass.State.StateType.TERMINATED)
+					.forEach((st) -> completeNode.add(stateToNode(st)));
 
-				for (int i = 1; i <= maxStateId; i++) {
-					if (!numsSent.contains(i)) {
-						forkedNode.add(new DefaultMutableTreeNode(String.format("State %d", i)));
-					}
+			activeNode.setUserObject(String.format("Active (%d)", activeNode.getChildCount()));
+			waitingNode
+					.setUserObject(String.format("Waiting (%d)", waitingNode.getChildCount()));
+			completeNode.setUserObject(
+				String.format("Complete (%d)", completeNode.getChildCount()));
+			erroredNode
+					.setUserObject(String.format("Errored (%d)", erroredNode.getChildCount()));
+
+			for (int i = 1; i <= maxStateId; i++) {
+				if (!numsSent.contains(i)) {
+					forkedNode.add(new DefaultMutableTreeNode(String.format("State %d", i)));
 				}
-				forkedNode.setUserObject(String.format("Forked (%d)", forkedNode.getChildCount()));
+			}
+			forkedNode.setUserObject(String.format("Forked (%d)", forkedNode.getChildCount()));
 
-				rootNode.setUserObject(String.format("States (%d)", maxStateId));
-			}
-			catch (NullPointerException npe) {
-				Msg.info(stateListModel, "no states yet");
-			}
+			rootNode.setUserObject(String.format("States (%d)", maxStateId));
 
 			treeModel.reload();
 
