@@ -18,15 +18,11 @@ package mui;
 import docking.ActionContext;
 import docking.action.DockingAction;
 import docking.action.MenuData;
-import ghidra.GhidraApplicationLayout;
 import ghidra.app.plugin.PluginCategoryNames;
 import ghidra.app.plugin.ProgramPlugin;
-import ghidra.framework.Application;
-import ghidra.framework.ApplicationConfiguration;
 import ghidra.framework.plugintool.*;
 import ghidra.framework.plugintool.util.PluginStatus;
 import ghidra.program.model.listing.Program;
-import ghidra.util.Msg;
 
 /** TODO: Provide class-level documentation that describes what this plugin does. */
 // @formatter:off
