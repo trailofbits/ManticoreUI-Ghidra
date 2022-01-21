@@ -1,3 +1,4 @@
+// copied from https://github.com/trailofbits/manticore/blob/master/manticore/core/state.proto
 syntax = "proto3";
 
 package mserialize;

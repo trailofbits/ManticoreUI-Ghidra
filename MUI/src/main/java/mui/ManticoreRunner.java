@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
+import javax.swing.tree.TreePath;
 
 import ghidra.util.Msg;
 import mserialize.StateOuterClass;
@@ -14,6 +15,7 @@ import mserialize.StateOuterClass;
 import java.io.*;
 import java.net.*;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
 
 public class ManticoreRunner {
@@ -25,12 +27,15 @@ public class ManticoreRunner {
 	private String host;
 	private int port;
 
+	public HashSet<TreePath> expandedPaths;
 	public ManticoreStateListModel stateListModel;
 
 	public ManticoreRunner(JTextArea logArea, JButton stopButton) {
+		stateListModel = new ManticoreStateListModel();
 		isTerminated = false;
 		this.logArea = logArea;
 		this.stopButton = stopButton;
+		expandedPaths = new HashSet();
 
 		host = "localhost";
 		port = 3214;
@@ -74,21 +79,17 @@ public class ManticoreRunner {
 									Socket stateSock = new Socket(host, port + 1); // port + 1 to get state server
 									InputStream stateInputStream = stateSock.getInputStream();
 									try {
-										byte[] curBytes = stateInputStream.readAllBytes();
-										StateOuterClass.StateList sl =
-											StateOuterClass.StateList.parseFrom(curBytes);
 										List<StateOuterClass.State> states =
-											sl.getStatesList();
+											StateOuterClass.StateList
+													.parseFrom(stateInputStream.readAllBytes())
+													.getStatesList();
 										if (states.size() > 0) {
 											ManticoreStateListModel newModel =
 												new ManticoreStateListModel();
 											for (StateOuterClass.State s : states) {
 												newModel.stateList.get(s.getType()).add(s);
 											}
-											stateListModel = newModel;
-											Msg.info(this,
-												Integer.toString(stateListModel.stateList.size()));
-											updateStateList();
+											updateStateList(newModel);
 										}
 
 									}
@@ -150,8 +151,11 @@ public class ManticoreRunner {
 		sw.execute();
 	}
 
-	private void updateStateList() {
-		MUIStateListProvider.tryUpdate(this, false);
+	private void updateStateList(ManticoreStateListModel model) {
+		stateListModel = model;
+		if (MUIStateListProvider.runnerDisplayed == this) {
+			MUIStateListProvider.tryUpdate(model);
+		}
 	}
 
 }

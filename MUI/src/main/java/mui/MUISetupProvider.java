@@ -180,7 +180,6 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 					logProvider.setVisible(true);
 					stateListProvider.setVisible(true);
 					logProvider.runMUI(programPath, formOptions, moreArgs.getText());
-
 				}
 			});
 		bottomPanel.add(runBtn, BorderLayout.SOUTH);

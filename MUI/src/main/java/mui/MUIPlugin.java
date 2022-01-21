@@ -87,7 +87,6 @@ public class MUIPlugin extends ProgramPlugin {
 		tool.addAction(showSetup);
 		tool.addAction(showLog);
 		tool.addAction(showStateList);
-
 	}
 
 	@Override

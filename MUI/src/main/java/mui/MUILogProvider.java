@@ -48,6 +48,7 @@ public class MUILogProvider extends ComponentProviderAdapter {
 
 		newTabContent.MUIInstance
 				.callProc(buildCommand(programPath, formOptions, moreArgs), defPort);
+
 		logTabPane.add(
 			ZonedDateTime.now(ZoneId.systemDefault())
 					.format(DateTimeFormatter.ofPattern("HH:mm:ss")),
@@ -55,9 +56,7 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		logTabPane.setTabComponentAt(
 			logTabPane.getTabCount() - 1, new MUILogTabComponent(logTabPane, this));
 		logTabPane.setSelectedIndex(logTabPane.getTabCount() - 1);
-
-		MUIStateListProvider.runnerDisplayed = newTabContent.MUIInstance;
-		MUIStateListProvider.tryUpdate(newTabContent.MUIInstance, true);
+		MUIStateListProvider.changeRunner(newTabContent.MUIInstance);
 		newTabContent.requestFocusInWindow();
 
 	}
