@@ -28,17 +28,17 @@ public class MUIPopupMenu extends ListingContextAction {
 		setupMenu();
 	}
 
-	public static void unsetColour(Address address) {
+	public static void unsetColor(Address address) {
 		ColorizingService service = pluginTool.getService(ColorizingService.class);
-		int tid = program.startTransaction("unsetColour");
+		int tid = program.startTransaction("unsetColor");
 		service.clearBackgroundColor(address, address);
 		program.endTransaction(tid, true);
 	}
 
-	public static void setColour(Address address, Color colour) {
+	public static void setColor(Address address, Color color) {
 		ColorizingService service = pluginTool.getService(ColorizingService.class);
-		int tid = program.startTransaction("setColour");
-		service.setBackgroundColor(address, address, colour);
+		int tid = program.startTransaction("setColor");
+		service.setBackgroundColor(address, address, color);
 		program.endTransaction(tid, true);
 
 	}
@@ -54,12 +54,12 @@ public class MUIPopupMenu extends ListingContextAction {
 
 					if (findAddresses.contains(selectedAddr)) {
 						findAddresses.remove(selectedAddr);
-						unsetColour(selectedAddr);
+						unsetColor(selectedAddr);
 					}
 					else {
 						findAddresses.add(selectedAddr);
 						avoidAddresses.remove(selectedAddr);
-						setColour(selectedAddr, Color.GREEN);
+						setColor(selectedAddr, Color.GREEN);
 					}
 				}
 			};
@@ -79,12 +79,12 @@ public class MUIPopupMenu extends ListingContextAction {
 
 					if (avoidAddresses.contains(selectedAddr)) {
 						avoidAddresses.remove(selectedAddr);
-						unsetColour(selectedAddr);
+						unsetColor(selectedAddr);
 					}
 					else {
 						avoidAddresses.add(selectedAddr);
 						findAddresses.remove(selectedAddr);
-						setColour(selectedAddr, Color.RED);
+						setColor(selectedAddr, Color.RED);
 					}
 				}
 			};
