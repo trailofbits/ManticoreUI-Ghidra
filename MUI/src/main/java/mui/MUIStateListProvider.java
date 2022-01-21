@@ -9,8 +9,11 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 import docking.WindowPosition;
 import ghidra.framework.plugintool.ComponentProviderAdapter;
@@ -71,6 +74,20 @@ public class MUIStateListProvider extends ComponentProviderAdapter {
 
 		stateListTree = new JTree(treeModel);
 		stateListView = new JScrollPane(stateListTree);
+
+		stateListTree.addTreeExpansionListener(new TreeExpansionListener() {
+
+			@Override
+			public void treeCollapsed(TreeExpansionEvent e) {
+				runnerDisplayed.expandedPaths.remove(e.getPath());
+			}
+
+			@Override
+			public void treeExpanded(TreeExpansionEvent e) {
+				runnerDisplayed.expandedPaths.add(e.getPath());
+			}
+
+		});
 	}
 
 	public static void changeRunner(ManticoreRunner runner) {
@@ -123,6 +140,9 @@ public class MUIStateListProvider extends ComponentProviderAdapter {
 
 		treeModel.reload();
 
+		for (TreePath path : runnerDisplayed.expandedPaths) {
+			stateListTree.expandPath(path);
+		}
 	}
 
 	private static DefaultMutableTreeNode stateToNode(StateOuterClass.State st) {

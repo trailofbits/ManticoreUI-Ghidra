@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
+import javax.swing.tree.TreePath;
 
 import ghidra.util.Msg;
 import mserialize.StateOuterClass;
@@ -14,6 +15,7 @@ import mserialize.StateOuterClass;
 import java.io.*;
 import java.net.*;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
 
 public class ManticoreRunner {
@@ -25,6 +27,8 @@ public class ManticoreRunner {
 	private String host;
 	private int port;
 
+	public HashSet<TreePath> expandedPaths;
+
 	public ManticoreStateListModel stateListModel;
 
 	public ManticoreRunner(JTextArea logArea, JButton stopButton) {
@@ -32,6 +36,7 @@ public class ManticoreRunner {
 		isTerminated = false;
 		this.logArea = logArea;
 		this.stopButton = stopButton;
+		expandedPaths = new HashSet();
 
 		host = "localhost";
 		port = 3214;
