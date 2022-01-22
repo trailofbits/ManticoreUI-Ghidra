@@ -43,6 +43,15 @@ public class MUIPopupMenu extends ListingContextAction {
 
 	}
 
+	private void updateWarning() {
+		if (findAddresses.isEmpty() && avoidAddresses.isEmpty()) {
+			MUISetupProvider.findAvoidUnimplementedLbl.setVisible(false);
+		}
+		else {
+			MUISetupProvider.findAvoidUnimplementedLbl.setVisible(true);
+		}
+	}
+
 	public void setupMenu() {
 		pluginTool.setMenuGroup(new String[] { "MUI" }, "MUI");
 
@@ -61,6 +70,7 @@ public class MUIPopupMenu extends ListingContextAction {
 						avoidAddresses.remove(selectedAddr);
 						setColor(selectedAddr, Color.GREEN);
 					}
+					updateWarning();
 				}
 			};
 
@@ -86,6 +96,7 @@ public class MUIPopupMenu extends ListingContextAction {
 						findAddresses.remove(selectedAddr);
 						setColor(selectedAddr, Color.RED);
 					}
+					updateWarning();
 				}
 			};
 
