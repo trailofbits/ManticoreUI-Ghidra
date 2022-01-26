@@ -17,7 +17,7 @@ message TerminateResponse {
 message CLIArguments {
     string program_path = 4;
     repeated string binary_args = 5;
-    string envp = 6;
+    repeated string envp = 6;
     repeated string symbolic_files = 7;
     string concrete_start = 8;
     string stdin_size = 9;

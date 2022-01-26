@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\rMUICore.proto\"!\n\x11ManticoreInstance\x12\x0c\n\x04uuid\x18\x02 \x01(\t\"$\n\x11TerminateResponse\x12\x0f\n\x07success\x18\x03 \x01(\x08\"\x8e\x02\n\x0c\x43LIArguments\x12\x14\n\x0cprogram_path\x18\x04 \x01(\t\x12\x13\n\x0b\x62inary_args\x18\x05 \x03(\t\x12\x0c\n\x04\x65nvp\x18\x06 \x01(\t\x12\x16\n\x0esymbolic_files\x18\x07 \x03(\t\x12\x16\n\x0e\x63oncrete_start\x18\x08 \x01(\t\x12\x12\n\nstdin_size\x18\t \x01(\t\x12\x45\n\x15\x61\x64\x64itional_mcore_args\x18\n \x03(\x0b\x32&.CLIArguments.AdditionalMcoreArgsEntry\x1a:\n\x18\x41\x64\x64itionalMcoreArgsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\xa5\x01\n\x0e\x41\x64\x64ressRequest\x12*\n\x0emcore_instance\x18\x0b \x01(\x0b\x32\x12.ManticoreInstance\x12\x0f\n\x07\x61\x64\x64ress\x18\x0c \x01(\x04\x12(\n\x04type\x18\r \x01(\x0e\x32\x1a.AddressRequest.TargetType\",\n\nTargetType\x12\x08\n\x04\x46IND\x10\x00\x12\t\n\x05\x41VOID\x10\x01\x12\t\n\x05\x43LEAR\x10\x02\"!\n\x0eTargetResponse\x12\x0f\n\x07success\x18\x0e \x01(\x08\x32\xa7\x01\n\x0bManticoreUI\x12\x35\n\tTerminate\x12\x12.ManticoreInstance\x1a\x12.TerminateResponse\"\x00\x12,\n\x05Start\x12\r.CLIArguments\x1a\x12.ManticoreInstance\"\x00\x12\x33\n\rTargetAddress\x12\x0f.AddressRequest\x1a\x0f.TargetResponse\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\rMUICore.proto\"!\n\x11ManticoreInstance\x12\x0c\n\x04uuid\x18\x02 \x01(\t\"$\n\x11TerminateResponse\x12\x0f\n\x07success\x18\x03 \x01(\x08\"\x8e\x02\n\x0c\x43LIArguments\x12\x14\n\x0cprogram_path\x18\x04 \x01(\t\x12\x13\n\x0b\x62inary_args\x18\x05 \x03(\t\x12\x0c\n\x04\x65nvp\x18\x06 \x03(\t\x12\x16\n\x0esymbolic_files\x18\x07 \x03(\t\x12\x16\n\x0e\x63oncrete_start\x18\x08 \x01(\t\x12\x12\n\nstdin_size\x18\t \x01(\t\x12\x45\n\x15\x61\x64\x64itional_mcore_args\x18\n \x03(\x0b\x32&.CLIArguments.AdditionalMcoreArgsEntry\x1a:\n\x18\x41\x64\x64itionalMcoreArgsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\xa5\x01\n\x0e\x41\x64\x64ressRequest\x12*\n\x0emcore_instance\x18\x0b \x01(\x0b\x32\x12.ManticoreInstance\x12\x0f\n\x07\x61\x64\x64ress\x18\x0c \x01(\x04\x12(\n\x04type\x18\r \x01(\x0e\x32\x1a.AddressRequest.TargetType\",\n\nTargetType\x12\x08\n\x04\x46IND\x10\x00\x12\t\n\x05\x41VOID\x10\x01\x12\t\n\x05\x43LEAR\x10\x02\"!\n\x0eTargetResponse\x12\x0f\n\x07success\x18\x0e \x01(\x08\x32\xa7\x01\n\x0bManticoreUI\x12\x35\n\tTerminate\x12\x12.ManticoreInstance\x1a\x12.TerminateResponse\"\x00\x12,\n\x05Start\x12\r.CLIArguments\x1a\x12.ManticoreInstance\"\x00\x12\x33\n\rTargetAddress\x12\x0f.AddressRequest\x1a\x0f.TargetResponse\"\x00\x62\x06proto3'
 )
 
 
@@ -181,8 +181,8 @@ _CLIARGUMENTS = _descriptor.Descriptor(
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='envp', full_name='CLIArguments.envp', index=2,
-      number=6, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
+      number=6, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
