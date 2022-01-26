@@ -175,11 +175,11 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 
 		findAvoidUnimplementedLbl = new JLabel(
-			"<html><br>WARNING: You have set instructions for Manticore to Find/Avoid in the Listing window. Find/Avoid functionality has NOT been implemented for MUI-Ghidra, and clicking 'Run' will result in Manticore exploring all paths as per usual.<br></html>");
+			"<html>WARNING: You have set instructions for Manticore to Find/Avoid in the Listing window. Find/Avoid functionality has NOT been implemented for MUI-Ghidra, and clicking 'Run' will result in Manticore exploring all paths as per usual.</html>");
 		findAvoidUnimplementedLbl.setForeground(new Color(139, 0, 0)); // DARK RED
 		findAvoidUnimplementedLbl.setHorizontalAlignment(SwingConstants.CENTER);
 
-		bottomPanel.add(findAvoidUnimplementedLbl, BorderLayout.NORTH);
+		bottomPanel.add(findAvoidUnimplementedLbl, BorderLayout.CENTER);
 		findAvoidUnimplementedLbl.setVisible(false);
 
 		JPanel moreArgsPanel = new JPanel(new BorderLayout());
@@ -191,7 +191,7 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 		moreArgs.setWrapStyleWord(true);
 		moreArgsPanel.add(moreArgs, BorderLayout.CENTER);
 
-		bottomPanel.add(moreArgsPanel, BorderLayout.CENTER);
+		bottomPanel.add(moreArgsPanel, BorderLayout.NORTH);
 
 		JButton runBtn = new JButton("Run");
 		runBtn.addActionListener(
