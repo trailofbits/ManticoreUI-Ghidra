@@ -7,7 +7,7 @@ service ManticoreUI {
 }
 
 message UUID {
-    string id = 1;
+    string hexstr = 1;
 }
 
 message ManticoreInstance {
