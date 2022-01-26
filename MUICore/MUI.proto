@@ -6,23 +6,12 @@ service ManticoreUI {
     rpc TargetAddress(AddressRequest) returns (TargetResponse) {}
 }
 
-message UUID {
-    string hexstr = 1;
-}
-
 message ManticoreInstance {
-    UUID id = 2;
+    string uuid = 2;
 }
 
 message TerminateResponse { 
-
-    enum TerminateStatus {
-        SUCCESS = 0;
-        ALREADY_STOPPED = 1;
-        INSTANCE_NOT_FOUND = 2;
-    }
-
-    TerminateStatus status = 3;
+    bool success = 3;
 }
 
 message CLIArguments {
@@ -49,12 +38,5 @@ message AddressRequest {
 }
 
 message TargetResponse {
-
-    enum TargetStatus {
-        SUCCESS = 0;
-        ADDRESS_NOT_FOUND = 1;
-        INSTANCE_NOT_FOUND = 2;
-    }
-    
-    TargetStatus status = 14;
+    bool success = 14;
 }
