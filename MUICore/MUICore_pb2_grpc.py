@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import MUI_pb2 as MUI__pb2
+import MUICore_pb2 as MUICore__pb2
 
 
 class ManticoreUIStub(object):
@@ -16,18 +16,18 @@ class ManticoreUIStub(object):
         """
         self.Terminate = channel.unary_unary(
                 '/ManticoreUI/Terminate',
-                request_serializer=MUI__pb2.ManticoreInstance.SerializeToString,
-                response_deserializer=MUI__pb2.TerminateResponse.FromString,
+                request_serializer=MUICore__pb2.ManticoreInstance.SerializeToString,
+                response_deserializer=MUICore__pb2.TerminateResponse.FromString,
                 )
         self.Start = channel.unary_unary(
                 '/ManticoreUI/Start',
-                request_serializer=MUI__pb2.CLIArguments.SerializeToString,
-                response_deserializer=MUI__pb2.ManticoreInstance.FromString,
+                request_serializer=MUICore__pb2.CLIArguments.SerializeToString,
+                response_deserializer=MUICore__pb2.ManticoreInstance.FromString,
                 )
         self.TargetAddress = channel.unary_unary(
                 '/ManticoreUI/TargetAddress',
-                request_serializer=MUI__pb2.AddressRequest.SerializeToString,
-                response_deserializer=MUI__pb2.TargetResponse.FromString,
+                request_serializer=MUICore__pb2.AddressRequest.SerializeToString,
+                response_deserializer=MUICore__pb2.TargetResponse.FromString,
                 )
 
 
@@ -57,18 +57,18 @@ def add_ManticoreUIServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'Terminate': grpc.unary_unary_rpc_method_handler(
                     servicer.Terminate,
-                    request_deserializer=MUI__pb2.ManticoreInstance.FromString,
-                    response_serializer=MUI__pb2.TerminateResponse.SerializeToString,
+                    request_deserializer=MUICore__pb2.ManticoreInstance.FromString,
+                    response_serializer=MUICore__pb2.TerminateResponse.SerializeToString,
             ),
             'Start': grpc.unary_unary_rpc_method_handler(
                     servicer.Start,
-                    request_deserializer=MUI__pb2.CLIArguments.FromString,
-                    response_serializer=MUI__pb2.ManticoreInstance.SerializeToString,
+                    request_deserializer=MUICore__pb2.CLIArguments.FromString,
+                    response_serializer=MUICore__pb2.ManticoreInstance.SerializeToString,
             ),
             'TargetAddress': grpc.unary_unary_rpc_method_handler(
                     servicer.TargetAddress,
-                    request_deserializer=MUI__pb2.AddressRequest.FromString,
-                    response_serializer=MUI__pb2.TargetResponse.SerializeToString,
+                    request_deserializer=MUICore__pb2.AddressRequest.FromString,
+                    response_serializer=MUICore__pb2.TargetResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -92,8 +92,8 @@ class ManticoreUI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ManticoreUI/Terminate',
-            MUI__pb2.ManticoreInstance.SerializeToString,
-            MUI__pb2.TerminateResponse.FromString,
+            MUICore__pb2.ManticoreInstance.SerializeToString,
+            MUICore__pb2.TerminateResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -109,8 +109,8 @@ class ManticoreUI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ManticoreUI/Start',
-            MUI__pb2.CLIArguments.SerializeToString,
-            MUI__pb2.ManticoreInstance.FromString,
+            MUICore__pb2.CLIArguments.SerializeToString,
+            MUICore__pb2.ManticoreInstance.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -126,7 +126,7 @@ class ManticoreUI(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/ManticoreUI/TargetAddress',
-            MUI__pb2.AddressRequest.SerializeToString,
-            MUI__pb2.TargetResponse.FromString,
+            MUICore__pb2.AddressRequest.SerializeToString,
+            MUICore__pb2.TargetResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
