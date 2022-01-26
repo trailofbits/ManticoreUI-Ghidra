@@ -33,9 +33,9 @@ class MUIServicer(MUICore_pb2_grpc.ManticoreUIServicer):
         try:
             m = Manticore.linux(
                 cli_arguments.program_path,
-                argv=cli_arguments.binary_args,
+                argv=list(cli_arguments.binary_args),
                 envp={key: val for key, val in [e.split() for e in cli_arguments.envp]},
-                symbolic_files=cli_arguments.symbolic_files,
+                symbolic_files=list(cli_arguments.symbolic_files),
                 concrete_start=cli_arguments.concrete_start,
                 stdin_size=0
                 if len(cli_arguments.stdin_size) == 0
