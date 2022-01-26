@@ -8,6 +8,7 @@ from manticore.core.state import StateBase
 from manticore.native import Manticore
 
 import uuid
+from eth_utils import address
 
 class MUIServicer(MUI_pb2_grpc.ManticoreUIServicer):
     """Provides functionality for the methods set out in the protobuf spec"""
@@ -19,7 +20,7 @@ class MUIServicer(MUI_pb2_grpc.ManticoreUIServicer):
         self.find=set()
         
     def Start(self, cli_arguments: CLIArguments, context: _Context) -> ManticoreInstance:
-        id = UUID(hexstr=uuid.uuid4().hex)
+        id = uuid.uuid4().hex
         try:
             m = Manticore.linux(
                 cli_arguments.program_path,
@@ -35,7 +36,7 @@ class MUIServicer(MUI_pb2_grpc.ManticoreUIServicer):
                 state.abandon()
             
             for addr in self.avoid:
-                m.hook(addr)(avoid_f)
+                m.add_hook(addr,avoid_f)
                 
             def find_f(state: StateBase):
                 bufs = state.solve_one_n_batched(state.input_symbols)
@@ -46,22 +47,38 @@ class MUIServicer(MUI_pb2_grpc.ManticoreUIServicer):
                 state.abandon()
             
             for addr in self.find:
-                m.hook(addr)(find_f)
+                m.add_hook(addr,find_f)
                 
             m.run()
             self.manticore_instances[id]=m
         except:
             return ManticoreInstance()       
         
-        return ManticoreInstance(id=id)
+        return ManticoreInstance(uuid=id)
     
     def Terminate(self, mcore_instance: ManticoreInstance, context: _Context) -> TerminateResponse:
         if mcore_instance.id.hexstr not in self.manticore_instances:
-            return TerminateResponse(status=TerminateResponse.TerminateStatus.INSTANCE_NOT_FOUND)
-        return TerminateResponse(status=TerminateResponse.TerminateStatus.SUCCESS)
+            return TerminateResponse(success=False)
+
+        m = self.manticore_instances[mcore_instance.id.hexstr]
+        if m.is_killed():
+            return TerminateResponse(success=True)
+        m.kill()
+        return TerminateResponse(success=True)
     
     def TargetAddress(self, address_request: AddressRequest, context: _Context) -> TargetResponse:
-        return TargetResponse(status=TargetResponse.TargetStatus.SUCCESS)
+        
+        if address_request.mcore_instance.uuid not in self.manticore_instances:
+            return TargetResponse(success=False)
+        
+        if address_request.type == AddressRequest.TargetType.FIND:
+            self.find.add(address_request.address)
+        elif address_request.type == AddressRequest.TargetType.AVOID:
+            self.avoid.add(address_request.address)
+        elif address_request.type == AddressRequest.TargetType.CLEAR:
+            self.avoid.remove(address_request.address)
+            self.find.remove(address_request.address)
+        return TargetResponse(success=True)
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
