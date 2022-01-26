@@ -6,8 +6,12 @@ service ManticoreUI {
     rpc TargetAddress(AddressRequest) returns (TargetResponse) {}
 }
 
+message UUID {
+    string id = 1;
+}
+
 message ManticoreInstance {
-    int32 id = 1;
+    UUID id = 2;
 }
 
 message TerminateResponse { 
@@ -18,11 +22,11 @@ message TerminateResponse {
         INSTANCE_NOT_FOUND = 2;
     }
 
-    TerminateStatus status = 2;
+    TerminateStatus status = 3;
 }
 
 message CLIArguments {
-    repeated string args = 3;
+    repeated string args = 4;
 }
 
 message AddressRequest {
@@ -33,9 +37,9 @@ message AddressRequest {
         CLEAR = 2;
     }
     
-    ManticoreInstance mcore_instance = 4;
-    uint64 address = 5;
-    TargetType type = 6;
+    ManticoreInstance mcore_instance = 5;
+    uint64 address = 6;
+    TargetType type = 7;
 }
 
 message TargetResponse {
@@ -46,5 +50,5 @@ message TargetResponse {
         INSTANCE_NOT_FOUND = 2;
     }
     
-    TargetStatus status = 7;
+    TargetStatus status = 8;
 }
