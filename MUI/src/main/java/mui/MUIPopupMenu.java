@@ -12,7 +12,6 @@ import ghidra.framework.plugintool.PluginTool;
 import ghidra.program.model.listing.Program;
 import ghidra.program.model.address.Address;
 
-
 /**
  * Provides functionality to Find/Avoid a specific address via a right-click context menu item in the Listing component.
  */

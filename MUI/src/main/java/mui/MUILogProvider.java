@@ -72,7 +72,7 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		newTabContent.requestFocusInWindow();
 
 	}
-	
+
 	/**
 	 * Structures Manticore argument data input by the user to be compatible with ProcessBuilder.
 	 * @param programPath Path of the binary being analyzed.
@@ -80,7 +80,8 @@ public class MUILogProvider extends ComponentProviderAdapter {
 	 * @param moreArgs Additional Manticore arguments set by the user.
 	 * @return String array suitable to be passed to a ProcessBuilder.
 	 */
-	public String[] buildCommand(String programPath, HashMap<String, JTextField> formOptions, String moreArgs) {
+	public String[] buildCommand(String programPath, HashMap<String, JTextField> formOptions,
+			String moreArgs) {
 		ArrayList<String> f_command = new ArrayList<String>();
 		f_command.add(formOptions.get("{mcore_binary}").getText());
 

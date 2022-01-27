@@ -7,8 +7,7 @@ import java.util.*;
  * @see <a href="https://github.com/trailofbits/ManticoreUI/blob/master/mui/settings.py">Binary Ninja plugin equivalent</a>
  */
 public class MUISettings {
-	
-	
+
 	/**
 	 * Map containing key Manticore arguments and their details including input types, defaults, and descriptions.
 	 */

@@ -67,7 +67,7 @@ public class MUILogTabComponent extends JPanel {
 				logProvider.closeLogTab(i);
 			}
 		}
-		
+
 		/**
 		 * Overrides the updateUI method with no action, since the Tab and thus the Button will be closed on click anyways.
 		 */

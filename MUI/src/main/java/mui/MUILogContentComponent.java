@@ -10,6 +10,7 @@ import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.ScrollPaneConstants;
 import resources.ResourceManager;
+
 /**
  * Provides the component for the Tab Content in the MUI Log tabbed pane.
  */

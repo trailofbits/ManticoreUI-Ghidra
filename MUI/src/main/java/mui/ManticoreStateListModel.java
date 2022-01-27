@@ -8,7 +8,7 @@ import mserialize.StateOuterClass;
  *
  */
 public class ManticoreStateListModel {
-	
+
 	public HashMap<StateOuterClass.State.StateType, ArrayList<StateOuterClass.State>> stateList;
 
 	/**
