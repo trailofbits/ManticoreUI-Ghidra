@@ -187,18 +187,6 @@ public class MUILogProvider extends ComponentProviderAdapter {
 	}
 
 	/**
-	 * @deprecated
-	 */
-	public void noManticoreBinary() {
-		MUILogContentComponent newTabContent = new MUILogContentComponent();
-		newTabContent.logArea.append("No manticore binary found!");
-		newTabContent.stopButton.setEnabled(false);
-		logTabPane.add(Long.toString(Instant.now().getEpochSecond()), newTabContent);
-		logTabPane.setTabComponentAt(
-			logTabPane.getTabCount() - 1, new MUILogTabComponent(logTabPane, this));
-	}
-
-	/**
 	 * Performs auxiliary actions when closing a tab, including stopping the Manticore instance and removing the tab component from the tab pane.
 	 * @param tabIndex The index of the closed tab in the MUI Log tab pane.
 	 */
