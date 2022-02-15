@@ -29,6 +29,7 @@ class MUIServicer(MUICore_pb2_grpc.ManticoreUIServicer):
     def Start(
         self, cli_arguments: CLIArguments, context: _Context
     ) -> ManticoreInstance:
+        """Starts a singular Manticore instance with the given CLI Arguments"""
         id = uuid.uuid4().hex
         try:
             m = Manticore.linux(
@@ -72,6 +73,7 @@ class MUIServicer(MUICore_pb2_grpc.ManticoreUIServicer):
     def Terminate(
         self, mcore_instance: ManticoreInstance, context: _Context
     ) -> TerminateResponse:
+        """Terminates the specified Manticore instance."""
         if mcore_instance.uuid not in self.manticore_instances:
             return TerminateResponse(success=False)
 
@@ -84,7 +86,7 @@ class MUIServicer(MUICore_pb2_grpc.ManticoreUIServicer):
     def TargetAddress(
         self, address_request: AddressRequest, context: _Context
     ) -> TargetResponse:
-
+        """Sets addresses in the binary to find/avoid, or clears address status."""
         if address_request.mcore_instance.uuid not in self.manticore_instances:
             return TargetResponse(success=False)
 
