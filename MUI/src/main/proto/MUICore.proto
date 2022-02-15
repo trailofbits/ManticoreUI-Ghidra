@@ -8,43 +8,8 @@ service ManticoreUI {
     rpc TargetAddress(AddressRequest) returns (TargetResponse) {}
 }
 
-message ManticoreInstance {
-    string uuid = 2;
-}
-
-message TerminateResponse {
-    bool success = 3;
-}
-
-message CLIArguments {
-    string program_path = 4;
-    repeated string binary_args = 5;	
-    repeated string envp = 6;
-    repeated string symbolic_files = 7;
-    string concrete_start = 8;
-    string stdin_size = 9;
-    map<string, string> additional_mcore_args = 10;
-}
-
-message AddressRequest {
-
-    enum TargetType {
-        FIND = 0;
-        AVOID = 1;
-        CLEAR = 2;
-    }
-
-    ManticoreInstance mcore_instance = 11;
-    uint64 address = 12;
-    TargetType type = 13;
-}
-
-message TargetResponse {
-    bool success = 14;
-}
-
 message LogMessage{
-	string content = 15;
+	string content = 1;
 }
 
 message State{
@@ -56,18 +21,55 @@ message State{
         TERMINATED = 3;
     }
     
-    int32 id = 16; // state ID
-    StateType type = 17; // Type of state
-    string reason = 18; // Reason for execution stopping
-    int32 num_executing = 19; // number of executing instructions
-    int32 wait_time = 20; 
+    int32 id = 2; // state ID
+    StateType type = 3; // Type of state
+    string reason = 4; // Reason for execution stopping
+    int32 num_executing = 5; // number of executing instructions
+    int32 wait_time = 6; 
 }
 
 message StateList{
-    repeated State states = 21; 
+    repeated State states = 7; 
 }
 
 message MessageList{
-    repeated LogMessage messages = 22; 
+    repeated LogMessage messages = 8; 
 }
+
+
+message ManticoreInstance {
+    string uuid = 9;
+}
+
+message TerminateResponse {
+    bool success = 10;
+}
+
+message CLIArguments {
+    string program_path = 11;
+    repeated string binary_args = 16;	
+    repeated string envp = 17;
+    repeated string symbolic_files = 18;
+    string concrete_start = 19;
+    string stdin_size = 20;
+    map<string, string> additional_mcore_args = 21;
+}
+
+message AddressRequest {
+
+    enum TargetType {
+        FIND = 0;
+        AVOID = 1;
+        CLEAR = 2;
+    }
+
+    ManticoreInstance mcore_instance = 12;
+    uint64 address = 13;
+    TargetType type = 14;
+}
+
+message TargetResponse {
+    bool success = 15;
+}
+
 
