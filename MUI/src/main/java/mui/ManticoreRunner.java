@@ -10,7 +10,7 @@ import javax.swing.SwingWorker;
 import javax.swing.tree.TreePath;
 
 import ghidra.util.Msg;
-import mserialize.StateOuterClass;
+import muicore.MUICore;
 
 import java.io.*;
 import java.net.*;
@@ -80,14 +80,14 @@ public class ManticoreRunner {
 									Socket stateSock = new Socket(host, port + 1); // port + 1 to get state server
 									InputStream stateInputStream = stateSock.getInputStream();
 									try {
-										List<StateOuterClass.State> states =
-											StateOuterClass.StateList
+										List<MUICore.State> states =
+											MUICore.StateList
 													.parseFrom(stateInputStream.readAllBytes())
 													.getStatesList();
 										if (states.size() > 0) {
 											ManticoreStateListModel newModel =
 												new ManticoreStateListModel();
-											for (StateOuterClass.State s : states) {
+											for (MUICore.State s : states) {
 												newModel.stateList.get(s.getType()).add(s);
 											}
 											updateStateList(newModel);

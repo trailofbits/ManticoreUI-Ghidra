@@ -19,7 +19,7 @@ import docking.WindowPosition;
 import ghidra.framework.plugintool.ComponentProviderAdapter;
 import ghidra.framework.plugintool.PluginTool;
 import ghidra.util.Msg;
-import mserialize.StateOuterClass;
+import muicore.MUICore;
 
 public class MUIStateListProvider extends ComponentProviderAdapter {
 
@@ -112,13 +112,13 @@ public class MUIStateListProvider extends ComponentProviderAdapter {
 
 		clearStateTree();
 
-		stateListModel.stateList.get(StateOuterClass.State.StateType.BUSY)
+		stateListModel.stateList.get(MUICore.State.StateType.BUSY)
 				.forEach((st) -> activeNode.add(stateToNode(st)));
-		stateListModel.stateList.get(StateOuterClass.State.StateType.READY)
+		stateListModel.stateList.get(MUICore.State.StateType.READY)
 				.forEach((st) -> waitingNode.add(stateToNode(st)));
-		stateListModel.stateList.get(StateOuterClass.State.StateType.KILLED)
+		stateListModel.stateList.get(MUICore.State.StateType.KILLED)
 				.forEach((st) -> erroredNode.add(stateToNode(st)));
-		stateListModel.stateList.get(StateOuterClass.State.StateType.TERMINATED)
+		stateListModel.stateList.get(MUICore.State.StateType.TERMINATED)
 				.forEach((st) -> completeNode.add(stateToNode(st)));
 
 		activeNode.setUserObject(String.format("Active (%d)", activeNode.getChildCount()));
@@ -145,7 +145,7 @@ public class MUIStateListProvider extends ComponentProviderAdapter {
 		}
 	}
 
-	private static DefaultMutableTreeNode stateToNode(StateOuterClass.State st) {
+	private static DefaultMutableTreeNode stateToNode(MUICore.State st) {
 		maxStateId = Math.max(maxStateId, st.getId());
 		numsSent.add(st.getId());
 		return new DefaultMutableTreeNode(String.format("State %d", st.getId()));
