@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package muicore;
+
+service ManticoreUI {
+    rpc Terminate(ManticoreInstance) returns (TerminateResponse) {}
+    rpc Start(CLIArguments) returns (ManticoreInstance) {}
+    rpc TargetAddress(AddressRequest) returns (TargetResponse) {}
+}
+
+message ManticoreInstance {
+    string uuid = 2;
+}
+
+message TerminateResponse {
+    bool success = 3;
+}
+
+message CLIArguments {
+    string program_path = 4;
+    repeated string binary_args = 5;	
+    repeated string envp = 6;
+    repeated string symbolic_files = 7;
+    string concrete_start = 8;
+    string stdin_size = 9;
+    map<string, string> additional_mcore_args = 10;
+}
+
+message AddressRequest {
+
+    enum TargetType {
+        FIND = 0;
+        AVOID = 1;
+        CLEAR = 2;
+    }
+
+    ManticoreInstance mcore_instance = 11;
+    uint64 address = 12;
+    TargetType type = 13;
+}
+
+message TargetResponse {
+    bool success = 14;
+}
+
+message LogMessage{
+	string content = 15;
+}
+
+message State{
+
+    enum StateType{
+        READY = 0;
+        BUSY = 1;
+        KILLED = 2;
+        TERMINATED = 3;
+    }
+    
+    int32 id = 16; // state ID
+    StateType type = 17; // Type of state
+    string reason = 18; // Reason for execution stopping
+    int32 num_executing = 19; // number of executing instructions
+    int32 wait_time = 20; 
+}
+
+message StateList{
+    repeated State states = 21; 
+}
+
+message MessageList{
+    repeated LogMessage messages = 22; 
+}
+
