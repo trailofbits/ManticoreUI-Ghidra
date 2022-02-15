@@ -15,18 +15,53 @@ _sym_db = _symbol_database.Default()
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='MUICore.proto',
-  package='',
+  package='muicore',
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\rMUICore.proto\"!\n\x11ManticoreInstance\x12\x0c\n\x04uuid\x18\x02 \x01(\t\"$\n\x11TerminateResponse\x12\x0f\n\x07success\x18\x03 \x01(\x08\"\x8e\x02\n\x0c\x43LIArguments\x12\x14\n\x0cprogram_path\x18\x04 \x01(\t\x12\x13\n\x0b\x62inary_args\x18\x05 \x03(\t\x12\x0c\n\x04\x65nvp\x18\x06 \x03(\t\x12\x16\n\x0esymbolic_files\x18\x07 \x03(\t\x12\x16\n\x0e\x63oncrete_start\x18\x08 \x01(\t\x12\x12\n\nstdin_size\x18\t \x01(\t\x12\x45\n\x15\x61\x64\x64itional_mcore_args\x18\n \x03(\x0b\x32&.CLIArguments.AdditionalMcoreArgsEntry\x1a:\n\x18\x41\x64\x64itionalMcoreArgsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\xa5\x01\n\x0e\x41\x64\x64ressRequest\x12*\n\x0emcore_instance\x18\x0b \x01(\x0b\x32\x12.ManticoreInstance\x12\x0f\n\x07\x61\x64\x64ress\x18\x0c \x01(\x04\x12(\n\x04type\x18\r \x01(\x0e\x32\x1a.AddressRequest.TargetType\",\n\nTargetType\x12\x08\n\x04\x46IND\x10\x00\x12\t\n\x05\x41VOID\x10\x01\x12\t\n\x05\x43LEAR\x10\x02\"!\n\x0eTargetResponse\x12\x0f\n\x07success\x18\x0e \x01(\x08\x32\xa7\x01\n\x0bManticoreUI\x12\x35\n\tTerminate\x12\x12.ManticoreInstance\x1a\x12.TerminateResponse\"\x00\x12,\n\x05Start\x12\r.CLIArguments\x1a\x12.ManticoreInstance\"\x00\x12\x33\n\rTargetAddress\x12\x0f.AddressRequest\x1a\x0f.TargetResponse\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\rMUICore.proto\x12\x07muicore\"\x1d\n\nLogMessage\x12\x0f\n\x07\x63ontent\x18\x01 \x01(\t\"\xb3\x01\n\x05State\x12\n\n\x02id\x18\x02 \x01(\x05\x12&\n\x04type\x18\x03 \x01(\x0e\x32\x18.muicore.State.StateType\x12\x0e\n\x06reason\x18\x04 \x01(\t\x12\x15\n\rnum_executing\x18\x05 \x01(\x05\x12\x11\n\twait_time\x18\x06 \x01(\x05\"<\n\tStateType\x12\t\n\x05READY\x10\x00\x12\x08\n\x04\x42USY\x10\x01\x12\n\n\x06KILLED\x10\x02\x12\x0e\n\nTERMINATED\x10\x03\"+\n\tStateList\x12\x1e\n\x06states\x18\x07 \x03(\x0b\x32\x0e.muicore.State\"4\n\x0bMessageList\x12%\n\x08messages\x18\x08 \x03(\x0b\x32\x13.muicore.LogMessage\"!\n\x11ManticoreInstance\x12\x0c\n\x04uuid\x18\t \x01(\t\"$\n\x11TerminateResponse\x12\x0f\n\x07success\x18\n \x01(\x08\"\x96\x02\n\x0c\x43LIArguments\x12\x14\n\x0cprogram_path\x18\x0b \x01(\t\x12\x13\n\x0b\x62inary_args\x18\x10 \x03(\t\x12\x0c\n\x04\x65nvp\x18\x11 \x03(\t\x12\x16\n\x0esymbolic_files\x18\x12 \x03(\t\x12\x16\n\x0e\x63oncrete_start\x18\x13 \x01(\t\x12\x12\n\nstdin_size\x18\x14 \x01(\t\x12M\n\x15\x61\x64\x64itional_mcore_args\x18\x15 \x03(\x0b\x32..muicore.CLIArguments.AdditionalMcoreArgsEntry\x1a:\n\x18\x41\x64\x64itionalMcoreArgsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\xb5\x01\n\x0e\x41\x64\x64ressRequest\x12\x32\n\x0emcore_instance\x18\x0c \x01(\x0b\x32\x1a.muicore.ManticoreInstance\x12\x0f\n\x07\x61\x64\x64ress\x18\r \x01(\x04\x12\x30\n\x04type\x18\x0e \x01(\x0e\x32\".muicore.AddressRequest.TargetType\",\n\nTargetType\x12\x08\n\x04\x46IND\x10\x00\x12\t\n\x05\x41VOID\x10\x01\x12\t\n\x05\x43LEAR\x10\x02\"!\n\x0eTargetResponse\x12\x0f\n\x07success\x18\x0f \x01(\x08\x32\xd7\x01\n\x0bManticoreUI\x12\x45\n\tTerminate\x12\x1a.muicore.ManticoreInstance\x1a\x1a.muicore.TerminateResponse\"\x00\x12<\n\x05Start\x12\x15.muicore.CLIArguments\x1a\x1a.muicore.ManticoreInstance\"\x00\x12\x43\n\rTargetAddress\x12\x17.muicore.AddressRequest\x1a\x17.muicore.TargetResponse\"\x00\x62\x06proto3'
 )
 
 
 
+_STATE_STATETYPE = _descriptor.EnumDescriptor(
+  name='StateType',
+  full_name='muicore.State.StateType',
+  filename=None,
+  file=DESCRIPTOR,
+  create_key=_descriptor._internal_create_key,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='READY', index=0, number=0,
+      serialized_options=None,
+      type=None,
+      create_key=_descriptor._internal_create_key),
+    _descriptor.EnumValueDescriptor(
+      name='BUSY', index=1, number=1,
+      serialized_options=None,
+      type=None,
+      create_key=_descriptor._internal_create_key),
+    _descriptor.EnumValueDescriptor(
+      name='KILLED', index=2, number=2,
+      serialized_options=None,
+      type=None,
+      create_key=_descriptor._internal_create_key),
+    _descriptor.EnumValueDescriptor(
+      name='TERMINATED', index=3, number=3,
+      serialized_options=None,
+      type=None,
+      create_key=_descriptor._internal_create_key),
+  ],
+  containing_type=None,
+  serialized_options=None,
+  serialized_start=177,
+  serialized_end=237,
+)
+_sym_db.RegisterEnumDescriptor(_STATE_STATETYPE)
+
 _ADDRESSREQUEST_TARGETTYPE = _descriptor.EnumDescriptor(
   name='TargetType',
-  full_name='AddressRequest.TargetType',
+  full_name='muicore.AddressRequest.TargetType',
   filename=None,
   file=DESCRIPTOR,
   create_key=_descriptor._internal_create_key,
@@ -49,23 +84,23 @@ _ADDRESSREQUEST_TARGETTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=485,
-  serialized_end=529,
+  serialized_start=830,
+  serialized_end=874,
 )
 _sym_db.RegisterEnumDescriptor(_ADDRESSREQUEST_TARGETTYPE)
 
 
-_MANTICOREINSTANCE = _descriptor.Descriptor(
-  name='ManticoreInstance',
-  full_name='ManticoreInstance',
+_LOGMESSAGE = _descriptor.Descriptor(
+  name='LogMessage',
+  full_name='muicore.LogMessage',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='uuid', full_name='ManticoreInstance.uuid', index=0,
-      number=2, type=9, cpp_type=9, label=1,
+      name='content', full_name='muicore.LogMessage.content', index=0,
+      number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -82,22 +117,179 @@ _MANTICOREINSTANCE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=17,
-  serialized_end=50,
+  serialized_start=26,
+  serialized_end=55,
 )
 
 
-_TERMINATERESPONSE = _descriptor.Descriptor(
-  name='TerminateResponse',
-  full_name='TerminateResponse',
+_STATE = _descriptor.Descriptor(
+  name='State',
+  full_name='muicore.State',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='success', full_name='TerminateResponse.success', index=0,
-      number=3, type=8, cpp_type=7, label=1,
+      name='id', full_name='muicore.State.id', index=0,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='type', full_name='muicore.State.type', index=1,
+      number=3, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='reason', full_name='muicore.State.reason', index=2,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='num_executing', full_name='muicore.State.num_executing', index=3,
+      number=5, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='wait_time', full_name='muicore.State.wait_time', index=4,
+      number=6, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+    _STATE_STATETYPE,
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=58,
+  serialized_end=237,
+)
+
+
+_STATELIST = _descriptor.Descriptor(
+  name='StateList',
+  full_name='muicore.StateList',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='states', full_name='muicore.StateList.states', index=0,
+      number=7, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=239,
+  serialized_end=282,
+)
+
+
+_MESSAGELIST = _descriptor.Descriptor(
+  name='MessageList',
+  full_name='muicore.MessageList',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='messages', full_name='muicore.MessageList.messages', index=0,
+      number=8, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=284,
+  serialized_end=336,
+)
+
+
+_MANTICOREINSTANCE = _descriptor.Descriptor(
+  name='ManticoreInstance',
+  full_name='muicore.ManticoreInstance',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='uuid', full_name='muicore.ManticoreInstance.uuid', index=0,
+      number=9, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=338,
+  serialized_end=371,
+)
+
+
+_TERMINATERESPONSE = _descriptor.Descriptor(
+  name='TerminateResponse',
+  full_name='muicore.TerminateResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='success', full_name='muicore.TerminateResponse.success', index=0,
+      number=10, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -114,28 +306,28 @@ _TERMINATERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=52,
-  serialized_end=88,
+  serialized_start=373,
+  serialized_end=409,
 )
 
 
 _CLIARGUMENTS_ADDITIONALMCOREARGSENTRY = _descriptor.Descriptor(
   name='AdditionalMcoreArgsEntry',
-  full_name='CLIArguments.AdditionalMcoreArgsEntry',
+  full_name='muicore.CLIArguments.AdditionalMcoreArgsEntry',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='key', full_name='CLIArguments.AdditionalMcoreArgsEntry.key', index=0,
+      name='key', full_name='muicore.CLIArguments.AdditionalMcoreArgsEntry.key', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='value', full_name='CLIArguments.AdditionalMcoreArgsEntry.value', index=1,
+      name='value', full_name='muicore.CLIArguments.AdditionalMcoreArgsEntry.value', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -153,63 +345,63 @@ _CLIARGUMENTS_ADDITIONALMCOREARGSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=303,
-  serialized_end=361,
+  serialized_start=632,
+  serialized_end=690,
 )
 
 _CLIARGUMENTS = _descriptor.Descriptor(
   name='CLIArguments',
-  full_name='CLIArguments',
+  full_name='muicore.CLIArguments',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='program_path', full_name='CLIArguments.program_path', index=0,
-      number=4, type=9, cpp_type=9, label=1,
+      name='program_path', full_name='muicore.CLIArguments.program_path', index=0,
+      number=11, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='binary_args', full_name='CLIArguments.binary_args', index=1,
-      number=5, type=9, cpp_type=9, label=3,
+      name='binary_args', full_name='muicore.CLIArguments.binary_args', index=1,
+      number=16, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='envp', full_name='CLIArguments.envp', index=2,
-      number=6, type=9, cpp_type=9, label=3,
+      name='envp', full_name='muicore.CLIArguments.envp', index=2,
+      number=17, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='symbolic_files', full_name='CLIArguments.symbolic_files', index=3,
-      number=7, type=9, cpp_type=9, label=3,
+      name='symbolic_files', full_name='muicore.CLIArguments.symbolic_files', index=3,
+      number=18, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='concrete_start', full_name='CLIArguments.concrete_start', index=4,
-      number=8, type=9, cpp_type=9, label=1,
+      name='concrete_start', full_name='muicore.CLIArguments.concrete_start', index=4,
+      number=19, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='stdin_size', full_name='CLIArguments.stdin_size', index=5,
-      number=9, type=9, cpp_type=9, label=1,
+      name='stdin_size', full_name='muicore.CLIArguments.stdin_size', index=5,
+      number=20, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='additional_mcore_args', full_name='CLIArguments.additional_mcore_args', index=6,
-      number=10, type=11, cpp_type=10, label=3,
+      name='additional_mcore_args', full_name='muicore.CLIArguments.additional_mcore_args', index=6,
+      number=21, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -226,36 +418,36 @@ _CLIARGUMENTS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=91,
-  serialized_end=361,
+  serialized_start=412,
+  serialized_end=690,
 )
 
 
 _ADDRESSREQUEST = _descriptor.Descriptor(
   name='AddressRequest',
-  full_name='AddressRequest',
+  full_name='muicore.AddressRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='mcore_instance', full_name='AddressRequest.mcore_instance', index=0,
-      number=11, type=11, cpp_type=10, label=1,
+      name='mcore_instance', full_name='muicore.AddressRequest.mcore_instance', index=0,
+      number=12, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='address', full_name='AddressRequest.address', index=1,
-      number=12, type=4, cpp_type=4, label=1,
+      name='address', full_name='muicore.AddressRequest.address', index=1,
+      number=13, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='type', full_name='AddressRequest.type', index=2,
-      number=13, type=14, cpp_type=8, label=1,
+      name='type', full_name='muicore.AddressRequest.type', index=2,
+      number=14, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -273,22 +465,22 @@ _ADDRESSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=364,
-  serialized_end=529,
+  serialized_start=693,
+  serialized_end=874,
 )
 
 
 _TARGETRESPONSE = _descriptor.Descriptor(
   name='TargetResponse',
-  full_name='TargetResponse',
+  full_name='muicore.TargetResponse',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='success', full_name='TargetResponse.success', index=0,
-      number=14, type=8, cpp_type=7, label=1,
+      name='success', full_name='muicore.TargetResponse.success', index=0,
+      number=15, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -305,15 +497,23 @@ _TARGETRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=531,
-  serialized_end=564,
+  serialized_start=876,
+  serialized_end=909,
 )
 
+_STATE.fields_by_name['type'].enum_type = _STATE_STATETYPE
+_STATE_STATETYPE.containing_type = _STATE
+_STATELIST.fields_by_name['states'].message_type = _STATE
+_MESSAGELIST.fields_by_name['messages'].message_type = _LOGMESSAGE
 _CLIARGUMENTS_ADDITIONALMCOREARGSENTRY.containing_type = _CLIARGUMENTS
 _CLIARGUMENTS.fields_by_name['additional_mcore_args'].message_type = _CLIARGUMENTS_ADDITIONALMCOREARGSENTRY
 _ADDRESSREQUEST.fields_by_name['mcore_instance'].message_type = _MANTICOREINSTANCE
 _ADDRESSREQUEST.fields_by_name['type'].enum_type = _ADDRESSREQUEST_TARGETTYPE
 _ADDRESSREQUEST_TARGETTYPE.containing_type = _ADDRESSREQUEST
+DESCRIPTOR.message_types_by_name['LogMessage'] = _LOGMESSAGE
+DESCRIPTOR.message_types_by_name['State'] = _STATE
+DESCRIPTOR.message_types_by_name['StateList'] = _STATELIST
+DESCRIPTOR.message_types_by_name['MessageList'] = _MESSAGELIST
 DESCRIPTOR.message_types_by_name['ManticoreInstance'] = _MANTICOREINSTANCE
 DESCRIPTOR.message_types_by_name['TerminateResponse'] = _TERMINATERESPONSE
 DESCRIPTOR.message_types_by_name['CLIArguments'] = _CLIARGUMENTS
@@ -321,17 +521,45 @@ DESCRIPTOR.message_types_by_name['AddressRequest'] = _ADDRESSREQUEST
 DESCRIPTOR.message_types_by_name['TargetResponse'] = _TARGETRESPONSE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
+LogMessage = _reflection.GeneratedProtocolMessageType('LogMessage', (_message.Message,), {
+  'DESCRIPTOR' : _LOGMESSAGE,
+  '__module__' : 'MUICore_pb2'
+  # @@protoc_insertion_point(class_scope:muicore.LogMessage)
+  })
+_sym_db.RegisterMessage(LogMessage)
+
+State = _reflection.GeneratedProtocolMessageType('State', (_message.Message,), {
+  'DESCRIPTOR' : _STATE,
+  '__module__' : 'MUICore_pb2'
+  # @@protoc_insertion_point(class_scope:muicore.State)
+  })
+_sym_db.RegisterMessage(State)
+
+StateList = _reflection.GeneratedProtocolMessageType('StateList', (_message.Message,), {
+  'DESCRIPTOR' : _STATELIST,
+  '__module__' : 'MUICore_pb2'
+  # @@protoc_insertion_point(class_scope:muicore.StateList)
+  })
+_sym_db.RegisterMessage(StateList)
+
+MessageList = _reflection.GeneratedProtocolMessageType('MessageList', (_message.Message,), {
+  'DESCRIPTOR' : _MESSAGELIST,
+  '__module__' : 'MUICore_pb2'
+  # @@protoc_insertion_point(class_scope:muicore.MessageList)
+  })
+_sym_db.RegisterMessage(MessageList)
+
 ManticoreInstance = _reflection.GeneratedProtocolMessageType('ManticoreInstance', (_message.Message,), {
   'DESCRIPTOR' : _MANTICOREINSTANCE,
   '__module__' : 'MUICore_pb2'
-  # @@protoc_insertion_point(class_scope:ManticoreInstance)
+  # @@protoc_insertion_point(class_scope:muicore.ManticoreInstance)
   })
 _sym_db.RegisterMessage(ManticoreInstance)
 
 TerminateResponse = _reflection.GeneratedProtocolMessageType('TerminateResponse', (_message.Message,), {
   'DESCRIPTOR' : _TERMINATERESPONSE,
   '__module__' : 'MUICore_pb2'
-  # @@protoc_insertion_point(class_scope:TerminateResponse)
+  # @@protoc_insertion_point(class_scope:muicore.TerminateResponse)
   })
 _sym_db.RegisterMessage(TerminateResponse)
 
@@ -340,12 +568,12 @@ CLIArguments = _reflection.GeneratedProtocolMessageType('CLIArguments', (_messag
   'AdditionalMcoreArgsEntry' : _reflection.GeneratedProtocolMessageType('AdditionalMcoreArgsEntry', (_message.Message,), {
     'DESCRIPTOR' : _CLIARGUMENTS_ADDITIONALMCOREARGSENTRY,
     '__module__' : 'MUICore_pb2'
-    # @@protoc_insertion_point(class_scope:CLIArguments.AdditionalMcoreArgsEntry)
+    # @@protoc_insertion_point(class_scope:muicore.CLIArguments.AdditionalMcoreArgsEntry)
     })
   ,
   'DESCRIPTOR' : _CLIARGUMENTS,
   '__module__' : 'MUICore_pb2'
-  # @@protoc_insertion_point(class_scope:CLIArguments)
+  # @@protoc_insertion_point(class_scope:muicore.CLIArguments)
   })
 _sym_db.RegisterMessage(CLIArguments)
 _sym_db.RegisterMessage(CLIArguments.AdditionalMcoreArgsEntry)
@@ -353,14 +581,14 @@ _sym_db.RegisterMessage(CLIArguments.AdditionalMcoreArgsEntry)
 AddressRequest = _reflection.GeneratedProtocolMessageType('AddressRequest', (_message.Message,), {
   'DESCRIPTOR' : _ADDRESSREQUEST,
   '__module__' : 'MUICore_pb2'
-  # @@protoc_insertion_point(class_scope:AddressRequest)
+  # @@protoc_insertion_point(class_scope:muicore.AddressRequest)
   })
 _sym_db.RegisterMessage(AddressRequest)
 
 TargetResponse = _reflection.GeneratedProtocolMessageType('TargetResponse', (_message.Message,), {
   'DESCRIPTOR' : _TARGETRESPONSE,
   '__module__' : 'MUICore_pb2'
-  # @@protoc_insertion_point(class_scope:TargetResponse)
+  # @@protoc_insertion_point(class_scope:muicore.TargetResponse)
   })
 _sym_db.RegisterMessage(TargetResponse)
 
@@ -369,17 +597,17 @@ _CLIARGUMENTS_ADDITIONALMCOREARGSENTRY._options = None
 
 _MANTICOREUI = _descriptor.ServiceDescriptor(
   name='ManticoreUI',
-  full_name='ManticoreUI',
+  full_name='muicore.ManticoreUI',
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=567,
-  serialized_end=734,
+  serialized_start=912,
+  serialized_end=1127,
   methods=[
   _descriptor.MethodDescriptor(
     name='Terminate',
-    full_name='ManticoreUI.Terminate',
+    full_name='muicore.ManticoreUI.Terminate',
     index=0,
     containing_service=None,
     input_type=_MANTICOREINSTANCE,
@@ -389,7 +617,7 @@ _MANTICOREUI = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='Start',
-    full_name='ManticoreUI.Start',
+    full_name='muicore.ManticoreUI.Start',
     index=1,
     containing_service=None,
     input_type=_CLIARGUMENTS,
@@ -399,7 +627,7 @@ _MANTICOREUI = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='TargetAddress',
-    full_name='ManticoreUI.TargetAddress',
+    full_name='muicore.ManticoreUI.TargetAddress',
     index=2,
     containing_service=None,
     input_type=_ADDRESSREQUEST,
