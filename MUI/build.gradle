@@ -60,13 +60,27 @@ repositories {
 dependencies {
     // Any external dependencies added here will automatically be copied to the lib/ directory when
     // this extension is built.
+    runtimeOnly 'io.grpc:grpc-netty-shaded:1.44.0'
+	implementation 'io.grpc:grpc-protobuf:1.44.0'
+	implementation 'io.grpc:grpc-stub:1.44.0'
+	compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+	    
 }
 
 protobuf {
     generatedFilesBaseDir = "$projectDir/src"
     protoc {
-        artifact = 'com.google.protobuf:protoc:3.0.0'
+        artifact = 'com.google.protobuf:protoc:3.19.2'
     }
+    plugins {
+		grpc {
+	    	artifact = 'io.grpc:protoc-gen-grpc-java:1.44.0'
+	  	}
+	}
+	generateProtoTasks {
+    	all()*.plugins {
+      		grpc {}
+		}
+	}
 }
 
 // The following installation helpers were copied from
