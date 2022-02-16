@@ -4,9 +4,15 @@ import java.util.*;
 
 import muicore.MUICore;
 
+/**
+ *
+ */
 public class ManticoreStateListModel {
 	public HashMap<MUICore.State.StateType, ArrayList<MUICore.State>> stateList;
 
+	/**
+	 * Maintains a State List with statuses based on the statuses provided by the protobuf message from each Manticore instance's State server.
+	 */
 	public ManticoreStateListModel() {
 		stateList = new HashMap();
 		stateList.put(MUICore.State.StateType.READY,
