@@ -113,13 +113,12 @@ class MUIServicer(MUICore_pb2_grpc.ManticoreUIServicer):
         return TargetResponse(success=True)
 
 
-def serve():
+def main():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     MUICore_pb2_grpc.add_ManticoreUIServicer_to_server(MUIServicer(), server)
     server.add_insecure_port("[::]:50010")
     server.start()
     server.wait_for_termination()
 
-
 if __name__ == "__main__":
-    serve()
+    main()
