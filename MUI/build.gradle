@@ -60,10 +60,20 @@ repositories {
 dependencies {
     // Any external dependencies added here will automatically be copied to the lib/ directory when
     // this extension is built.
-    runtimeOnly 'io.grpc:grpc-netty-shaded:1.44.0'
-	implementation 'io.grpc:grpc-protobuf:1.44.0'
-	implementation 'io.grpc:grpc-stub:1.44.0'
-	compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+	    
+    implementation 'io.grpc:grpc-all:1.44.0'
+    implementation 'com.google.protobuf:protobuf-java-util:1.44.0'
+//  runtimeOnly 'io.grpc:grpc-netty-shaded:1.44.0'
+//	implementation 'io.grpc:grpc-protobuf:1.44.0'
+//	implementation 'io.grpc:grpc-stub:1.44.0'
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+
+}
+sourceSets {
+    main {
+        java {
+            srcDirs 'build/generated/source/proto/main/grpc'
+            srcDirs 'build/generated/source/proto/main/java'
+        }
+    }
 }
 
 protobuf {
@@ -72,15 +82,15 @@ protobuf {
         artifact = 'com.google.protobuf:protoc:3.19.2'
     }
     plugins {
-		grpc {
-	    	artifact = 'io.grpc:protoc-gen-grpc-java:1.44.0'
-	  	}
-	}
-	generateProtoTasks {
-    	all()*.plugins {
-      		grpc {}
-		}
-	}
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.44.0'
+          }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+              grpc {}
+        }
+    }
 }
 
 // The following installation helpers were copied from
@@ -151,6 +161,7 @@ spotless {
     java {
         target 'src/*/java/**/*.java', 'ghidra_scripts/*.java'
         targetExclude('src/main/java/muicore/**/*.java')
+        targetExclude('src/main/grpc/muicore/**/*.java')
         // The Ghidra formatting file was taken from Ghidra 10.1.1 located in
         // eclipse/GhidraEclipseFormatter.xml Ghidra repo
         eclipse().configFile('GhidraEclipseFormatter.xml')

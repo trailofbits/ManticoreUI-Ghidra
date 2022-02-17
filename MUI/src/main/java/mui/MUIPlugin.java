@@ -15,14 +15,25 @@
  */
 package mui;
 
+import javax.swing.SwingWorker;
+
 import docking.ActionContext;
 import docking.action.DockingAction;
 import docking.action.MenuData;
+import ghidra.GhidraApplicationLayout;
 import ghidra.app.plugin.PluginCategoryNames;
 import ghidra.app.plugin.ProgramPlugin;
+import ghidra.framework.Application;
+import ghidra.framework.ApplicationConfiguration;
 import ghidra.framework.plugintool.*;
 import ghidra.framework.plugintool.util.PluginStatus;
 import ghidra.program.model.listing.Program;
+
+import muicore.MUICore.*;
+import muicore.ManticoreUIGrpc;
+import muicore.ManticoreUIGrpc.ManticoreUIBlockingStub;
+import muicore.ManticoreUIGrpc.ManticoreUIStub;
+import io.grpc.*;
 
 // @formatter:off
 @PluginInfo(
@@ -44,11 +55,20 @@ public class MUIPlugin extends ProgramPlugin {
 	private DockingAction showLog;
 	private DockingAction showStateList;
 
+	private String MUICoreServerPath;
+	public static ManticoreUIBlockingStub blockingMUICoreStub;
+	public static ManticoreUIStub asyncMUICoreStub;
+
 	/**
 	 * The main extension constructor, initializes the plugin's components and sets up the "MUI" MenuBar tab.
+	 * @throws Exception 
 	 */
-	public MUIPlugin(PluginTool tool) {
+	public MUIPlugin(PluginTool tool) throws Exception {
 		super(tool, true, true);
+
+		startMUICoreServer();
+		initMUICoreStubs();
+
 		String pluginName = getName();
 		log = new MUILogProvider(tool, pluginName);
 		popup = new MUIPopupMenu(tool, pluginName);
@@ -87,6 +107,38 @@ public class MUIPlugin extends ProgramPlugin {
 		tool.addAction(showSetup);
 		tool.addAction(showLog);
 		tool.addAction(showStateList);
+	}
+
+	public void startMUICoreServer() throws Exception {
+		try {
+			if (!Application.isInitialized()) {
+				Application.initializeApplication(
+					new GhidraApplicationLayout(), new ApplicationConfiguration());
+			}
+			MUICoreServerPath = Application.getOSFile("muicore_server").getCanonicalPath();
+		}
+		catch (Exception e) {
+			throw e;
+		}
+
+		SwingWorker sw =
+			new SwingWorker() {
+
+				@Override
+				protected Object doInBackground() throws Exception {
+					ProcessBuilder pb = new ProcessBuilder(MUICoreServerPath);
+					Process p = pb.start();
+					return null;
+				}
+			};
+		sw.execute();
+	}
+
+	public void initMUICoreStubs() {
+		ManagedChannel channel =
+			ManagedChannelBuilder.forTarget("localhost:50010").usePlaintext().build();
+		blockingMUICoreStub = ManticoreUIGrpc.newBlockingStub(channel);
+		asyncMUICoreStub = ManticoreUIGrpc.newStub(channel);
 	}
 
 	@Override
