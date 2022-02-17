@@ -236,12 +236,12 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 			}
 
 			@Override
-			public void onNext(ManticoreInstance arg0) {
+			public void onNext(ManticoreInstance mcore) {
 				logProvider.setVisible(true);
 				stateListProvider.setVisible(true);
 
 				// tell ui to start listening to this ManticoreInstance
-				logProvider.addManticoreInstance(arg0);
+				logProvider.addManticoreInstance(mcore);
 			}
 
 		};

@@ -10,7 +10,9 @@ import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.ScrollPaneConstants;
 
+import io.grpc.stub.StreamObserver;
 import muicore.MUICore.ManticoreInstance;
+import muicore.MUICore.TerminateResponse;
 import resources.ResourceManager;
 
 /**
@@ -60,12 +62,32 @@ public class MUILogContentComponent extends JPanel {
 		JToolBar logToolBar = new JToolBar();
 		logToolBar.setFloatable(false);
 		stopButton.setIcon(ResourceManager.loadImage("images/stopNode.png"));
+
+		StreamObserver<TerminateResponse> terminate_observer =
+			new StreamObserver<TerminateResponse>() {
+
+				@Override
+				public void onCompleted() {
+				}
+
+				@Override
+				public void onError(Throwable arg0) {
+				}
+
+				@Override
+				public void onNext(TerminateResponse response) {
+					if (response.getSuccess()) {
+						logArea.append("Manticore stopped by user");
+					}
+				}
+
+			};
 		stopButton.addActionListener(
 			new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					MUIInstance.stopProc();
+					MUIPlugin.asyncMUICoreStub.terminate(manticoreInstance, terminate_observer);
 				}
 			});
 		logToolBar.add(Box.createGlue()); // shifts buttons to the right

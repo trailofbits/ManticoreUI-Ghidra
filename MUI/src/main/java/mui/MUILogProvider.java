@@ -4,7 +4,9 @@ import docking.*;
 import ghidra.framework.plugintool.ComponentProviderAdapter;
 import ghidra.framework.plugintool.PluginTool;
 import ghidra.util.Msg;
+import io.grpc.stub.StreamObserver;
 import muicore.MUICore.ManticoreInstance;
+import muicore.MUICore.TerminateResponse;
 
 import java.awt.*;
 import java.io.IOException;
@@ -71,8 +73,28 @@ public class MUILogProvider extends ComponentProviderAdapter {
 	public void closeLogTab(int tabIndex) {
 		MUILogContentComponent curComp =
 			(MUILogContentComponent) logTabPane.getComponentAt(tabIndex);
-		curComp.MUIInstance.stopProc();
-		logTabPane.remove(tabIndex);
+
+		StreamObserver<TerminateResponse> terminate_observer =
+			new StreamObserver<TerminateResponse>() {
+
+				@Override
+				public void onCompleted() {
+				}
+
+				@Override
+				public void onError(Throwable arg0) {
+				}
+
+				@Override
+				public void onNext(TerminateResponse response) {
+					if (response.getSuccess()) {
+						logTabPane.remove(tabIndex);
+					}
+				}
+
+			};
+		MUIPlugin.asyncMUICoreStub.terminate(curComp.manticoreInstance, terminate_observer);
+
 	}
 
 	@Override
