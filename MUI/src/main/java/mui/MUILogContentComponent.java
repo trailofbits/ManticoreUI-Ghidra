@@ -9,6 +9,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.ScrollPaneConstants;
+
+import muicore.MUICore.ManticoreInstance;
 import resources.ResourceManager;
 
 /**
@@ -16,12 +18,14 @@ import resources.ResourceManager;
  */
 public class MUILogContentComponent extends JPanel {
 
-	public ManticoreRunner MUIInstance;
+	//public ManticoreRunner MUIInstance;
+
+	public ManticoreInstance manticoreInstance;
 
 	public JTextArea logArea;
 	public JButton stopButton;
 
-	public MUILogContentComponent() {
+	public MUILogContentComponent(ManticoreInstance mcore) {
 		setLayout(new BorderLayout());
 		setMinimumSize(new Dimension(300, 300));
 
@@ -29,7 +33,7 @@ public class MUILogContentComponent extends JPanel {
 		stopButton = new JButton();
 
 		buildLogArea();
-		MUIInstance = new ManticoreRunner(logArea, stopButton);
+		manticoreInstance = mcore;
 		buildToolBar();
 	}
 

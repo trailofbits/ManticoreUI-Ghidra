@@ -241,7 +241,7 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 				stateListProvider.setVisible(true);
 
 				// tell ui to start listening to this ManticoreInstance
-
+				logProvider.addManticoreInstance(arg0);
 			}
 
 		};
@@ -263,7 +263,6 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 							.build();
 
 					MUIPlugin.asyncMUICoreStub.start(mcore_args, start_observer);
-					logProvider.runMUI(programPath, formOptions, moreArgs.getText());
 				}
 			});
 		bottomPanel.add(runBtn, BorderLayout.SOUTH);
