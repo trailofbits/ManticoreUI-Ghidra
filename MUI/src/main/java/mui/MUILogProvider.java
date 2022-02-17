@@ -146,48 +146,6 @@ public class MUILogProvider extends ComponentProviderAdapter {
 	}
 
 	/**
-	 * Tokenizes a String containing multiple arguments formatted shell-style, cognizant of spaces which are escaped or within quotes.
-	 * @param string Shell-style space-separated arguments for Manticore arguments with array input type.
-	 * @return String array suitable to be passed to a ProcessBuilder.
-	 */
-	public String[] tokenizeArrayInput(String string) {
-		final List<Character> WORD_DELIMITERS = Arrays.asList(' ', '\t');
-		final List<Character> QUOTE_CHARACTERS = Arrays.asList('"', '\'');
-		final char ESCAPE_CHARACTER = '\\';
-
-		StringBuilder wordBuilder = new StringBuilder();
-		List<String> words = new ArrayList<>();
-		char quote = 0;
-
-		for (int i = 0; i < string.length(); i++) {
-			char c = string.charAt(i);
-
-			if (c == ESCAPE_CHARACTER && i + 1 < string.length()) {
-				wordBuilder.append(string.charAt(++i));
-			}
-			else if (WORD_DELIMITERS.contains(c) && quote == 0) {
-				words.add(wordBuilder.toString());
-				wordBuilder.setLength(0);
-			}
-			else if (quote == 0 && QUOTE_CHARACTERS.contains(c)) {
-				quote = c;
-			}
-			else if (quote == c) {
-				quote = 0;
-			}
-			else {
-				wordBuilder.append(c);
-			}
-		}
-
-		if (wordBuilder.length() > 0) {
-			words.add(wordBuilder.toString());
-		}
-
-		return words.toArray(new String[0]);
-	}
-
-	/**
 	 * Performs auxiliary actions when closing a tab, including stopping the Manticore instance and removing the tab component from the tab pane.
 	 * @param tabIndex The index of the closed tab in the MUI Log tab pane.
 	 */

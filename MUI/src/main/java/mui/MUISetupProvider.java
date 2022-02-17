@@ -7,11 +7,15 @@ import ghidra.framework.ApplicationConfiguration;
 import ghidra.framework.plugintool.ComponentProviderAdapter;
 import ghidra.framework.plugintool.PluginTool;
 import ghidra.program.model.listing.Program;
+import io.grpc.stub.StreamObserver;
+import muicore.MUICore.CLIArguments;
+import muicore.MUICore.ManticoreInstance;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 import java.util.Map.Entry;
 import javax.swing.*;
 
@@ -220,19 +224,93 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 		bottomPanel.add(moreArgsPanel, BorderLayout.NORTH);
 
 		JButton runBtn = new JButton("Run");
+
+		StreamObserver<ManticoreInstance> start_observer = new StreamObserver<ManticoreInstance>() {
+
+			@Override
+			public void onCompleted() {
+			}
+
+			@Override
+			public void onError(Throwable arg0) {
+			}
+
+			@Override
+			public void onNext(ManticoreInstance arg0) {
+				logProvider.setVisible(true);
+				stateListProvider.setVisible(true);
+
+				// tell ui to start listening to this ManticoreInstance
+
+			}
+
+		};
+
 		runBtn.addActionListener(
 			new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					logProvider.setVisible(true);
-					stateListProvider.setVisible(true);
+
+					CLIArguments mcore_args = CLIArguments.newBuilder()
+							.setProgramPath(programPath)
+							.addAllBinaryArgs(tokenizeArrayInput(formOptions.get("argv").getText()))
+							.addAllEnvp(tokenizeArrayInput(formOptions.get("env").getText()))
+							.addAllSymbolicFiles(
+								tokenizeArrayInput(formOptions.get("file").getText()))
+							.setStdinSize(formOptions.get("native.stdin_size").getText())
+							.setConcreteStart(formOptions.get("data").getText())
+							.build();
+
+					MUIPlugin.asyncMUICoreStub.start(mcore_args, start_observer);
 					logProvider.runMUI(programPath, formOptions, moreArgs.getText());
 				}
 			});
 		bottomPanel.add(runBtn, BorderLayout.SOUTH);
 
 		mainPanel.add(bottomPanel, BorderLayout.SOUTH);
+	}
+
+	/**
+	 * Tokenizes a String containing multiple arguments formatted shell-style, cognizant of spaces which are escaped or within quotes.
+	 * @param string Shell-style space-separated arguments for Manticore arguments with array input type.
+	 * @return String iterable suitable to be passed to a ProcessBuilder.
+	 */
+	public List<String> tokenizeArrayInput(String string) {
+		final List<Character> WORD_DELIMITERS = Arrays.asList(' ', '\t');
+		final List<Character> QUOTE_CHARACTERS = Arrays.asList('"', '\'');
+		final char ESCAPE_CHARACTER = '\\';
+
+		StringBuilder wordBuilder = new StringBuilder();
+		List<String> words = new ArrayList<>();
+		char quote = 0;
+
+		for (int i = 0; i < string.length(); i++) {
+			char c = string.charAt(i);
+
+			if (c == ESCAPE_CHARACTER && i + 1 < string.length()) {
+				wordBuilder.append(string.charAt(++i));
+			}
+			else if (WORD_DELIMITERS.contains(c) && quote == 0) {
+				words.add(wordBuilder.toString());
+				wordBuilder.setLength(0);
+			}
+			else if (quote == 0 && QUOTE_CHARACTERS.contains(c)) {
+				quote = c;
+			}
+			else if (quote == c) {
+				quote = 0;
+			}
+			else {
+				wordBuilder.append(c);
+			}
+		}
+
+		if (wordBuilder.length() > 0) {
+			words.add(wordBuilder.toString());
+		}
+
+		return words;
 	}
 
 	/** 
