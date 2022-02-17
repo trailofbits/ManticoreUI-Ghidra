@@ -74,7 +74,7 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		MUILogContentComponent curComp =
 			(MUILogContentComponent) logTabPane.getComponentAt(tabIndex);
 
-		StreamObserver<TerminateResponse> terminate_observer =
+		StreamObserver<TerminateResponse> terminateObserver =
 			new StreamObserver<TerminateResponse>() {
 
 				@Override
@@ -88,12 +88,13 @@ public class MUILogProvider extends ComponentProviderAdapter {
 				@Override
 				public void onNext(TerminateResponse response) {
 					if (response.getSuccess()) {
+						curComp.isManticoreRunning = false;
 						logTabPane.remove(tabIndex);
 					}
 				}
 
 			};
-		MUIPlugin.asyncMUICoreStub.terminate(curComp.manticoreInstance, terminate_observer);
+		MUIPlugin.asyncMUICoreStub.terminate(curComp.manticoreInstance, terminateObserver);
 
 	}
 

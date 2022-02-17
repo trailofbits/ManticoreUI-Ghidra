@@ -2,6 +2,8 @@ package mui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.time.Instant;
+
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -9,9 +11,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingWorker;
 
 import io.grpc.stub.StreamObserver;
 import muicore.MUICore.ManticoreInstance;
+import muicore.MUICore.MUILogMessage;
+import muicore.MUICore.MUIMessageList;
 import muicore.MUICore.TerminateResponse;
 import resources.ResourceManager;
 
@@ -23,11 +28,15 @@ public class MUILogContentComponent extends JPanel {
 	//public ManticoreRunner MUIInstance;
 
 	public ManticoreInstance manticoreInstance;
+	public boolean isManticoreRunning;
 
 	public JTextArea logArea;
 	public JButton stopButton;
 
 	public MUILogContentComponent(ManticoreInstance mcore) {
+		isManticoreRunning = true;
+		manticoreInstance = mcore;
+
 		setLayout(new BorderLayout());
 		setMinimumSize(new Dimension(300, 300));
 
@@ -35,8 +44,8 @@ public class MUILogContentComponent extends JPanel {
 		stopButton = new JButton();
 
 		buildLogArea();
-		manticoreInstance = mcore;
 		buildToolBar();
+		fetchLogs();
 	}
 
 	/**
@@ -63,7 +72,7 @@ public class MUILogContentComponent extends JPanel {
 		logToolBar.setFloatable(false);
 		stopButton.setIcon(ResourceManager.loadImage("images/stopNode.png"));
 
-		StreamObserver<TerminateResponse> terminate_observer =
+		StreamObserver<TerminateResponse> terminateObserver =
 			new StreamObserver<TerminateResponse>() {
 
 				@Override
@@ -77,7 +86,9 @@ public class MUILogContentComponent extends JPanel {
 				@Override
 				public void onNext(TerminateResponse response) {
 					if (response.getSuccess()) {
+						isManticoreRunning = false;
 						logArea.append("Manticore stopped by user");
+						stopButton.setEnabled(false);
 					}
 				}
 
@@ -87,12 +98,55 @@ public class MUILogContentComponent extends JPanel {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					MUIPlugin.asyncMUICoreStub.terminate(manticoreInstance, terminate_observer);
+					MUIPlugin.asyncMUICoreStub.terminate(manticoreInstance, terminateObserver);
 				}
 			});
 		logToolBar.add(Box.createGlue()); // shifts buttons to the right
 		logToolBar.add(stopButton);
 
 		add(logToolBar, BorderLayout.PAGE_START);
+	}
+
+	private void fetchLogs() {
+
+		SwingWorker sw = new SwingWorker() {
+
+			@Override
+			protected Object doInBackground() throws Exception {
+
+				StreamObserver<MUIMessageList> messagelistObserver =
+					new StreamObserver<MUIMessageList>() {
+
+						@Override
+						public void onCompleted() {
+						}
+
+						@Override
+						public void onError(Throwable arg0) {
+						}
+
+						@Override
+						public void onNext(MUIMessageList messageList) {
+							for (MUILogMessage msg : messageList.getMessagesList()) {
+								logArea.append(msg.getContent());
+							}
+						}
+					};
+
+				long prevtime = Instant.now().getEpochSecond();
+				while (isManticoreRunning) {
+					if (Instant.now().getEpochSecond() - 2 > prevtime) {
+						prevtime = Instant.now().getEpochSecond();
+						MUIPlugin.asyncMUICoreStub.getMessageList(manticoreInstance,
+							messagelistObserver);
+					}
+				}
+
+				return null;
+			}
+
+		};
+
+		sw.execute();
 	}
 }
