@@ -29,6 +29,16 @@ class ManticoreUIStub(object):
                 request_serializer=MUICore__pb2.AddressRequest.SerializeToString,
                 response_deserializer=MUICore__pb2.TargetResponse.FromString,
                 )
+        self.GetStateList = channel.unary_unary(
+                '/muicore.ManticoreUI/GetStateList',
+                request_serializer=MUICore__pb2.ManticoreInstance.SerializeToString,
+                response_deserializer=MUICore__pb2.MUIStateList.FromString,
+                )
+        self.GetMessageList = channel.unary_unary(
+                '/muicore.ManticoreUI/GetMessageList',
+                request_serializer=MUICore__pb2.ManticoreInstance.SerializeToString,
+                response_deserializer=MUICore__pb2.MUIMessageList.FromString,
+                )
 
 
 class ManticoreUIServicer(object):
@@ -52,6 +62,18 @@ class ManticoreUIServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetStateList(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetMessageList(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ManticoreUIServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -69,6 +91,16 @@ def add_ManticoreUIServicer_to_server(servicer, server):
                     servicer.TargetAddress,
                     request_deserializer=MUICore__pb2.AddressRequest.FromString,
                     response_serializer=MUICore__pb2.TargetResponse.SerializeToString,
+            ),
+            'GetStateList': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetStateList,
+                    request_deserializer=MUICore__pb2.ManticoreInstance.FromString,
+                    response_serializer=MUICore__pb2.MUIStateList.SerializeToString,
+            ),
+            'GetMessageList': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetMessageList,
+                    request_deserializer=MUICore__pb2.ManticoreInstance.FromString,
+                    response_serializer=MUICore__pb2.MUIMessageList.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -128,5 +160,39 @@ class ManticoreUI(object):
         return grpc.experimental.unary_unary(request, target, '/muicore.ManticoreUI/TargetAddress',
             MUICore__pb2.AddressRequest.SerializeToString,
             MUICore__pb2.TargetResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetStateList(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/muicore.ManticoreUI/GetStateList',
+            MUICore__pb2.ManticoreInstance.SerializeToString,
+            MUICore__pb2.MUIStateList.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetMessageList(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/muicore.ManticoreUI/GetMessageList',
+            MUICore__pb2.ManticoreInstance.SerializeToString,
+            MUICore__pb2.MUIMessageList.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

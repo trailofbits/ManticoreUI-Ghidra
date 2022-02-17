@@ -108,6 +108,68 @@ public final class ManticoreUIGrpc {
     return getTargetAddressMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<muicore.MUICore.ManticoreInstance,
+      muicore.MUICore.MUIStateList> getGetStateListMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "GetStateList",
+      requestType = muicore.MUICore.ManticoreInstance.class,
+      responseType = muicore.MUICore.MUIStateList.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<muicore.MUICore.ManticoreInstance,
+      muicore.MUICore.MUIStateList> getGetStateListMethod() {
+    io.grpc.MethodDescriptor<muicore.MUICore.ManticoreInstance, muicore.MUICore.MUIStateList> getGetStateListMethod;
+    if ((getGetStateListMethod = ManticoreUIGrpc.getGetStateListMethod) == null) {
+      synchronized (ManticoreUIGrpc.class) {
+        if ((getGetStateListMethod = ManticoreUIGrpc.getGetStateListMethod) == null) {
+          ManticoreUIGrpc.getGetStateListMethod = getGetStateListMethod =
+              io.grpc.MethodDescriptor.<muicore.MUICore.ManticoreInstance, muicore.MUICore.MUIStateList>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "GetStateList"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  muicore.MUICore.ManticoreInstance.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  muicore.MUICore.MUIStateList.getDefaultInstance()))
+              .setSchemaDescriptor(new ManticoreUIMethodDescriptorSupplier("GetStateList"))
+              .build();
+        }
+      }
+    }
+    return getGetStateListMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<muicore.MUICore.ManticoreInstance,
+      muicore.MUICore.MUIMessageList> getGetMessageListMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "GetMessageList",
+      requestType = muicore.MUICore.ManticoreInstance.class,
+      responseType = muicore.MUICore.MUIMessageList.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<muicore.MUICore.ManticoreInstance,
+      muicore.MUICore.MUIMessageList> getGetMessageListMethod() {
+    io.grpc.MethodDescriptor<muicore.MUICore.ManticoreInstance, muicore.MUICore.MUIMessageList> getGetMessageListMethod;
+    if ((getGetMessageListMethod = ManticoreUIGrpc.getGetMessageListMethod) == null) {
+      synchronized (ManticoreUIGrpc.class) {
+        if ((getGetMessageListMethod = ManticoreUIGrpc.getGetMessageListMethod) == null) {
+          ManticoreUIGrpc.getGetMessageListMethod = getGetMessageListMethod =
+              io.grpc.MethodDescriptor.<muicore.MUICore.ManticoreInstance, muicore.MUICore.MUIMessageList>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "GetMessageList"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  muicore.MUICore.ManticoreInstance.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  muicore.MUICore.MUIMessageList.getDefaultInstance()))
+              .setSchemaDescriptor(new ManticoreUIMethodDescriptorSupplier("GetMessageList"))
+              .build();
+        }
+      }
+    }
+    return getGetMessageListMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -177,6 +239,20 @@ public final class ManticoreUIGrpc {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getTargetAddressMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void getStateList(muicore.MUICore.ManticoreInstance request,
+        io.grpc.stub.StreamObserver<muicore.MUICore.MUIStateList> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetStateListMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void getMessageList(muicore.MUICore.ManticoreInstance request,
+        io.grpc.stub.StreamObserver<muicore.MUICore.MUIMessageList> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetMessageListMethod(), responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -200,6 +276,20 @@ public final class ManticoreUIGrpc {
                 muicore.MUICore.AddressRequest,
                 muicore.MUICore.TargetResponse>(
                   this, METHODID_TARGET_ADDRESS)))
+          .addMethod(
+            getGetStateListMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+              new MethodHandlers<
+                muicore.MUICore.ManticoreInstance,
+                muicore.MUICore.MUIStateList>(
+                  this, METHODID_GET_STATE_LIST)))
+          .addMethod(
+            getGetMessageListMethod(),
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
+              new MethodHandlers<
+                muicore.MUICore.ManticoreInstance,
+                muicore.MUICore.MUIMessageList>(
+                  this, METHODID_GET_MESSAGE_LIST)))
           .build();
     }
   }
@@ -241,6 +331,22 @@ public final class ManticoreUIGrpc {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getTargetAddressMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void getStateList(muicore.MUICore.ManticoreInstance request,
+        io.grpc.stub.StreamObserver<muicore.MUICore.MUIStateList> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getGetStateListMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void getMessageList(muicore.MUICore.ManticoreInstance request,
+        io.grpc.stub.StreamObserver<muicore.MUICore.MUIMessageList> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
+          getChannel().newCall(getGetMessageListMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -276,6 +382,20 @@ public final class ManticoreUIGrpc {
     public muicore.MUICore.TargetResponse targetAddress(muicore.MUICore.AddressRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getTargetAddressMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public muicore.MUICore.MUIStateList getStateList(muicore.MUICore.ManticoreInstance request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getGetStateListMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public muicore.MUICore.MUIMessageList getMessageList(muicore.MUICore.ManticoreInstance request) {
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
+          getChannel(), getGetMessageListMethod(), getCallOptions(), request);
     }
   }
 
@@ -316,11 +436,29 @@ public final class ManticoreUIGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getTargetAddressMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<muicore.MUICore.MUIStateList> getStateList(
+        muicore.MUICore.ManticoreInstance request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getGetStateListMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<muicore.MUICore.MUIMessageList> getMessageList(
+        muicore.MUICore.ManticoreInstance request) {
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
+          getChannel().newCall(getGetMessageListMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_TERMINATE = 0;
   private static final int METHODID_START = 1;
   private static final int METHODID_TARGET_ADDRESS = 2;
+  private static final int METHODID_GET_STATE_LIST = 3;
+  private static final int METHODID_GET_MESSAGE_LIST = 4;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -350,6 +488,14 @@ public final class ManticoreUIGrpc {
         case METHODID_TARGET_ADDRESS:
           serviceImpl.targetAddress((muicore.MUICore.AddressRequest) request,
               (io.grpc.stub.StreamObserver<muicore.MUICore.TargetResponse>) responseObserver);
+          break;
+        case METHODID_GET_STATE_LIST:
+          serviceImpl.getStateList((muicore.MUICore.ManticoreInstance) request,
+              (io.grpc.stub.StreamObserver<muicore.MUICore.MUIStateList>) responseObserver);
+          break;
+        case METHODID_GET_MESSAGE_LIST:
+          serviceImpl.getMessageList((muicore.MUICore.ManticoreInstance) request,
+              (io.grpc.stub.StreamObserver<muicore.MUICore.MUIMessageList>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -415,6 +561,8 @@ public final class ManticoreUIGrpc {
               .addMethod(getTerminateMethod())
               .addMethod(getStartMethod())
               .addMethod(getTargetAddressMethod())
+              .addMethod(getGetStateListMethod())
+              .addMethod(getGetMessageListMethod())
               .build();
         }
       }

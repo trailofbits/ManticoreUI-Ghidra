@@ -6,36 +6,33 @@ service ManticoreUI {
     rpc Terminate(ManticoreInstance) returns (TerminateResponse) {}
     rpc Start(CLIArguments) returns (ManticoreInstance) {}
     rpc TargetAddress(AddressRequest) returns (TargetResponse) {}
+    rpc GetStateList(ManticoreInstance) returns (MUIStateList) {}
+    rpc GetMessageList(ManticoreInstance) returns (MUIMessageList) {}
 }
 
-message LogMessage{
+// LogMessage and StateList message types have "MUI" in their names to distinguish them from those in mserialize
+
+message MUILogMessage{ 
 	string content = 1;
 }
 
-message State{
-
-    enum StateType{
-        READY = 0;
-        BUSY = 1;
-        KILLED = 2;
-        TERMINATED = 3;
-    }
-    
-    int32 id = 2; // state ID
-    StateType type = 3; // Type of state
-    string reason = 4; // Reason for execution stopping
-    int32 num_executing = 5; // number of executing instructions
-    int32 wait_time = 6; 
+message MUIMessageList{
+    repeated MUILogMessage messages = 2; 
 }
 
-message StateList{
-    repeated State states = 7; 
+message MUIState {
+	int32 state_id = 3;
 }
 
-message MessageList{
-    repeated LogMessage messages = 8; 
-}
+message MUIStateList{
 
+	// state categories in MUI - based on manticore enums StateStatus and StateList
+	repeated MUIState active_states = 4;
+	repeated MUIState waiting_states = 5;
+	repeated MUIState forked_states = 6;
+	repeated MUIState errored_states = 7;
+	repeated MUIState complete_states = 8;
+}
 
 message ManticoreInstance {
     string uuid = 9;
@@ -71,5 +68,3 @@ message AddressRequest {
 message TargetResponse {
     bool success = 15;
 }
-
-
