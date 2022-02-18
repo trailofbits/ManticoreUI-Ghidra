@@ -39,6 +39,11 @@ class ManticoreUIStub(object):
                 request_serializer=MUICore__pb2.ManticoreInstance.SerializeToString,
                 response_deserializer=MUICore__pb2.MUIMessageList.FromString,
                 )
+        self.CheckManticoreRunning = channel.unary_unary(
+                '/muicore.ManticoreUI/CheckManticoreRunning',
+                request_serializer=MUICore__pb2.ManticoreInstance.SerializeToString,
+                response_deserializer=MUICore__pb2.ManticoreRunningStatus.FromString,
+                )
 
 
 class ManticoreUIServicer(object):
@@ -74,6 +79,12 @@ class ManticoreUIServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def CheckManticoreRunning(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ManticoreUIServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -101,6 +112,11 @@ def add_ManticoreUIServicer_to_server(servicer, server):
                     servicer.GetMessageList,
                     request_deserializer=MUICore__pb2.ManticoreInstance.FromString,
                     response_serializer=MUICore__pb2.MUIMessageList.SerializeToString,
+            ),
+            'CheckManticoreRunning': grpc.unary_unary_rpc_method_handler(
+                    servicer.CheckManticoreRunning,
+                    request_deserializer=MUICore__pb2.ManticoreInstance.FromString,
+                    response_serializer=MUICore__pb2.ManticoreRunningStatus.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -194,5 +210,22 @@ class ManticoreUI(object):
         return grpc.experimental.unary_unary(request, target, '/muicore.ManticoreUI/GetMessageList',
             MUICore__pb2.ManticoreInstance.SerializeToString,
             MUICore__pb2.MUIMessageList.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def CheckManticoreRunning(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/muicore.ManticoreUI/CheckManticoreRunning',
+            MUICore__pb2.ManticoreInstance.SerializeToString,
+            MUICore__pb2.ManticoreRunningStatus.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

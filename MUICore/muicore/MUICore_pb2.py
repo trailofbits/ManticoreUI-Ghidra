@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\rMUICore.proto\x12\x07muicore\" \n\rMUILogMessage\x12\x0f\n\x07\x63ontent\x18\x01 \x01(\t\":\n\x0eMUIMessageList\x12(\n\x08messages\x18\x02 \x03(\x0b\x32\x16.muicore.MUILogMessage\"\x1c\n\x08MUIState\x12\x10\n\x08state_id\x18\x03 \x01(\x05\"\xe4\x01\n\x0cMUIStateList\x12(\n\ractive_states\x18\x04 \x03(\x0b\x32\x11.muicore.MUIState\x12)\n\x0ewaiting_states\x18\x05 \x03(\x0b\x32\x11.muicore.MUIState\x12(\n\rforked_states\x18\x06 \x03(\x0b\x32\x11.muicore.MUIState\x12)\n\x0e\x65rrored_states\x18\x07 \x03(\x0b\x32\x11.muicore.MUIState\x12*\n\x0f\x63omplete_states\x18\x08 \x03(\x0b\x32\x11.muicore.MUIState\"!\n\x11ManticoreInstance\x12\x0c\n\x04uuid\x18\t \x01(\t\"$\n\x11TerminateResponse\x12\x0f\n\x07success\x18\n \x01(\x08\"\x96\x02\n\x0c\x43LIArguments\x12\x14\n\x0cprogram_path\x18\x0b \x01(\t\x12\x13\n\x0b\x62inary_args\x18\x10 \x03(\t\x12\x0c\n\x04\x65nvp\x18\x11 \x03(\t\x12\x16\n\x0esymbolic_files\x18\x12 \x03(\t\x12\x16\n\x0e\x63oncrete_start\x18\x13 \x01(\t\x12\x12\n\nstdin_size\x18\x14 \x01(\t\x12M\n\x15\x61\x64\x64itional_mcore_args\x18\x15 \x03(\x0b\x32..muicore.CLIArguments.AdditionalMcoreArgsEntry\x1a:\n\x18\x41\x64\x64itionalMcoreArgsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\x81\x01\n\x0e\x41\x64\x64ressRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x0c \x01(\x04\x12\x30\n\x04type\x18\r \x01(\x0e\x32\".muicore.AddressRequest.TargetType\",\n\nTargetType\x12\x08\n\x04\x46IND\x10\x00\x12\t\n\x05\x41VOID\x10\x01\x12\t\n\x05\x43LEAR\x10\x02\"!\n\x0eTargetResponse\x12\x0f\n\x07success\x18\x0e \x01(\x08\x32\xe5\x02\n\x0bManticoreUI\x12\x45\n\tTerminate\x12\x1a.muicore.ManticoreInstance\x1a\x1a.muicore.TerminateResponse\"\x00\x12<\n\x05Start\x12\x15.muicore.CLIArguments\x1a\x1a.muicore.ManticoreInstance\"\x00\x12\x43\n\rTargetAddress\x12\x17.muicore.AddressRequest\x1a\x17.muicore.TargetResponse\"\x00\x12\x43\n\x0cGetStateList\x12\x1a.muicore.ManticoreInstance\x1a\x15.muicore.MUIStateList\"\x00\x12G\n\x0eGetMessageList\x12\x1a.muicore.ManticoreInstance\x1a\x17.muicore.MUIMessageList\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\rMUICore.proto\x12\x07muicore\" \n\rMUILogMessage\x12\x0f\n\x07\x63ontent\x18\x01 \x01(\t\":\n\x0eMUIMessageList\x12(\n\x08messages\x18\x02 \x03(\x0b\x32\x16.muicore.MUILogMessage\"\x1c\n\x08MUIState\x12\x10\n\x08state_id\x18\x03 \x01(\x05\"\xe4\x01\n\x0cMUIStateList\x12(\n\ractive_states\x18\x04 \x03(\x0b\x32\x11.muicore.MUIState\x12)\n\x0ewaiting_states\x18\x05 \x03(\x0b\x32\x11.muicore.MUIState\x12(\n\rforked_states\x18\x06 \x03(\x0b\x32\x11.muicore.MUIState\x12)\n\x0e\x65rrored_states\x18\x07 \x03(\x0b\x32\x11.muicore.MUIState\x12*\n\x0f\x63omplete_states\x18\x08 \x03(\x0b\x32\x11.muicore.MUIState\"!\n\x11ManticoreInstance\x12\x0c\n\x04uuid\x18\t \x01(\t\"$\n\x11TerminateResponse\x12\x0f\n\x07success\x18\n \x01(\x08\"\x96\x02\n\x0c\x43LIArguments\x12\x14\n\x0cprogram_path\x18\x0b \x01(\t\x12\x13\n\x0b\x62inary_args\x18\x10 \x03(\t\x12\x0c\n\x04\x65nvp\x18\x11 \x03(\t\x12\x16\n\x0esymbolic_files\x18\x12 \x03(\t\x12\x16\n\x0e\x63oncrete_start\x18\x13 \x01(\t\x12\x12\n\nstdin_size\x18\x14 \x01(\t\x12M\n\x15\x61\x64\x64itional_mcore_args\x18\x15 \x03(\x0b\x32..muicore.CLIArguments.AdditionalMcoreArgsEntry\x1a:\n\x18\x41\x64\x64itionalMcoreArgsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\x81\x01\n\x0e\x41\x64\x64ressRequest\x12\x0f\n\x07\x61\x64\x64ress\x18\x0c \x01(\x04\x12\x30\n\x04type\x18\r \x01(\x0e\x32\".muicore.AddressRequest.TargetType\",\n\nTargetType\x12\x08\n\x04\x46IND\x10\x00\x12\t\n\x05\x41VOID\x10\x01\x12\t\n\x05\x43LEAR\x10\x02\"!\n\x0eTargetResponse\x12\x0f\n\x07success\x18\x0e \x01(\x08\",\n\x16ManticoreRunningStatus\x12\x12\n\nis_running\x18\x0f \x01(\x08\x32\xbd\x03\n\x0bManticoreUI\x12\x45\n\tTerminate\x12\x1a.muicore.ManticoreInstance\x1a\x1a.muicore.TerminateResponse\"\x00\x12<\n\x05Start\x12\x15.muicore.CLIArguments\x1a\x1a.muicore.ManticoreInstance\"\x00\x12\x43\n\rTargetAddress\x12\x17.muicore.AddressRequest\x1a\x17.muicore.TargetResponse\"\x00\x12\x43\n\x0cGetStateList\x12\x1a.muicore.ManticoreInstance\x1a\x15.muicore.MUIStateList\"\x00\x12G\n\x0eGetMessageList\x12\x1a.muicore.ManticoreInstance\x1a\x17.muicore.MUIMessageList\"\x00\x12V\n\x15\x43heckManticoreRunning\x12\x1a.muicore.ManticoreInstance\x1a\x1f.muicore.ManticoreRunningStatus\"\x00\x62\x06proto3'
 )
 
 
@@ -458,6 +458,38 @@ _TARGETRESPONSE = _descriptor.Descriptor(
   serialized_end=900,
 )
 
+
+_MANTICORERUNNINGSTATUS = _descriptor.Descriptor(
+  name='ManticoreRunningStatus',
+  full_name='muicore.ManticoreRunningStatus',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  create_key=_descriptor._internal_create_key,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='is_running', full_name='muicore.ManticoreRunningStatus.is_running', index=0,
+      number=15, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=902,
+  serialized_end=946,
+)
+
 _MUIMESSAGELIST.fields_by_name['messages'].message_type = _MUILOGMESSAGE
 _MUISTATELIST.fields_by_name['active_states'].message_type = _MUISTATE
 _MUISTATELIST.fields_by_name['waiting_states'].message_type = _MUISTATE
@@ -477,6 +509,7 @@ DESCRIPTOR.message_types_by_name['TerminateResponse'] = _TERMINATERESPONSE
 DESCRIPTOR.message_types_by_name['CLIArguments'] = _CLIARGUMENTS
 DESCRIPTOR.message_types_by_name['AddressRequest'] = _ADDRESSREQUEST
 DESCRIPTOR.message_types_by_name['TargetResponse'] = _TARGETRESPONSE
+DESCRIPTOR.message_types_by_name['ManticoreRunningStatus'] = _MANTICORERUNNINGSTATUS
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 MUILogMessage = _reflection.GeneratedProtocolMessageType('MUILogMessage', (_message.Message,), {
@@ -550,6 +583,13 @@ TargetResponse = _reflection.GeneratedProtocolMessageType('TargetResponse', (_me
   })
 _sym_db.RegisterMessage(TargetResponse)
 
+ManticoreRunningStatus = _reflection.GeneratedProtocolMessageType('ManticoreRunningStatus', (_message.Message,), {
+  'DESCRIPTOR' : _MANTICORERUNNINGSTATUS,
+  '__module__' : 'MUICore_pb2'
+  # @@protoc_insertion_point(class_scope:muicore.ManticoreRunningStatus)
+  })
+_sym_db.RegisterMessage(ManticoreRunningStatus)
+
 
 _CLIARGUMENTS_ADDITIONALMCOREARGSENTRY._options = None
 
@@ -560,8 +600,8 @@ _MANTICOREUI = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=903,
-  serialized_end=1260,
+  serialized_start=949,
+  serialized_end=1394,
   methods=[
   _descriptor.MethodDescriptor(
     name='Terminate',
@@ -610,6 +650,16 @@ _MANTICOREUI = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_MANTICOREINSTANCE,
     output_type=_MUIMESSAGELIST,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
+    name='CheckManticoreRunning',
+    full_name='muicore.ManticoreUI.CheckManticoreRunning',
+    index=5,
+    containing_service=None,
+    input_type=_MANTICOREINSTANCE,
+    output_type=_MANTICORERUNNINGSTATUS,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

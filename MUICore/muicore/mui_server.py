@@ -192,6 +192,17 @@ class MUIServicer(MUICore_pb2_grpc.ManticoreUIServicer):
             messages.append(msg)
             i += 1
         return MUIMessageList(messages=messages)
+    
+    def CheckManticoreRunning(
+        self, mcore_instance: ManticoreInstance, context: _Context
+    ) -> ManticoreRunningStatus:
+        
+        if mcore_instance.uuid not in self.manticore_instances:
+            return ManticoreRunningStatus(is_running=False)
+
+        m, mthread = self.manticore_instances[mcore_instance.uuid]
+
+        return ManticoreRunningStatus(is_running=(not m.is_killed() and mthread.is_alive()))
 
 
 def main():
