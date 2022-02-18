@@ -9,3 +9,6 @@ Currently, MUI-Core communicates only on `localhost:50010`.
 Your MUI Plugin will require the relevant gRPC client code. You can find out how to generate gRPC client code in your desired language from [the gRPC website](https://grpc.io/docs/languages/).
 
 You may refer to the [Protobuf Specification](MUICore.proto) for information about the RPC services provided and the message types.
+
+# Development
+You may refer to [this commit](https://github.com/trailofbits/MUI-Ghidra/commit/468c8efbf949758633b9da839d377e09abfcf8d9) as an example of a feature being added to MUI Core. [codegen.sh](codegen.sh) will propagate the changes from `MUICore.proto` (current source is the proto file in the Ghidra plugin), and [build_binary.sh](muicore/build_binary.sh) will generate the `muicore_server` binary from the `mui_server.py` file (requires [`shiv`](https://github.com/linkedin/shiv)).
