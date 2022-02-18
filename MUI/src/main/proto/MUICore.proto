@@ -60,11 +60,10 @@ message AddressRequest {
         CLEAR = 2;
     }
 
-    ManticoreInstance mcore_instance = 12;
-    uint64 address = 13;
-    TargetType type = 14;
+    uint64 address = 12;
+    TargetType type = 13;
 }
 
 message TargetResponse {
-    bool success = 15;
+    bool success = 14;
 }

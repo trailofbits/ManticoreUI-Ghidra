@@ -114,8 +114,6 @@ class MUIServicer(MUICore_pb2_grpc.ManticoreUIServicer):
         self, address_request: AddressRequest, context: _Context
     ) -> TargetResponse:
         """Sets addresses in the binary to find/avoid, or clears address status."""
-        if address_request.mcore_instance.uuid not in self.manticore_instances:
-            return TargetResponse(success=False)
 
         if address_request.type == AddressRequest.TargetType.FIND:
             self.find.add(address_request.address)
