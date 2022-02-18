@@ -17,6 +17,7 @@ import docking.WindowPosition;
 import ghidra.framework.plugintool.ComponentProviderAdapter;
 import ghidra.framework.plugintool.PluginTool;
 import muicore.MUICore;
+import muicore.MUICore.ManticoreInstance;
 
 /**
  * Provides the "MUI State List" component used to display the State List of the Manticore instance whose MUI Log tab is currently focused.
@@ -100,7 +101,7 @@ public class MUIStateListProvider extends ComponentProviderAdapter {
 	 * Gracefully updates the Manticore instance whose State List is shown.
 	 * @param runner The new Manticore instance whose State List should be shown.
 	 */
-	public static void changeRunner(ManticoreRunner runner) {
+	public static void changeRunner(ManticoreInstance runner) {
 		clearStateTree();
 		runnerDisplayed = runner;
 		tryUpdate(runnerDisplayed.stateListModel);

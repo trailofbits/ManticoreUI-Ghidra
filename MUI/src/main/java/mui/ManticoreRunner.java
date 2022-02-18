@@ -26,6 +26,7 @@ public class ManticoreRunner {
 	private Boolean isTerminated;
 	private JTextArea logArea;
 	private JButton stopButton;
+	private MUILogContentComponent logContentComponent;
 
 	private String host;
 	private int port;
