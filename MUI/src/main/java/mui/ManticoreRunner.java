@@ -13,6 +13,8 @@ import ghidra.util.Msg;
 
 import muicore.MUICore;
 import muicore.MUICore.CLIArguments;
+import muicore.MUICore.MUILogMessage;
+import muicore.MUICore.MUIMessageList;
 import muicore.MUICore.ManticoreInstance;
 import muicore.ManticoreUIGrpc;
 import io.grpc.*;
@@ -21,6 +23,7 @@ import io.grpc.stub.StreamObserver;
 import java.io.*;
 import java.net.*;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -30,6 +33,7 @@ import java.util.List;
 public class ManticoreRunner {
 
 	private ManticoreInstance manticoreInstance;
+	private StringBuilder logText;
 
 	public ManticoreRunner() {
 	}
@@ -53,6 +57,33 @@ public class ManticoreRunner {
 		};
 
 		MUIPlugin.asyncMUICoreStub.start(cliArgs, startObserver);
+	}
+
+	public void fetchMessageLogs() {
+		StreamObserver<MUIMessageList> messagelistObserver =
+			new StreamObserver<MUIMessageList>() {
+
+				@Override
+				public void onCompleted() {
+				}
+
+				@Override
+				public void onError(Throwable arg0) {
+				}
+
+				@Override
+				public void onNext(MUIMessageList messageList) {
+					for (MUILogMessage msg : messageList.getMessagesList()) {
+						logText.append(msg.getContent());
+					}
+				}
+			};
+
+		MUIPlugin.asyncMUICoreStub.getMessageList(manticoreInstance, messagelistObserver);
+	}
+
+	public String getLogText() {
+		return logText.toString();
 	}
 
 }

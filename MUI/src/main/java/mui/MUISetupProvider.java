@@ -35,24 +35,13 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 
 	private HashMap<String, JTextField> formOptions;
 
-	public MUISetupProvider(PluginTool tool, String name, MUILogProvider log,
-			MUIStateListProvider stateList) {
+	public MUISetupProvider(PluginTool tool, String name) {
 		super(tool, name, name);
-		setLogProvider(log);
-		setStateListProvider(stateList);
 		buildFormPanel();
 		buildMainPanel();
 		setTitle("MUI Setup");
 		setDefaultWindowPosition(WindowPosition.WINDOW);
 		setVisible(false);
-	}
-
-	private void setLogProvider(MUILogProvider log) {
-		logProvider = log;
-	}
-
-	private void setStateListProvider(MUIStateListProvider stateList) {
-		stateListProvider = stateList;
 	}
 
 	/**
