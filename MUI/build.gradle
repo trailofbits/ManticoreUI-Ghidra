@@ -148,9 +148,9 @@ spotless {
         endWithNewline()
     }
     java {
-        target 'src/*/java/**/*.java', 'ghidra_scripts/*.java'
+        target 'src/*/java/mui/**/*.java', 'ghidra_scripts/*.java'
         targetExclude('src/main/java/muicore/**/*.java')
-        targetExclude('src/main/grpc/muicore/**/*.java')
+        targetExclude('src/main/grpc/**/*.java')
         // The Ghidra formatting file was taken from Ghidra 10.1.1 located in
         // eclipse/GhidraEclipseFormatter.xml Ghidra repo
         eclipse().configFile('GhidraEclipseFormatter.xml')
