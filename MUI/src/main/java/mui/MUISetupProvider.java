@@ -7,13 +7,17 @@ import ghidra.framework.ApplicationConfiguration;
 import ghidra.framework.plugintool.ComponentProviderAdapter;
 import ghidra.framework.plugintool.PluginTool;
 import ghidra.program.model.listing.Program;
+import muicore.MUICore.CLIArguments;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
-
+import java.util.ArrayList;
 import javax.swing.*;
 
 /**
@@ -25,12 +29,8 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 
 	private JPanel mainPanel;
 	private String programPath;
-	private String bundledManticorePath;
-
-	private MUILogProvider logProvider;
-	private MUIStateListProvider stateListProvider;
-
 	private JPanel formPanel;
+
 	public static JLabel findAvoidUnimplementedLbl;
 
 	private HashMap<String, JTextField> formOptions;
@@ -66,17 +66,6 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 			new GridLayout(MUISettings.SETTINGS.get("NATIVE_RUN_SETTINGS").size(), 2));
 		formPanel.setMinimumSize(new Dimension(800, 500));
 
-		try {
-			if (!Application.isInitialized()) {
-				Application.initializeApplication(
-					new GhidraApplicationLayout(), new ApplicationConfiguration());
-			}
-			bundledManticorePath = Application.getOSFile("manticore").getCanonicalPath();
-		}
-		catch (Exception e) {
-			bundledManticorePath = "";
-		}
-
 		formOptions = new HashMap<String, JTextField>();
 
 		for (Entry<String, Map<String, Object>[]> option : MUISettings.SETTINGS
@@ -92,8 +81,7 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 
 			if (extra.containsKey("is_dir_path") && (Boolean) extra.get("is_dir_path")) {
 				formOptions.put(name,
-					createPathInput((name == "{mcore_binary}" ? bundledManticorePath
-							: prop.get("default").toString())));
+					createPathInput(prop.get("default").toString()));
 			}
 			else if (prop.get("type") == "string" || prop.get("type") == "number") {
 				formOptions.put(name, createStringNumberInput(prop.get("default").toString()));
@@ -226,14 +214,76 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					logProvider.setVisible(true);
-					stateListProvider.setVisible(true);
-					logProvider.runMUI(programPath, formOptions, moreArgs.getText());
+					List<String> moreArgsList = tokenizeArrayInput(moreArgs.getText());
+					HashMap<String, String> moreArgsMap = new HashMap<String, String>();
+
+					for (String arg : moreArgsList) {
+						String[] argSplit = arg.split("=");
+						moreArgsMap.put(argSplit[0], argSplit[1]);
+					}
+
+					CLIArguments mcoreArgs = CLIArguments.newBuilder()
+							.setProgramPath(programPath)
+							.addAllBinaryArgs(tokenizeArrayInput(formOptions.get("argv").getText()))
+							.addAllEnvp(tokenizeArrayInput(formOptions.get("env").getText()))
+							.addAllSymbolicFiles(
+								tokenizeArrayInput(formOptions.get("file").getText()))
+							.setStdinSize(formOptions.get("native.stdin_size").getText())
+							.setConcreteStart(formOptions.get("data").getText())
+							.putAllAdditionalMcoreArgs(moreArgsMap)
+							.build();
+
+					ManticoreRunner runner = new ManticoreRunner();
+					runner.startManticore(mcoreArgs);
+					// TODO: connect to Log/StateList UI elements
+					MUIPlugin.manticoreRunners.add(runner);
 				}
 			});
 		bottomPanel.add(runBtn, BorderLayout.SOUTH);
 
 		mainPanel.add(bottomPanel, BorderLayout.SOUTH);
+	}
+
+	/**
+	 * Tokenizes a String containing multiple arguments formatted shell-style, cognizant of spaces which are escaped or within quotes.
+	 * @param string Shell-style space-separated arguments for Manticore arguments with array input type.
+	 * @return String iterable suitable to be passed to a ProcessBuilder.
+	 */
+	private List<String> tokenizeArrayInput(String string) {
+		final List<Character> WORD_DELIMITERS = Arrays.asList(' ', '\t');
+		final List<Character> QUOTE_CHARACTERS = Arrays.asList('"', '\'');
+		final char ESCAPE_CHARACTER = '\\';
+
+		StringBuilder wordBuilder = new StringBuilder();
+		List<String> words = new ArrayList<>();
+		char quote = 0;
+
+		for (int i = 0; i < string.length(); i++) {
+			char c = string.charAt(i);
+
+			if (c == ESCAPE_CHARACTER && i + 1 < string.length()) {
+				wordBuilder.append(string.charAt(++i));
+			}
+			else if (WORD_DELIMITERS.contains(c) && quote == 0) {
+				words.add(wordBuilder.toString());
+				wordBuilder.setLength(0);
+			}
+			else if (quote == 0 && QUOTE_CHARACTERS.contains(c)) {
+				quote = c;
+			}
+			else if (quote == c) {
+				quote = 0;
+			}
+			else {
+				wordBuilder.append(c);
+			}
+		}
+
+		if (wordBuilder.length() > 0) {
+			words.add(wordBuilder.toString());
+		}
+
+		return words;
 	}
 
 	/** 

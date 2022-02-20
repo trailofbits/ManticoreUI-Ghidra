@@ -15,6 +15,8 @@
  */
 package mui;
 
+import java.util.HashSet;
+
 import javax.swing.SwingWorker;
 
 import docking.ActionContext;
@@ -49,6 +51,8 @@ public class MUIPlugin extends ProgramPlugin {
 	public static MUILogProvider log;
 	public static MUIPopupMenu popup;
 	public static MUIStateListProvider stateList;
+
+	public static HashSet<ManticoreRunner> manticoreRunners;
 
 	private String MUICoreServerPath;
 	public static ManticoreUIBlockingStub blockingMUICoreStub;
