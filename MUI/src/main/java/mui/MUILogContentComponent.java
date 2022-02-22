@@ -64,8 +64,9 @@ public class MUILogContentComponent extends JPanel {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					MUIInstance.stopProc();
+					manticoreRunner.terminateManticore();
 				}
+
 			});
 		logToolBar.add(Box.createGlue()); // shifts buttons to the right
 		logToolBar.add(stopButton);

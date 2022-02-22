@@ -77,8 +77,11 @@ public class MUILogProvider extends ComponentProviderAdapter {
 
 			@Override
 			protected Object doInBackground() throws Exception {
+				while (!tabContent.manticoreRunner.getHasStarted()) {
+				} // wait until started
+
 				long prevTime = Instant.now().getEpochSecond();
-				while (tabContent.manticoreRunner.getRunningStatus()) {
+				while (tabContent.manticoreRunner.getIsRunning()) {
 					if (Instant.now().getEpochSecond() - 1 > prevTime) {
 						tabContent.manticoreRunner.fetchMessageLogs();
 						tabContent.logArea.setText(tabContent.manticoreRunner.getLogText());
@@ -91,7 +94,14 @@ public class MUILogProvider extends ComponentProviderAdapter {
 			@Override
 			protected void done() {
 				tabContent.stopButton.setEnabled(false);
-				// TODO: indicate if instance naturally finished or was terminated
+				if (tabContent.manticoreRunner.getWasTerminated()) {
+					tabContent.logArea.append(
+						System.lineSeparator() + "Manticore process terminated by user.");
+				}
+				else {
+					tabContent.logArea
+							.append(System.lineSeparator() + "Manticore process completed.");
+				}
 			}
 
 		};
@@ -106,7 +116,9 @@ public class MUILogProvider extends ComponentProviderAdapter {
 	public void closeLogTab(int tabIndex) {
 		MUILogContentComponent curComp =
 			(MUILogContentComponent) logTabPane.getComponentAt(tabIndex);
-		curComp.MUIInstance.stopProc();
+		if (curComp.manticoreRunner.getIsRunning()) {
+			curComp.manticoreRunner.terminateManticore();
+		}
 		logTabPane.remove(tabIndex);
 	}
 

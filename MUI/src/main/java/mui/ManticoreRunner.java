@@ -17,6 +17,7 @@ import muicore.MUICore.MUILogMessage;
 import muicore.MUICore.MUIMessageList;
 import muicore.MUICore.ManticoreInstance;
 import muicore.MUICore.ManticoreRunningStatus;
+import muicore.MUICore.TerminateResponse;
 import muicore.ManticoreUIGrpc;
 import io.grpc.*;
 import io.grpc.stub.StreamObserver;
@@ -35,9 +36,16 @@ public class ManticoreRunner {
 
 	private ManticoreInstance manticoreInstance;
 	private StringBuilder logText;
+
+	private boolean hasStarted;
 	private boolean isRunning;
+	private boolean wasTerminated;
 
 	public ManticoreRunner() {
+		logText = new StringBuilder();
+		hasStarted = false;
+		isRunning = false;
+		wasTerminated = false;
 	}
 
 	public void startManticore(CLIArguments cliArgs) {
@@ -54,11 +62,44 @@ public class ManticoreRunner {
 			@Override
 			public void onNext(ManticoreInstance mcore) {
 				manticoreInstance = mcore;
+				hasStarted = true;
+				isRunning = true;
 			}
 
 		};
 
 		MUIPlugin.asyncMUICoreStub.start(cliArgs, startObserver);
+	}
+
+	public boolean getHasStarted() {
+		return hasStarted;
+	}
+
+	public void terminateManticore() {
+
+		StreamObserver<TerminateResponse> terminateObserver =
+			new StreamObserver<TerminateResponse>() {
+
+				@Override
+				public void onCompleted() {
+				}
+
+				@Override
+				public void onError(Throwable arg0) {
+				}
+
+				@Override
+				public void onNext(TerminateResponse resp) {
+					wasTerminated = resp.getSuccess();
+					isRunning = !resp.getSuccess();
+				}
+
+			};
+		MUIPlugin.asyncMUICoreStub.terminate(manticoreInstance, terminateObserver);
+	}
+
+	public boolean getWasTerminated() {
+		return wasTerminated;
 	}
 
 	public void fetchMessageLogs() {
@@ -109,7 +150,7 @@ public class ManticoreRunner {
 		MUIPlugin.asyncMUICoreStub.checkManticoreRunning(manticoreInstance, null);
 	}
 
-	public boolean getRunningStatus() {
+	public boolean getIsRunning() {
 		return isRunning;
 	}
 
