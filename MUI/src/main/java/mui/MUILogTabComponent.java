@@ -1,6 +1,5 @@
 package mui;
 
-import ghidra.util.Msg;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -104,9 +103,7 @@ public class MUILogTabComponent extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int index = parentPane.indexOfTabComponent(MUILogTabComponent.this);
-				Msg.info(this, Integer.toString(index));
 				parentPane.setSelectedIndex(index);
-				Msg.info(this, "switchtab");
 				MUILogContentComponent tabContent =
 					(MUILogContentComponent) parentPane.getComponentAt(index);
 				MUIStateListProvider.changeRunner(tabContent.manticoreRunner);

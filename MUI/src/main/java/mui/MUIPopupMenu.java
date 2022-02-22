@@ -10,7 +10,6 @@ import ghidra.app.context.ListingContextAction;
 import ghidra.app.plugin.core.colorizer.ColorizingService;
 import ghidra.framework.plugintool.PluginTool;
 import ghidra.program.model.listing.Program;
-import ghidra.util.Msg;
 import muicore.MUICore.AddressRequest;
 import muicore.MUICore.AddressRequest.Builder;
 import ghidra.program.model.address.Address;
@@ -58,7 +57,6 @@ public class MUIPopupMenu extends ListingContextAction {
 
 	}
 
-
 	/**
 	 * Builds the menu items in the right-click context menu of the Listing component.
 	 */
@@ -70,10 +68,9 @@ public class MUIPopupMenu extends ListingContextAction {
 				@Override
 				protected void actionPerformed(ListingActionContext context) {
 					Address selectedAddr = context.getLocation().getAddress();
-					
-					Msg.info(this,selectedAddr.toString());
-					Msg.info(this, Long.parseLong(selectedAddr.toString(), 16));
-					Builder reqBuilder = AddressRequest.newBuilder().setAddress(Long.parseLong(selectedAddr.toString(), 16));
+
+					Builder reqBuilder = AddressRequest.newBuilder()
+							.setAddress(Long.parseLong(selectedAddr.toString(), 16));
 
 					if (findAddresses.contains(selectedAddr)) {
 						findAddresses.remove(selectedAddr);
@@ -104,8 +101,9 @@ public class MUIPopupMenu extends ListingContextAction {
 				@Override
 				protected void actionPerformed(ListingActionContext context) {
 					Address selectedAddr = context.getLocation().getAddress();
-					
-					Builder reqBuilder = AddressRequest.newBuilder().setAddress(Long.parseLong(selectedAddr.toString(), 16));
+
+					Builder reqBuilder = AddressRequest.newBuilder()
+							.setAddress(Long.parseLong(selectedAddr.toString(), 16));
 
 					if (avoidAddresses.contains(selectedAddr)) {
 						avoidAddresses.remove(selectedAddr);

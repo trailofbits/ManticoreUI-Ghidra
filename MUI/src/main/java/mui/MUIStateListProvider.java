@@ -16,8 +16,6 @@ import javax.swing.tree.TreePath;
 import docking.WindowPosition;
 import ghidra.framework.plugintool.ComponentProviderAdapter;
 import ghidra.framework.plugintool.PluginTool;
-import ghidra.util.Msg;
-import muicore.MUICore;
 import muicore.MUICore.MUIState;
 
 /**

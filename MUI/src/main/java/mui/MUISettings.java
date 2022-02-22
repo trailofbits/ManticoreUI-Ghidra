@@ -37,14 +37,6 @@ public class MUISettings {
 						"elementType", "string",
 						"default", ""),
 					Map.of() },
-				"workspace", new Map[] {
-					Map.of(
-						"title", "Workspace URL",
-						"description", "Workspace URL to use for manticore",
-						"type", "string",
-						"default", "mem:"),
-					Map.of(
-						"is_dir_path", true) },
 				"env", new Map[] {
 					Map.of(
 						"title", "Environment Variables",

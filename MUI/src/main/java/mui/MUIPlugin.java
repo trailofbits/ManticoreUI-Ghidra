@@ -15,8 +15,6 @@
  */
 package mui;
 
-import java.util.ArrayList;
-
 import javax.swing.SwingWorker;
 
 import docking.ActionContext;
@@ -52,8 +50,6 @@ public class MUIPlugin extends ProgramPlugin {
 	public static MUIPopupMenu popup;
 	public static MUIStateListProvider stateList;
 
-	public static ArrayList<ManticoreRunner> manticoreRunners;
-
 	private String MUICoreServerPath;
 	public static ManticoreUIBlockingStub blockingMUICoreStub;
 	public static ManticoreUIStub asyncMUICoreStub;
@@ -68,8 +64,6 @@ public class MUIPlugin extends ProgramPlugin {
 	 */
 	public MUIPlugin(PluginTool tool) throws Exception {
 		super(tool, true, true);
-
-		manticoreRunners = new ArrayList<ManticoreRunner>();
 
 		startMUICoreServer();
 		initMUICoreStubs();

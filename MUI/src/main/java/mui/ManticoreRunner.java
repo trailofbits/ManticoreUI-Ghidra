@@ -19,8 +19,6 @@ import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.tree.TreePath;
 
-import ghidra.util.Msg;
-
 /**
  * The class representing each instance of Manticore.
  */
@@ -67,9 +65,6 @@ public class ManticoreRunner {
 
 			@Override
 			public void onCompleted() {
-				Msg.info(this, "COMPLETED");
-				Msg.info(this, hasStarted);
-
 			}
 
 			@Override
@@ -78,18 +73,12 @@ public class ManticoreRunner {
 
 			@Override
 			public void onNext(ManticoreInstance mcore) {
-				Msg.info(this, "OK MCORE ONNEXT");
 				setManticoreInstance(mcore);
-				Msg.info(this, mcore.getUuid());
 				setHasStarted(true);
 				setIsRunning(true);
-
-				Msg.info(this, hasStarted);
 			}
 
 		};
-
-		Msg.info(this, "TRY ASYNC");
 
 		MUIPlugin.asyncMUICoreStub.start(cliArgs, startObserver);
 	}

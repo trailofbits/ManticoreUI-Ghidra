@@ -3,18 +3,12 @@ package mui;
 import docking.*;
 import ghidra.framework.plugintool.ComponentProviderAdapter;
 import ghidra.framework.plugintool.PluginTool;
-import ghidra.util.Msg;
 
 import java.awt.*;
-import java.io.IOException;
-import java.net.Socket;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.List;
-import java.util.Map.Entry;
 
 import javax.swing.*;
 
@@ -54,8 +48,6 @@ public class MUILogProvider extends ComponentProviderAdapter {
 	 */
 	public void addLogTab(ManticoreRunner manticoreRunner) {
 
-		Msg.info(this, "ADDLOGTAB");
-
 		MUILogContentComponent newTabContent = new MUILogContentComponent(manticoreRunner);
 		manticoreRunner.setLogUIElems(newTabContent);
 
@@ -81,30 +73,19 @@ public class MUILogProvider extends ComponentProviderAdapter {
 			protected Object doInBackground() throws Exception {
 				manticoreRunner.getLogText()
 						.append("Manticore process started..." + System.lineSeparator());
-				Msg.info(this, "START FETCH");
 				boolean waiting = true;
 				long prevTime = Instant.now().getEpochSecond();
-				Msg.info(this, waiting);
-				Msg.info(this, prevTime);
 				while (waiting) {
 					if (Instant.now().getEpochSecond() - 1 > prevTime) {
 						prevTime = Instant.now().getEpochSecond();
-						Msg.info(this, "wtf");
 						waiting = !manticoreRunner.getHasStarted();
-						Msg.info(this, waiting);
-						Msg.info(this, manticoreRunner.getHasStarted());
 
 					}
 				} // wait until started
-				Msg.info(this, "real start fetch");
 
 				prevTime = Instant.now().getEpochSecond();
-				Msg.info(this, prevTime);
 				while (manticoreRunner.getIsRunning()) {
 					if (Instant.now().getEpochSecond() - 1 > prevTime) {
-						Msg.info(this, "legit fetched wow");
-						Msg.info(this, prevTime);
-
 						manticoreRunner.fetchMessageLogs();
 						manticoreRunner.fetchStateList();
 						manticoreRunner.fetchIsRunning();
@@ -116,7 +97,6 @@ public class MUILogProvider extends ComponentProviderAdapter {
 
 			@Override
 			protected void done() {
-				Msg.info(this, "DONE WTF");
 				manticoreRunner.getStopBtn().setEnabled(false);
 				manticoreRunner.fetchMessageLogs();
 				manticoreRunner.fetchStateList();
