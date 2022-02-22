@@ -20,7 +20,7 @@ import javax.swing.JTextArea;
 import javax.swing.tree.TreePath;
 
 /**
- * The class representing each instance of Manticore.
+ * The class representing each instance of Manticore. Used to interact with MUI-Core server and correspondingly update UI elements.
  */
 public class ManticoreRunner {
 
@@ -59,6 +59,10 @@ public class ManticoreRunner {
 		stateListExpandedPaths = new HashSet<TreePath>();
 	}
 
+	/**
+	 * Starts Manticore with given arguments.
+	 * @param cliArgs MUICore.CLIArguments object
+	 */
 	public void startManticore(CLIArguments cliArgs) {
 
 		StreamObserver<ManticoreInstance> startObserver = new StreamObserver<ManticoreInstance>() {
@@ -99,6 +103,9 @@ public class ManticoreRunner {
 		return hasStarted;
 	}
 
+	/**
+	 * Terminates Manticore, but ManticoreRunner instance stays intact and can continue to display its Logs and State List.
+	 */
 	public void terminateManticore() {
 
 		StreamObserver<TerminateResponse> terminateObserver =
@@ -126,6 +133,11 @@ public class ManticoreRunner {
 		return wasTerminated;
 	}
 
+	/**
+	 * Fetches Message Logs.
+	 * TODO: Message logs displayed should be updated to mimic MUI-Binja.
+	 * TODO: Message logs gRPC service should be re-written to be client-side streaming, not unary
+	 */
 	public void fetchMessageLogs() {
 
 		StreamObserver<MUIMessageList> messageListObserver =
@@ -163,6 +175,10 @@ public class ManticoreRunner {
 		stopBtn = content.stopButton;
 	}
 
+	/**
+	 * Fetches State List.
+	 * TODO: State List gRPC service should be re-written to be client-side streaming, not unary
+	 */
 	public void fetchStateList() {
 
 		StreamObserver<MUIStateList> stateListObserver = new StreamObserver<MUIStateList>() {
@@ -214,6 +230,9 @@ public class ManticoreRunner {
 		return completeStates;
 	}
 
+	/**
+	 * Fetches current status of Manticore execution.
+	 */
 	public void fetchIsRunning() {
 
 		StreamObserver<ManticoreRunningStatus> runningObserver =

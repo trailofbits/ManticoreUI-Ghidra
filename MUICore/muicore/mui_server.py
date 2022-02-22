@@ -37,7 +37,7 @@ class MUIServicer(MUICore_pb2_grpc.ManticoreUIServicer):
         self, cli_arguments: CLIArguments, context: _Context
     ) -> ManticoreInstance:
         """Starts a singular Manticore instance with the given CLI Arguments"""
-
+        print("START CALLED")
         id = uuid.uuid4().hex
         try:
             m = Manticore(
@@ -95,7 +95,7 @@ class MUIServicer(MUICore_pb2_grpc.ManticoreUIServicer):
             print(e)
             raise e
             return ManticoreInstance()
-
+        print("RETURNING START NOW")
         return ManticoreInstance(uuid=id)
 
     def Terminate(
@@ -134,7 +134,7 @@ class MUIServicer(MUICore_pb2_grpc.ManticoreUIServicer):
     ) -> MUIStateList:
         """Returns full list of states for given ManticoreInstance.
         Currently, implementation is based on MUI's Binary Ninja plugin."""
-
+        print("GETSTATE CALLED")
         active_states = []
         waiting_states = []
         forked_states = []
@@ -178,7 +178,7 @@ class MUIServicer(MUICore_pb2_grpc.ManticoreUIServicer):
     ) -> MUIMessageList:
         """Returns any new log messages for given ManticoreInstance since the previous call.
         Currently, implementation is based on TUI."""
-
+        print("GETMSG CALLLED")
         if mcore_instance.uuid not in self.manticore_instances:
             return MUIMessageList(
                 messages=[LogMessage(content="Manticore instance not found!")]

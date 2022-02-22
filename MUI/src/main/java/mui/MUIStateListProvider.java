@@ -97,8 +97,8 @@ public class MUIStateListProvider extends ComponentProviderAdapter {
 	}
 
 	/**
-	 * Gracefully updates the Manticore instance whose State List is shown.
-	 * @param runner The new Manticore instance whose State List should be shown.
+	 * Gracefully updates the Manticore runner whose State List is shown.
+	 * @param runner The new Manticore runner whose State List should be shown.
 	 */
 	public static void changeRunner(ManticoreRunner runner) {
 		clearStateTree();
@@ -118,8 +118,11 @@ public class MUIStateListProvider extends ComponentProviderAdapter {
 	}
 
 	/**
-	 * Updates the State List UI using the given state list model.
-	 * @param stateListModel Updated State List model.
+	 * 	 * @param stateListModel Updated State List model.
+	 */
+	/**
+	 * Updates the State List UI by getting the given Runner's state lists.
+	 * @param runner ManticoreRunner whose states to display
 	 */
 	public static void updateShownStates(ManticoreRunner runner) {
 
@@ -158,7 +161,7 @@ public class MUIStateListProvider extends ComponentProviderAdapter {
 	}
 
 	/**
-	 * @param st State
+	 * @param st MUIState
 	 * @return Node that can be added to another parent node for the State List UI.
 	 */
 	private static DefaultMutableTreeNode stateToNode(MUIState st) {
