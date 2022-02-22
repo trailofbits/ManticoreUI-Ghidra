@@ -109,7 +109,7 @@ public class MUILogTabComponent extends JPanel {
 				Msg.info(this, "switchtab");
 				MUILogContentComponent tabContent =
 					(MUILogContentComponent) parentPane.getComponentAt(index);
-				MUIStateListProvider.changeRunner(tabContent.MUIInstance);
+				MUIStateListProvider.changeRunner(tabContent.manticoreRunner);
 			}
 		};
 

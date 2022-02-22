@@ -1,33 +1,21 @@
 package mui;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import javax.swing.JButton;
-import javax.swing.JTextArea;
-import javax.swing.SwingWorker;
-import javax.swing.tree.TreePath;
-
-import ghidra.util.Msg;
-
-import muicore.MUICore;
 import muicore.MUICore.CLIArguments;
 import muicore.MUICore.MUILogMessage;
 import muicore.MUICore.MUIMessageList;
+import muicore.MUICore.MUIState;
+import muicore.MUICore.MUIStateList;
 import muicore.MUICore.ManticoreInstance;
 import muicore.MUICore.ManticoreRunningStatus;
 import muicore.MUICore.TerminateResponse;
-import muicore.ManticoreUIGrpc;
-import io.grpc.*;
+
 import io.grpc.stub.StreamObserver;
 
-import java.io.*;
-import java.net.*;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
+import javax.swing.tree.TreePath;
 
 /**
  * The class representing each instance of Manticore.
@@ -35,20 +23,39 @@ import java.util.List;
 public class ManticoreRunner {
 
 	private ManticoreInstance manticoreInstance;
-	private StringBuilder logText;
 
 	private boolean hasStarted;
 	private boolean isRunning;
 	private boolean wasTerminated;
 
+	private StringBuilder logText;
+
+	private List<MUIState> activeStates;
+	private List<MUIState> waitingStates;
+	private List<MUIState> forkedStates;
+	private List<MUIState> erroredStates;
+	private List<MUIState> completeStates;
+
+	public HashSet<TreePath> stateListExpandedPaths;
+
 	public ManticoreRunner() {
-		logText = new StringBuilder();
 		hasStarted = false;
 		isRunning = false;
 		wasTerminated = false;
+
+		logText = new StringBuilder();
+
+		activeStates = new ArrayList<MUIState>();
+		waitingStates = new ArrayList<MUIState>();
+		forkedStates = new ArrayList<MUIState>();
+		erroredStates = new ArrayList<MUIState>();
+		completeStates = new ArrayList<MUIState>();
+
+		stateListExpandedPaths = new HashSet<TreePath>();
 	}
 
 	public void startManticore(CLIArguments cliArgs) {
+
 		StreamObserver<ManticoreInstance> startObserver = new StreamObserver<ManticoreInstance>() {
 
 			@Override
@@ -103,7 +110,8 @@ public class ManticoreRunner {
 	}
 
 	public void fetchMessageLogs() {
-		StreamObserver<MUIMessageList> messagelistObserver =
+
+		StreamObserver<MUIMessageList> messageListObserver =
 			new StreamObserver<MUIMessageList>() {
 
 				@Override
@@ -122,14 +130,61 @@ public class ManticoreRunner {
 				}
 			};
 
-		MUIPlugin.asyncMUICoreStub.getMessageList(manticoreInstance, messagelistObserver);
+		MUIPlugin.asyncMUICoreStub.getMessageList(manticoreInstance, messageListObserver);
 	}
 
 	public String getLogText() {
 		return logText.toString();
 	}
 
+	public void fetchStateList() {
+
+		StreamObserver<MUIStateList> stateListObserver = new StreamObserver<MUIStateList>() {
+
+			@Override
+			public void onCompleted() {
+			}
+
+			@Override
+			public void onError(Throwable arg0) {
+			}
+
+			@Override
+			public void onNext(MUIStateList muiStateList) {
+				activeStates = muiStateList.getActiveStatesList();
+				waitingStates = muiStateList.getWaitingStatesList();
+				forkedStates = muiStateList.getForkedStatesList();
+				erroredStates = muiStateList.getErroredStatesList();
+				completeStates = muiStateList.getCompleteStatesList();
+			}
+
+		};
+
+		MUIPlugin.asyncMUICoreStub.getStateList(manticoreInstance, stateListObserver);
+	}
+
+	public List<MUIState> getActiveStates() {
+		return activeStates;
+	}
+
+	public List<MUIState> getWaitingStates() {
+		return waitingStates;
+	}
+
+	public List<MUIState> getForkedStates() {
+		return forkedStates;
+	}
+
+	public List<MUIState> getErroredStates() {
+		return erroredStates;
+	}
+
+	public List<MUIState> getCompleteStates() {
+		return completeStates;
+	}
+
 	public void fetchIsRunning() {
+
 		StreamObserver<ManticoreRunningStatus> runningObserver =
 			new StreamObserver<ManticoreRunningStatus>() {
 
@@ -147,7 +202,7 @@ public class ManticoreRunner {
 				}
 
 			};
-		MUIPlugin.asyncMUICoreStub.checkManticoreRunning(manticoreInstance, null);
+		MUIPlugin.asyncMUICoreStub.checkManticoreRunning(manticoreInstance, runningObserver);
 	}
 
 	public boolean getIsRunning() {

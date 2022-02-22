@@ -1,8 +1,6 @@
 package mui;
 
 import java.awt.BorderLayout;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 import javax.swing.JComponent;
@@ -19,7 +17,8 @@ import docking.WindowPosition;
 import ghidra.framework.plugintool.ComponentProviderAdapter;
 import ghidra.framework.plugintool.PluginTool;
 import ghidra.util.Msg;
-import mserialize.StateOuterClass;
+import muicore.MUICore;
+import muicore.MUICore.MUIState;
 
 /**
  * Provides the "MUI State List" component used to display the State List of the Manticore instance whose MUI Log tab is currently focused.
@@ -88,12 +87,12 @@ public class MUIStateListProvider extends ComponentProviderAdapter {
 
 			@Override
 			public void treeCollapsed(TreeExpansionEvent e) {
-				runnerDisplayed.expandedPaths.remove(e.getPath());
+				runnerDisplayed.stateListExpandedPaths.remove(e.getPath());
 			}
 
 			@Override
 			public void treeExpanded(TreeExpansionEvent e) {
-				runnerDisplayed.expandedPaths.add(e.getPath());
+				runnerDisplayed.stateListExpandedPaths.add(e.getPath());
 			}
 
 		});
@@ -106,7 +105,7 @@ public class MUIStateListProvider extends ComponentProviderAdapter {
 	public static void changeRunner(ManticoreRunner runner) {
 		clearStateTree();
 		runnerDisplayed = runner;
-		tryUpdate(runnerDisplayed.stateListModel);
+		updateShownStates(runnerDisplayed);
 	}
 
 	/**
@@ -124,7 +123,7 @@ public class MUIStateListProvider extends ComponentProviderAdapter {
 	 * Updates the State List UI using the given state list model.
 	 * @param stateListModel Updated State List model.
 	 */
-	public static void tryUpdate(ManticoreStateListModel stateListModel) {
+	public static void updateShownStates(ManticoreRunner runner) {
 
 		maxStateId = 0;
 		numsSent = new HashSet<Integer>();
@@ -132,35 +131,30 @@ public class MUIStateListProvider extends ComponentProviderAdapter {
 
 		clearStateTree();
 
-		stateListModel.stateList.get(StateOuterClass.State.StateType.BUSY)
-				.forEach((st) -> activeNode.add(stateToNode(st)));
-		stateListModel.stateList.get(StateOuterClass.State.StateType.READY)
-				.forEach((st) -> waitingNode.add(stateToNode(st)));
-		stateListModel.stateList.get(StateOuterClass.State.StateType.KILLED)
-				.forEach((st) -> erroredNode.add(stateToNode(st)));
-		stateListModel.stateList.get(StateOuterClass.State.StateType.TERMINATED)
-				.forEach((st) -> completeNode.add(stateToNode(st)));
+		runner.getActiveStates().forEach((state) -> activeNode.add(stateToNode(state)));
+		runner.getWaitingStates().forEach((state) -> waitingNode.add(stateToNode(state)));
+		runner.getForkedStates().forEach((state) -> forkedNode.add(stateToNode(state)));
+		runner.getErroredStates().forEach((state) -> erroredNode.add(stateToNode(state)));
+		runner.getCompleteStates().forEach((state) -> completeNode.add(stateToNode(state)));
 
-		activeNode.setUserObject(String.format("Active (%d)", activeNode.getChildCount()));
-		waitingNode
-				.setUserObject(String.format("Waiting (%d)", waitingNode.getChildCount()));
-		completeNode.setUserObject(
-			String.format("Complete (%d)", completeNode.getChildCount()));
-		erroredNode
-				.setUserObject(String.format("Errored (%d)", erroredNode.getChildCount()));
+		int activeCount = activeNode.getChildCount();
+		int waitingCount = waitingNode.getChildCount();
+		int forkedCount = forkedNode.getChildCount();
+		int erroredCount = erroredNode.getChildCount();
+		int completeCount = completeNode.getChildCount();
 
-		for (int i = 1; i <= maxStateId; i++) {
-			if (!numsSent.contains(i)) {
-				forkedNode.add(new DefaultMutableTreeNode(String.format("State %d", i)));
-			}
-		}
-		forkedNode.setUserObject(String.format("Forked (%d)", forkedNode.getChildCount()));
+		activeNode.setUserObject(String.format("Active (%d)", activeCount));
+		waitingNode.setUserObject(String.format("Waiting (%d)", waitingCount));
+		forkedNode.setUserObject(String.format("Forked (%d)", forkedCount));
+		erroredNode.setUserObject(String.format("Errored (%d)", erroredCount));
+		completeNode.setUserObject(String.format("Complete (%d)", completeCount));
 
-		rootNode.setUserObject(String.format("States (%d)", maxStateId));
+		rootNode.setUserObject(String.format("States (%d)",
+			activeCount + waitingCount + forkedCount + erroredCount + completeCount));
 
 		treeModel.reload();
 
-		for (TreePath path : runnerDisplayed.expandedPaths) {
+		for (TreePath path : runner.stateListExpandedPaths) {
 			stateListTree.expandPath(path);
 		}
 	}
@@ -169,10 +163,10 @@ public class MUIStateListProvider extends ComponentProviderAdapter {
 	 * @param st State
 	 * @return Node that can be added to another parent node for the State List UI.
 	 */
-	private static DefaultMutableTreeNode stateToNode(StateOuterClass.State st) {
-		maxStateId = Math.max(maxStateId, st.getId());
-		numsSent.add(st.getId());
-		return new DefaultMutableTreeNode(String.format("State %d", st.getId()));
+	private static DefaultMutableTreeNode stateToNode(MUIState st) {
+		maxStateId = Math.max(maxStateId, st.getStateId());
+		numsSent.add(st.getStateId());
+		return new DefaultMutableTreeNode(String.format("State %d", st.getStateId()));
 	}
 
 	@Override

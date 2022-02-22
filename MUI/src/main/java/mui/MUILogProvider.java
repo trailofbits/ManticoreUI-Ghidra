@@ -66,8 +66,7 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		newTabContent.requestFocusInWindow();
 
 		fetchLogs(newTabContent);
-
-		MUIStateListProvider.changeRunner(newTabContent.MUIInstance);
+		MUIStateListProvider.changeRunner(newTabContent.manticoreRunner);
 
 	}
 
