@@ -16,6 +16,7 @@ import muicore.MUICore.CLIArguments;
 import muicore.MUICore.MUILogMessage;
 import muicore.MUICore.MUIMessageList;
 import muicore.MUICore.ManticoreInstance;
+import muicore.MUICore.ManticoreRunningStatus;
 import muicore.ManticoreUIGrpc;
 import io.grpc.*;
 import io.grpc.stub.StreamObserver;
@@ -34,6 +35,7 @@ public class ManticoreRunner {
 
 	private ManticoreInstance manticoreInstance;
 	private StringBuilder logText;
+	private boolean isRunning;
 
 	public ManticoreRunner() {
 	}
@@ -84,6 +86,31 @@ public class ManticoreRunner {
 
 	public String getLogText() {
 		return logText.toString();
+	}
+
+	public void fetchIsRunning() {
+		StreamObserver<ManticoreRunningStatus> runningObserver =
+			new StreamObserver<ManticoreRunningStatus>() {
+
+				@Override
+				public void onCompleted() {
+				}
+
+				@Override
+				public void onError(Throwable arg0) {
+				}
+
+				@Override
+				public void onNext(ManticoreRunningStatus status) {
+					isRunning = status.getIsRunning();
+				}
+
+			};
+		MUIPlugin.asyncMUICoreStub.checkManticoreRunning(manticoreInstance, null);
+	}
+
+	public boolean getRunningStatus() {
+		return isRunning;
 	}
 
 }

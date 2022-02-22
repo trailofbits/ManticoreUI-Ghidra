@@ -26,12 +26,8 @@ public class MUILogProvider extends ComponentProviderAdapter {
 	private JPanel logPanel;
 	private JTabbedPane logTabPane;
 
-	private boolean isFetchingLogs;
-
 	public MUILogProvider(PluginTool tool, String name) {
 		super(tool, name, name);
-		isFetchingLogs = false;
-		currentlyShownRunner = null;
 		buildLogPanel();
 		setTitle("MUI Log");
 		setDefaultWindowPosition(WindowPosition.BOTTOM);
@@ -69,34 +65,37 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		logTabPane.setSelectedIndex(logTabPane.getTabCount() - 1);
 		newTabContent.requestFocusInWindow();
 
-		if (!isFetchingLogs) {
-			fetchLogs();
-		}
+		fetchLogs(newTabContent);
 
 		MUIStateListProvider.changeRunner(newTabContent.MUIInstance);
 
 	}
 
-	private void fetchLogs() {
-		
-		isFetchingLogs = true;
-		
+	private void fetchLogs(MUILogContentComponent tabContent) {
+
 		SwingWorker sw = new SwingWorker() {
 
 			@Override
 			protected Object doInBackground() throws Exception {
 				long prevTime = Instant.now().getEpochSecond();
-				while(isFetchingLogs) {
-					if(Instant.now().getEpochSecond() - 1 > prevTime) {
-						(MUILogContentComponent)logTabPane.getSelectedComponent() .fetchMessageLogs();
-						currentlyShownRunner.getLogText();
+				while (tabContent.manticoreRunner.getRunningStatus()) {
+					if (Instant.now().getEpochSecond() - 1 > prevTime) {
+						tabContent.manticoreRunner.fetchMessageLogs();
+						tabContent.logArea.setText(tabContent.manticoreRunner.getLogText());
+						tabContent.manticoreRunner.fetchIsRunning();
 					}
 				}
 				return null;
 			}
-			
+
+			@Override
+			protected void done() {
+				tabContent.stopButton.setEnabled(false);
+				// TODO: indicate if instance naturally finished or was terminated
+			}
+
 		};
-		
+
 		sw.execute();
 	}
 
