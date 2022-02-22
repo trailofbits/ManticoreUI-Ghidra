@@ -7,6 +7,7 @@ import ghidra.framework.ApplicationConfiguration;
 import ghidra.framework.plugintool.ComponentProviderAdapter;
 import ghidra.framework.plugintool.PluginTool;
 import ghidra.program.model.listing.Program;
+import ghidra.util.Msg;
 import muicore.MUICore.CLIArguments;
 
 import java.awt.*;
@@ -223,9 +224,13 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 							.build();
 
 					ManticoreRunner runner = new ManticoreRunner();
+					Msg.info(this, "ATTEMPT MUI START");
 					runner.startManticore(mcoreArgs);
-					// TODO: connect to Log/StateList UI elements
+					Msg.info(this, "MUI STARTED NANI");
 					MUIPlugin.manticoreRunners.add(runner);
+					MUIPlugin.log.setVisible(true);
+					MUIPlugin.stateList.setVisible(true);
+					MUIPlugin.log.addLogTab(runner);
 				}
 			});
 		bottomPanel.add(runBtn, BorderLayout.SOUTH);

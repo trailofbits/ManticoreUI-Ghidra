@@ -54,7 +54,10 @@ public class MUILogProvider extends ComponentProviderAdapter {
 	 */
 	public void addLogTab(ManticoreRunner manticoreRunner) {
 
+		Msg.info(this, "ADDLOGTAB");
+
 		MUILogContentComponent newTabContent = new MUILogContentComponent(manticoreRunner);
+		manticoreRunner.setLogUIElems(newTabContent);
 
 		logTabPane.add(
 			ZonedDateTime.now(ZoneId.systemDefault())
@@ -65,26 +68,47 @@ public class MUILogProvider extends ComponentProviderAdapter {
 		logTabPane.setSelectedIndex(logTabPane.getTabCount() - 1);
 		newTabContent.requestFocusInWindow();
 
-		fetchLogs(newTabContent);
-		MUIStateListProvider.changeRunner(newTabContent.manticoreRunner);
+		fetchLogs(manticoreRunner);
+		MUIStateListProvider.changeRunner(manticoreRunner);
 
 	}
 
-	private void fetchLogs(MUILogContentComponent tabContent) {
+	private void fetchLogs(ManticoreRunner manticoreRunner) {
 
 		SwingWorker sw = new SwingWorker() {
 
 			@Override
 			protected Object doInBackground() throws Exception {
-				while (!tabContent.manticoreRunner.getHasStarted()) {
-				} // wait until started
-
+				manticoreRunner.getLogText()
+						.append("Manticore process started..." + System.lineSeparator());
+				Msg.info(this, "START FETCH");
+				boolean waiting = true;
 				long prevTime = Instant.now().getEpochSecond();
-				while (tabContent.manticoreRunner.getIsRunning()) {
+				Msg.info(this, waiting);
+				Msg.info(this, prevTime);
+				while (waiting) {
 					if (Instant.now().getEpochSecond() - 1 > prevTime) {
-						tabContent.manticoreRunner.fetchMessageLogs();
-						tabContent.logArea.setText(tabContent.manticoreRunner.getLogText());
-						tabContent.manticoreRunner.fetchIsRunning();
+						prevTime = Instant.now().getEpochSecond();
+						Msg.info(this, "wtf");
+						waiting = !manticoreRunner.getHasStarted();
+						Msg.info(this, waiting);
+						Msg.info(this, manticoreRunner.getHasStarted());
+
+					}
+				} // wait until started
+				Msg.info(this, "real start fetch");
+
+				prevTime = Instant.now().getEpochSecond();
+				Msg.info(this, prevTime);
+				while (manticoreRunner.getIsRunning()) {
+					if (Instant.now().getEpochSecond() - 1 > prevTime) {
+						Msg.info(this, "legit fetched wow");
+						Msg.info(this, prevTime);
+
+						manticoreRunner.fetchMessageLogs();
+						manticoreRunner.fetchStateList();
+						manticoreRunner.fetchIsRunning();
+						prevTime = Instant.now().getEpochSecond();
 					}
 				}
 				return null;
@@ -92,13 +116,17 @@ public class MUILogProvider extends ComponentProviderAdapter {
 
 			@Override
 			protected void done() {
-				tabContent.stopButton.setEnabled(false);
-				if (tabContent.manticoreRunner.getWasTerminated()) {
-					tabContent.logArea.append(
-						System.lineSeparator() + "Manticore process terminated by user.");
+				Msg.info(this, "DONE WTF");
+				manticoreRunner.getStopBtn().setEnabled(false);
+				manticoreRunner.fetchMessageLogs();
+				manticoreRunner.fetchStateList();
+				if (manticoreRunner.getWasTerminated()) {
+					manticoreRunner.getLogText()
+							.append(
+								System.lineSeparator() + "Manticore process terminated by user.");
 				}
 				else {
-					tabContent.logArea
+					manticoreRunner.getLogText()
 							.append(System.lineSeparator() + "Manticore process completed.");
 				}
 			}

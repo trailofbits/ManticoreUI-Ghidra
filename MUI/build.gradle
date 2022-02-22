@@ -54,25 +54,36 @@ else {
 //----------------------END "DO NOT MODIFY" SECTION-------------------------------
 
 repositories {
+    maven { url "https://maven-central.storage-download.googleapis.com/maven2/" }
     mavenCentral()
 }
 
+def grpcVersion = '1.44.0'
+def protobufVersion = '3.19.2'
+def protocVersion = protobufVersion
+
+
 dependencies {
-    // Any external dependencies added here will automatically be copied to the lib/ directory when
-    // this extension is built.
-    implementation 'io.grpc:grpc-all:1.44.0'
-    implementation 'com.google.protobuf:protobuf-java-util:1.44.0'
-    compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+
+    implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+    implementation "io.grpc:grpc-stub:${grpcVersion}"
+    compileOnly "org.apache.tomcat:annotations-api:6.0.53"
+
+    // examples/advanced need this for JsonFormat
+    implementation "com.google.protobuf:protobuf-java-util:${protobufVersion}"
+
+    runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
+
+    testImplementation "io.grpc:grpc-testing:${grpcVersion}"
 }
 
 protobuf {
     generatedFilesBaseDir = "$projectDir/src"
     protoc {
-        artifact = 'com.google.protobuf:protoc:3.19.2'
+        artifact = "com.google.protobuf:protoc:${protocVersion}"
     }
     plugins {
         grpc {
-            artifact = 'io.grpc:protoc-gen-grpc-java:1.44.0'
+            artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}"
         }
     }
     generateProtoTasks {

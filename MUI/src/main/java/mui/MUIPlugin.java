@@ -115,9 +115,13 @@ public class MUIPlugin extends ProgramPlugin {
 	}
 
 	/**
-	 * Starts the MUICore server using the muicore_server binary included in the Extension.
+	 * Starts the MUICore server using the muicore_server binary included in the extension.
+	 * 
+	 * Should eventually be optimized such that it's created only when needed, and automatically  
+	 * destroys after a set period of inactivity.
 	 * @throws Exception
 	 */
+
 	public void startMUICoreServer() throws Exception {
 		try {
 			if (!Application.isInitialized()) {
@@ -137,6 +141,14 @@ public class MUIPlugin extends ProgramPlugin {
 				protected Object doInBackground() throws Exception {
 					ProcessBuilder pb = new ProcessBuilder(MUICoreServerPath);
 					Process p = pb.start();
+					Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+
+						@Override
+						public void run() {
+							p.destroy();
+						}
+
+					}));
 					return null;
 				}
 			};

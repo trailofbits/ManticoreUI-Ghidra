@@ -15,7 +15,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.swing.JButton;
+import javax.swing.JTextArea;
 import javax.swing.tree.TreePath;
+
+import ghidra.util.Msg;
 
 /**
  * The class representing each instance of Manticore.
@@ -28,11 +32,13 @@ public class ManticoreRunner {
 	private boolean isRunning;
 	private boolean wasTerminated;
 
-	private StringBuilder logText;
+	private JTextArea logText;
+	private JButton stopBtn;
 
 	private List<MUIState> activeStates;
 	private List<MUIState> waitingStates;
 	private List<MUIState> forkedStates;
+
 	private List<MUIState> erroredStates;
 	private List<MUIState> completeStates;
 
@@ -43,7 +49,8 @@ public class ManticoreRunner {
 		isRunning = false;
 		wasTerminated = false;
 
-		logText = new StringBuilder();
+		logText = new JTextArea();
+		stopBtn = new JButton();
 
 		activeStates = new ArrayList<MUIState>();
 		waitingStates = new ArrayList<MUIState>();
@@ -60,6 +67,9 @@ public class ManticoreRunner {
 
 			@Override
 			public void onCompleted() {
+				Msg.info(this, "COMPLETED");
+				Msg.info(this, hasStarted);
+
 			}
 
 			@Override
@@ -68,14 +78,32 @@ public class ManticoreRunner {
 
 			@Override
 			public void onNext(ManticoreInstance mcore) {
-				manticoreInstance = mcore;
-				hasStarted = true;
-				isRunning = true;
+				Msg.info(this, "OK MCORE ONNEXT");
+				setManticoreInstance(mcore);
+				Msg.info(this, mcore.getUuid());
+				setHasStarted(true);
+				setIsRunning(true);
+
+				Msg.info(this, hasStarted);
 			}
 
 		};
 
+		Msg.info(this, "TRY ASYNC");
+
 		MUIPlugin.asyncMUICoreStub.start(cliArgs, startObserver);
+	}
+
+	public void setManticoreInstance(ManticoreInstance m) {
+		manticoreInstance = m;
+	}
+
+	public void setIsRunning(boolean b) {
+		isRunning = true;
+	}
+
+	public void setHasStarted(boolean b) {
+		hasStarted = true;
 	}
 
 	public boolean getHasStarted() {
@@ -133,8 +161,17 @@ public class ManticoreRunner {
 		MUIPlugin.asyncMUICoreStub.getMessageList(manticoreInstance, messageListObserver);
 	}
 
-	public String getLogText() {
-		return logText.toString();
+	public JTextArea getLogText() {
+		return logText;
+	}
+
+	public JButton getStopBtn() {
+		return stopBtn;
+	}
+
+	public void setLogUIElems(MUILogContentComponent content) {
+		logText = content.logArea;
+		stopBtn = content.stopButton;
 	}
 
 	public void fetchStateList() {
@@ -156,6 +193,11 @@ public class ManticoreRunner {
 				forkedStates = muiStateList.getForkedStatesList();
 				erroredStates = muiStateList.getErroredStatesList();
 				completeStates = muiStateList.getCompleteStatesList();
+
+				if (MUIPlugin.stateList.runnerDisplayed == ManticoreRunner.this) { // tab could've change in between fetch and onNext
+					MUIPlugin.stateList.updateShownStates(ManticoreRunner.this);
+				}
+
 			}
 
 		};
