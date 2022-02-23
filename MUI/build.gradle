@@ -138,20 +138,10 @@ task uninstallPreviousMUI {
 
 build.dependsOn uninstallPreviousMUI
 
-/*
-task copyZip(type: Copy) {
-    group = "Installation"
-    description = "Copies zip contents into special Extensions directory so user may enable or disable easily with reinstalling from gradle each time."
-    from "$buildExtension.destinationDir/$buildExtension.baseName.$buildExtension.extension"
-    into ghidraInstallDir + '/Extensions/Ghidra'
-    dependsOn buildExtension
-}
-*/
 
 task installZip(type: Exec) {
     group = "Installation"
     description = "Installs the zip package in installed Ghidra's default extension directory"
-//    workingDir ghidraInstallDir + '/Ghidra/Extensions'
     commandLine 'unzip', '-o', "$buildExtension.destinationDir/$buildExtension.baseName.$buildExtension.extension", '-d', ghidraUserDirectory+'/Extensions/'
     dependsOn buildExtension
 }
