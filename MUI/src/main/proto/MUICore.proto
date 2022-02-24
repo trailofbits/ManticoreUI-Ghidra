@@ -50,7 +50,7 @@ message CLIArguments {
     repeated string symbolic_files = 18;
     string concrete_start = 19;
     string stdin_size = 20;
-    map<string, string> additional_mcore_args = 21;
+    string additional_mcore_args = 21;
 }
 
 message AddressRequest {

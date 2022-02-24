@@ -1,6 +1,5 @@
 from concurrent import futures
 from threading import Thread
-import socket
 
 import grpc
 from grpc._server import _Context
@@ -16,11 +15,13 @@ from manticore.core.plugin import (
     Tracer,
     RecordSymbolicBranches,
 )
+
 from manticore.utils.enums import StateStatus, StateLists
 
 import uuid
-from eth_utils import address
 from manticore.core.state_pb2 import MessageList
+
+from utils import parse_additional_arguments
 
 
 class MUIServicer(MUICore_pb2_grpc.ManticoreUIServicer):
@@ -37,17 +38,20 @@ class MUIServicer(MUICore_pb2_grpc.ManticoreUIServicer):
         self, cli_arguments: CLIArguments, context: _Context
     ) -> ManticoreInstance:
         """Starts a singular Manticore instance with the given CLI Arguments"""
-        print("START CALLED")
         id = uuid.uuid4().hex
         try:
-            m = Manticore(
+
+            parsed = parse_additional_arguments(cli_arguments.additional_mcore_args)
+            m = Manticore.linux(
                 cli_arguments.program_path,
                 argv=None
                 if not cli_arguments.binary_args
                 else list(cli_arguments.binary_args),
                 envp=None
                 if not cli_arguments.envp
-                else {key: val for key, val in [e.split() for e in cli_arguments.envp]},
+                else {
+                    key: val for key, val in [e.split("=") for e in cli_arguments.envp]
+                },
                 symbolic_files=None
                 if not cli_arguments.symbolic_files
                 else list(cli_arguments.symbolic_files),
@@ -57,9 +61,20 @@ class MUIServicer(MUICore_pb2_grpc.ManticoreUIServicer):
                 stdin_size=265
                 if not cli_arguments.stdin_size
                 else int(cli_arguments.stdin_size),
+                workspace_url=parsed.workspace,
                 introspection_plugin_type=MUIIntrospectionPlugin,
-                **cli_arguments.additional_mcore_args,
             )
+
+            m.register_plugin(InstructionCounter())
+            m.register_plugin(Visited(parsed.coverage))
+            m.register_plugin(Tracer())
+            m.register_plugin(RecordSymbolicBranches())
+
+            if parsed.names is not None:
+                m.apply_model_hooks(parsed.names)
+
+            if parsed.assertions:
+                m.load_assertions(parsed.assertions)
 
             def avoid_f(state: StateBase):
                 state.abandon()
@@ -78,11 +93,6 @@ class MUIServicer(MUICore_pb2_grpc.ManticoreUIServicer):
             for addr in self.find:
                 m.add_hook(addr, find_f)
 
-            m.register_plugin(InstructionCounter())
-            m.register_plugin(Visited())
-            m.register_plugin(Tracer())
-            m.register_plugin(RecordSymbolicBranches())
-
             def manticore_runner(mcore: Manticore):
                 mcore.run()
                 mcore.finalize()
@@ -95,14 +105,12 @@ class MUIServicer(MUICore_pb2_grpc.ManticoreUIServicer):
             print(e)
             raise e
             return ManticoreInstance()
-        print("RETURNING START NOW")
         return ManticoreInstance(uuid=id)
 
     def Terminate(
         self, mcore_instance: ManticoreInstance, context: _Context
     ) -> TerminateResponse:
         """Terminates the specified Manticore instance."""
-
         if mcore_instance.uuid not in self.manticore_instances:
             return TerminateResponse(success=False)
 
@@ -134,7 +142,6 @@ class MUIServicer(MUICore_pb2_grpc.ManticoreUIServicer):
     ) -> MUIStateList:
         """Returns full list of states for given ManticoreInstance.
         Currently, implementation is based on MUI's Binary Ninja plugin."""
-        print("GETSTATE CALLED")
         active_states = []
         waiting_states = []
         forked_states = []
@@ -178,7 +185,6 @@ class MUIServicer(MUICore_pb2_grpc.ManticoreUIServicer):
     ) -> MUIMessageList:
         """Returns any new log messages for given ManticoreInstance since the previous call.
         Currently, implementation is based on TUI."""
-        print("GETMSG CALLLED")
         if mcore_instance.uuid not in self.manticore_instances:
             return MUIMessageList(
                 messages=[LogMessage(content="Manticore instance not found!")]
@@ -192,17 +198,19 @@ class MUIServicer(MUICore_pb2_grpc.ManticoreUIServicer):
             messages.append(msg)
             i += 1
         return MUIMessageList(messages=messages)
-    
+
     def CheckManticoreRunning(
         self, mcore_instance: ManticoreInstance, context: _Context
     ) -> ManticoreRunningStatus:
-        
+
         if mcore_instance.uuid not in self.manticore_instances:
             return ManticoreRunningStatus(is_running=False)
 
         m, mthread = self.manticore_instances[mcore_instance.uuid]
 
-        return ManticoreRunningStatus(is_running=(not m.is_killed() and mthread.is_alive()))
+        return ManticoreRunningStatus(
+            is_running=(not m.is_killed() and mthread.is_alive())
+        )
 
 
 def main():
