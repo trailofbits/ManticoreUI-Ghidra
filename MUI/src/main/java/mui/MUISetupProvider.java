@@ -192,13 +192,6 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					List<String> moreArgsList = tokenizeArrayInput(moreArgs.getText());
-					HashMap<String, String> moreArgsMap = new HashMap<String, String>();
-
-					for (String arg : moreArgsList) {
-						String[] argSplit = arg.split("=");
-						moreArgsMap.put(argSplit[0], argSplit[1]);
-					}
 
 					CLIArguments mcoreArgs = CLIArguments.newBuilder()
 							.setProgramPath(programPath)
