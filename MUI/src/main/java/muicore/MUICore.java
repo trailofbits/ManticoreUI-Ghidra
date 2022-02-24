@@ -5429,38 +5429,16 @@ public final class MUICore {
         getStdinSizeBytes();
 
     /**
-     * <code>map&lt;string, string&gt; additional_mcore_args = 21;</code>
+     * <code>string additional_mcore_args = 21;</code>
+     * @return The additionalMcoreArgs.
      */
-    int getAdditionalMcoreArgsCount();
+    java.lang.String getAdditionalMcoreArgs();
     /**
-     * <code>map&lt;string, string&gt; additional_mcore_args = 21;</code>
+     * <code>string additional_mcore_args = 21;</code>
+     * @return The bytes for additionalMcoreArgs.
      */
-    boolean containsAdditionalMcoreArgs(
-        java.lang.String key);
-    /**
-     * Use {@link #getAdditionalMcoreArgsMap()} instead.
-     */
-    @java.lang.Deprecated
-    java.util.Map<java.lang.String, java.lang.String>
-    getAdditionalMcoreArgs();
-    /**
-     * <code>map&lt;string, string&gt; additional_mcore_args = 21;</code>
-     */
-    java.util.Map<java.lang.String, java.lang.String>
-    getAdditionalMcoreArgsMap();
-    /**
-     * <code>map&lt;string, string&gt; additional_mcore_args = 21;</code>
-     */
-
-    java.lang.String getAdditionalMcoreArgsOrDefault(
-        java.lang.String key,
-        java.lang.String defaultValue);
-    /**
-     * <code>map&lt;string, string&gt; additional_mcore_args = 21;</code>
-     */
-
-    java.lang.String getAdditionalMcoreArgsOrThrow(
-        java.lang.String key);
+    com.google.protobuf.ByteString
+        getAdditionalMcoreArgsBytes();
   }
   /**
    * Protobuf type {@code muicore.CLIArguments}
@@ -5481,6 +5459,7 @@ public final class MUICore {
       symbolicFiles_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       concreteStart_ = "";
       stdinSize_ = "";
+      additionalMcoreArgs_ = "";
     }
 
     @java.lang.Override
@@ -5560,16 +5539,9 @@ public final class MUICore {
               break;
             }
             case 170: {
-              if (!((mutable_bitField0_ & 0x00000008) != 0)) {
-                additionalMcoreArgs_ = com.google.protobuf.MapField.newMapField(
-                    AdditionalMcoreArgsDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000008;
-              }
-              com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-              additionalMcoreArgs__ = input.readMessage(
-                  AdditionalMcoreArgsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-              additionalMcoreArgs_.getMutableMap().put(
-                  additionalMcoreArgs__.getKey(), additionalMcoreArgs__.getValue());
+              java.lang.String s = input.readStringRequireUtf8();
+
+              additionalMcoreArgs_ = s;
               break;
             }
             default: {
@@ -5605,18 +5577,6 @@ public final class MUICore {
       return muicore.MUICore.internal_static_muicore_CLIArguments_descriptor;
     }
 
-    @SuppressWarnings({"rawtypes"})
-    @java.lang.Override
-    protected com.google.protobuf.MapField internalGetMapField(
-        int number) {
-      switch (number) {
-        case 21:
-          return internalGetAdditionalMcoreArgs();
-        default:
-          throw new RuntimeException(
-              "Invalid map field number: " + number);
-      }
-    }
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
@@ -5845,84 +5805,41 @@ public final class MUICore {
     }
 
     public static final int ADDITIONAL_MCORE_ARGS_FIELD_NUMBER = 21;
-    private static final class AdditionalMcoreArgsDefaultEntryHolder {
-      static final com.google.protobuf.MapEntry<
-          java.lang.String, java.lang.String> defaultEntry =
-              com.google.protobuf.MapEntry
-              .<java.lang.String, java.lang.String>newDefaultInstance(
-                  muicore.MUICore.internal_static_muicore_CLIArguments_AdditionalMcoreArgsEntry_descriptor, 
-                  com.google.protobuf.WireFormat.FieldType.STRING,
-                  "",
-                  com.google.protobuf.WireFormat.FieldType.STRING,
-                  "");
-    }
-    private com.google.protobuf.MapField<
-        java.lang.String, java.lang.String> additionalMcoreArgs_;
-    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-    internalGetAdditionalMcoreArgs() {
-      if (additionalMcoreArgs_ == null) {
-        return com.google.protobuf.MapField.emptyMapField(
-            AdditionalMcoreArgsDefaultEntryHolder.defaultEntry);
+    private volatile java.lang.Object additionalMcoreArgs_;
+    /**
+     * <code>string additional_mcore_args = 21;</code>
+     * @return The additionalMcoreArgs.
+     */
+    @java.lang.Override
+    public java.lang.String getAdditionalMcoreArgs() {
+      java.lang.Object ref = additionalMcoreArgs_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        additionalMcoreArgs_ = s;
+        return s;
       }
-      return additionalMcoreArgs_;
-    }
-
-    public int getAdditionalMcoreArgsCount() {
-      return internalGetAdditionalMcoreArgs().getMap().size();
     }
     /**
-     * <code>map&lt;string, string&gt; additional_mcore_args = 21;</code>
-     */
-
-    @java.lang.Override
-    public boolean containsAdditionalMcoreArgs(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      return internalGetAdditionalMcoreArgs().getMap().containsKey(key);
-    }
-    /**
-     * Use {@link #getAdditionalMcoreArgsMap()} instead.
+     * <code>string additional_mcore_args = 21;</code>
+     * @return The bytes for additionalMcoreArgs.
      */
     @java.lang.Override
-    @java.lang.Deprecated
-    public java.util.Map<java.lang.String, java.lang.String> getAdditionalMcoreArgs() {
-      return getAdditionalMcoreArgsMap();
-    }
-    /**
-     * <code>map&lt;string, string&gt; additional_mcore_args = 21;</code>
-     */
-    @java.lang.Override
-
-    public java.util.Map<java.lang.String, java.lang.String> getAdditionalMcoreArgsMap() {
-      return internalGetAdditionalMcoreArgs().getMap();
-    }
-    /**
-     * <code>map&lt;string, string&gt; additional_mcore_args = 21;</code>
-     */
-    @java.lang.Override
-
-    public java.lang.String getAdditionalMcoreArgsOrDefault(
-        java.lang.String key,
-        java.lang.String defaultValue) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, java.lang.String> map =
-          internalGetAdditionalMcoreArgs().getMap();
-      return map.containsKey(key) ? map.get(key) : defaultValue;
-    }
-    /**
-     * <code>map&lt;string, string&gt; additional_mcore_args = 21;</code>
-     */
-    @java.lang.Override
-
-    public java.lang.String getAdditionalMcoreArgsOrThrow(
-        java.lang.String key) {
-      if (key == null) { throw new NullPointerException("map key"); }
-      java.util.Map<java.lang.String, java.lang.String> map =
-          internalGetAdditionalMcoreArgs().getMap();
-      if (!map.containsKey(key)) {
-        throw new java.lang.IllegalArgumentException();
+    public com.google.protobuf.ByteString
+        getAdditionalMcoreArgsBytes() {
+      java.lang.Object ref = additionalMcoreArgs_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        additionalMcoreArgs_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
       }
-      return map.get(key);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -5957,12 +5874,9 @@ public final class MUICore {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(stdinSize_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 20, stdinSize_);
       }
-      com.google.protobuf.GeneratedMessageV3
-        .serializeStringMapTo(
-          output,
-          internalGetAdditionalMcoreArgs(),
-          AdditionalMcoreArgsDefaultEntryHolder.defaultEntry,
-          21);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(additionalMcoreArgs_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 21, additionalMcoreArgs_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -6005,15 +5919,8 @@ public final class MUICore {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(stdinSize_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(20, stdinSize_);
       }
-      for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
-           : internalGetAdditionalMcoreArgs().getMap().entrySet()) {
-        com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-        additionalMcoreArgs__ = AdditionalMcoreArgsDefaultEntryHolder.defaultEntry.newBuilderForType()
-            .setKey(entry.getKey())
-            .setValue(entry.getValue())
-            .build();
-        size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(21, additionalMcoreArgs__);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(additionalMcoreArgs_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(21, additionalMcoreArgs_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -6042,8 +5949,8 @@ public final class MUICore {
           .equals(other.getConcreteStart())) return false;
       if (!getStdinSize()
           .equals(other.getStdinSize())) return false;
-      if (!internalGetAdditionalMcoreArgs().equals(
-          other.internalGetAdditionalMcoreArgs())) return false;
+      if (!getAdditionalMcoreArgs()
+          .equals(other.getAdditionalMcoreArgs())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -6073,10 +5980,8 @@ public final class MUICore {
       hash = (53 * hash) + getConcreteStart().hashCode();
       hash = (37 * hash) + STDIN_SIZE_FIELD_NUMBER;
       hash = (53 * hash) + getStdinSize().hashCode();
-      if (!internalGetAdditionalMcoreArgs().getMap().isEmpty()) {
-        hash = (37 * hash) + ADDITIONAL_MCORE_ARGS_FIELD_NUMBER;
-        hash = (53 * hash) + internalGetAdditionalMcoreArgs().hashCode();
-      }
+      hash = (37 * hash) + ADDITIONAL_MCORE_ARGS_FIELD_NUMBER;
+      hash = (53 * hash) + getAdditionalMcoreArgs().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -6184,28 +6089,6 @@ public final class MUICore {
         return muicore.MUICore.internal_static_muicore_CLIArguments_descriptor;
       }
 
-      @SuppressWarnings({"rawtypes"})
-      protected com.google.protobuf.MapField internalGetMapField(
-          int number) {
-        switch (number) {
-          case 21:
-            return internalGetAdditionalMcoreArgs();
-          default:
-            throw new RuntimeException(
-                "Invalid map field number: " + number);
-        }
-      }
-      @SuppressWarnings({"rawtypes"})
-      protected com.google.protobuf.MapField internalGetMutableMapField(
-          int number) {
-        switch (number) {
-          case 21:
-            return internalGetMutableAdditionalMcoreArgs();
-          default:
-            throw new RuntimeException(
-                "Invalid map field number: " + number);
-        }
-      }
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
@@ -6244,7 +6127,8 @@ public final class MUICore {
 
         stdinSize_ = "";
 
-        internalGetMutableAdditionalMcoreArgs().clear();
+        additionalMcoreArgs_ = "";
+
         return this;
       }
 
@@ -6290,8 +6174,7 @@ public final class MUICore {
         result.symbolicFiles_ = symbolicFiles_;
         result.concreteStart_ = concreteStart_;
         result.stdinSize_ = stdinSize_;
-        result.additionalMcoreArgs_ = internalGetAdditionalMcoreArgs();
-        result.additionalMcoreArgs_.makeImmutable();
+        result.additionalMcoreArgs_ = additionalMcoreArgs_;
         onBuilt();
         return result;
       }
@@ -6382,8 +6265,10 @@ public final class MUICore {
           stdinSize_ = other.stdinSize_;
           onChanged();
         }
-        internalGetMutableAdditionalMcoreArgs().mergeFrom(
-            other.internalGetAdditionalMcoreArgs());
+        if (!other.getAdditionalMcoreArgs().isEmpty()) {
+          additionalMcoreArgs_ = other.additionalMcoreArgs_;
+          onChanged();
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -6972,134 +6857,79 @@ public final class MUICore {
         return this;
       }
 
-      private com.google.protobuf.MapField<
-          java.lang.String, java.lang.String> additionalMcoreArgs_;
-      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-      internalGetAdditionalMcoreArgs() {
-        if (additionalMcoreArgs_ == null) {
-          return com.google.protobuf.MapField.emptyMapField(
-              AdditionalMcoreArgsDefaultEntryHolder.defaultEntry);
+      private java.lang.Object additionalMcoreArgs_ = "";
+      /**
+       * <code>string additional_mcore_args = 21;</code>
+       * @return The additionalMcoreArgs.
+       */
+      public java.lang.String getAdditionalMcoreArgs() {
+        java.lang.Object ref = additionalMcoreArgs_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          additionalMcoreArgs_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
         }
-        return additionalMcoreArgs_;
       }
-      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-      internalGetMutableAdditionalMcoreArgs() {
-        onChanged();;
-        if (additionalMcoreArgs_ == null) {
-          additionalMcoreArgs_ = com.google.protobuf.MapField.newMapField(
-              AdditionalMcoreArgsDefaultEntryHolder.defaultEntry);
+      /**
+       * <code>string additional_mcore_args = 21;</code>
+       * @return The bytes for additionalMcoreArgs.
+       */
+      public com.google.protobuf.ByteString
+          getAdditionalMcoreArgsBytes() {
+        java.lang.Object ref = additionalMcoreArgs_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          additionalMcoreArgs_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
         }
-        if (!additionalMcoreArgs_.isMutable()) {
-          additionalMcoreArgs_ = additionalMcoreArgs_.copy();
-        }
-        return additionalMcoreArgs_;
-      }
-
-      public int getAdditionalMcoreArgsCount() {
-        return internalGetAdditionalMcoreArgs().getMap().size();
       }
       /**
-       * <code>map&lt;string, string&gt; additional_mcore_args = 21;</code>
+       * <code>string additional_mcore_args = 21;</code>
+       * @param value The additionalMcoreArgs to set.
+       * @return This builder for chaining.
        */
-
-      @java.lang.Override
-      public boolean containsAdditionalMcoreArgs(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        return internalGetAdditionalMcoreArgs().getMap().containsKey(key);
-      }
-      /**
-       * Use {@link #getAdditionalMcoreArgsMap()} instead.
-       */
-      @java.lang.Override
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, java.lang.String> getAdditionalMcoreArgs() {
-        return getAdditionalMcoreArgsMap();
-      }
-      /**
-       * <code>map&lt;string, string&gt; additional_mcore_args = 21;</code>
-       */
-      @java.lang.Override
-
-      public java.util.Map<java.lang.String, java.lang.String> getAdditionalMcoreArgsMap() {
-        return internalGetAdditionalMcoreArgs().getMap();
-      }
-      /**
-       * <code>map&lt;string, string&gt; additional_mcore_args = 21;</code>
-       */
-      @java.lang.Override
-
-      public java.lang.String getAdditionalMcoreArgsOrDefault(
-          java.lang.String key,
-          java.lang.String defaultValue) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, java.lang.String> map =
-            internalGetAdditionalMcoreArgs().getMap();
-        return map.containsKey(key) ? map.get(key) : defaultValue;
-      }
-      /**
-       * <code>map&lt;string, string&gt; additional_mcore_args = 21;</code>
-       */
-      @java.lang.Override
-
-      public java.lang.String getAdditionalMcoreArgsOrThrow(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        java.util.Map<java.lang.String, java.lang.String> map =
-            internalGetAdditionalMcoreArgs().getMap();
-        if (!map.containsKey(key)) {
-          throw new java.lang.IllegalArgumentException();
-        }
-        return map.get(key);
-      }
-
-      public Builder clearAdditionalMcoreArgs() {
-        internalGetMutableAdditionalMcoreArgs().getMutableMap()
-            .clear();
-        return this;
-      }
-      /**
-       * <code>map&lt;string, string&gt; additional_mcore_args = 21;</code>
-       */
-
-      public Builder removeAdditionalMcoreArgs(
-          java.lang.String key) {
-        if (key == null) { throw new NullPointerException("map key"); }
-        internalGetMutableAdditionalMcoreArgs().getMutableMap()
-            .remove(key);
-        return this;
-      }
-      /**
-       * Use alternate mutation accessors instead.
-       */
-      @java.lang.Deprecated
-      public java.util.Map<java.lang.String, java.lang.String>
-      getMutableAdditionalMcoreArgs() {
-        return internalGetMutableAdditionalMcoreArgs().getMutableMap();
-      }
-      /**
-       * <code>map&lt;string, string&gt; additional_mcore_args = 21;</code>
-       */
-      public Builder putAdditionalMcoreArgs(
-          java.lang.String key,
+      public Builder setAdditionalMcoreArgs(
           java.lang.String value) {
-        if (key == null) { throw new NullPointerException("map key"); }
         if (value == null) {
-  throw new NullPointerException("map value");
-}
-
-        internalGetMutableAdditionalMcoreArgs().getMutableMap()
-            .put(key, value);
+    throw new NullPointerException();
+  }
+  
+        additionalMcoreArgs_ = value;
+        onChanged();
         return this;
       }
       /**
-       * <code>map&lt;string, string&gt; additional_mcore_args = 21;</code>
+       * <code>string additional_mcore_args = 21;</code>
+       * @return This builder for chaining.
        */
-
-      public Builder putAllAdditionalMcoreArgs(
-          java.util.Map<java.lang.String, java.lang.String> values) {
-        internalGetMutableAdditionalMcoreArgs().getMutableMap()
-            .putAll(values);
+      public Builder clearAdditionalMcoreArgs() {
+        
+        additionalMcoreArgs_ = getDefaultInstance().getAdditionalMcoreArgs();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string additional_mcore_args = 21;</code>
+       * @param value The bytes for additionalMcoreArgs to set.
+       * @return This builder for chaining.
+       */
+      public Builder setAdditionalMcoreArgsBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        additionalMcoreArgs_ = value;
+        onChanged();
         return this;
       }
       @java.lang.Override
@@ -8882,11 +8712,6 @@ public final class MUICore {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_muicore_CLIArguments_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_muicore_CLIArguments_AdditionalMcoreArgsEntry_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_muicore_CLIArguments_AdditionalMcoreArgsEntry_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_muicore_AddressRequest_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -8921,31 +8746,28 @@ public final class MUICore {
       "uicore.MUIState\022*\n\017complete_states\030\010 \003(\013" +
       "2\021.muicore.MUIState\"!\n\021ManticoreInstance" +
       "\022\014\n\004uuid\030\t \001(\t\"$\n\021TerminateResponse\022\017\n\007s" +
-      "uccess\030\n \001(\010\"\226\002\n\014CLIArguments\022\024\n\014program" +
+      "uccess\030\n \001(\010\"\252\001\n\014CLIArguments\022\024\n\014program" +
       "_path\030\013 \001(\t\022\023\n\013binary_args\030\020 \003(\t\022\014\n\004envp" +
       "\030\021 \003(\t\022\026\n\016symbolic_files\030\022 \003(\t\022\026\n\016concre" +
-      "te_start\030\023 \001(\t\022\022\n\nstdin_size\030\024 \001(\t\022M\n\025ad" +
-      "ditional_mcore_args\030\025 \003(\0132..muicore.CLIA" +
-      "rguments.AdditionalMcoreArgsEntry\032:\n\030Add" +
-      "itionalMcoreArgsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005va" +
-      "lue\030\002 \001(\t:\0028\001\"\201\001\n\016AddressRequest\022\017\n\007addr" +
-      "ess\030\014 \001(\004\0220\n\004type\030\r \001(\0162\".muicore.Addres" +
-      "sRequest.TargetType\",\n\nTargetType\022\010\n\004FIN" +
-      "D\020\000\022\t\n\005AVOID\020\001\022\t\n\005CLEAR\020\002\"!\n\016TargetRespo" +
-      "nse\022\017\n\007success\030\016 \001(\010\",\n\026ManticoreRunning" +
-      "Status\022\022\n\nis_running\030\017 \001(\0102\275\003\n\013Manticore" +
-      "UI\022E\n\tTerminate\022\032.muicore.ManticoreInsta" +
-      "nce\032\032.muicore.TerminateResponse\"\000\022<\n\005Sta" +
-      "rt\022\025.muicore.CLIArguments\032\032.muicore.Mant" +
-      "icoreInstance\"\000\022C\n\rTargetAddress\022\027.muico" +
-      "re.AddressRequest\032\027.muicore.TargetRespon" +
-      "se\"\000\022C\n\014GetStateList\022\032.muicore.Manticore" +
-      "Instance\032\025.muicore.MUIStateList\"\000\022G\n\016Get" +
-      "MessageList\022\032.muicore.ManticoreInstance\032" +
-      "\027.muicore.MUIMessageList\"\000\022V\n\025CheckManti" +
-      "coreRunning\022\032.muicore.ManticoreInstance\032" +
-      "\037.muicore.ManticoreRunningStatus\"\000b\006prot" +
-      "o3"
+      "te_start\030\023 \001(\t\022\022\n\nstdin_size\030\024 \001(\t\022\035\n\025ad" +
+      "ditional_mcore_args\030\025 \001(\t\"\201\001\n\016AddressReq" +
+      "uest\022\017\n\007address\030\014 \001(\004\0220\n\004type\030\r \001(\0162\".mu" +
+      "icore.AddressRequest.TargetType\",\n\nTarge" +
+      "tType\022\010\n\004FIND\020\000\022\t\n\005AVOID\020\001\022\t\n\005CLEAR\020\002\"!\n" +
+      "\016TargetResponse\022\017\n\007success\030\016 \001(\010\",\n\026Mant" +
+      "icoreRunningStatus\022\022\n\nis_running\030\017 \001(\0102\275" +
+      "\003\n\013ManticoreUI\022E\n\tTerminate\022\032.muicore.Ma" +
+      "nticoreInstance\032\032.muicore.TerminateRespo" +
+      "nse\"\000\022<\n\005Start\022\025.muicore.CLIArguments\032\032." +
+      "muicore.ManticoreInstance\"\000\022C\n\rTargetAdd" +
+      "ress\022\027.muicore.AddressRequest\032\027.muicore." +
+      "TargetResponse\"\000\022C\n\014GetStateList\022\032.muico" +
+      "re.ManticoreInstance\032\025.muicore.MUIStateL" +
+      "ist\"\000\022G\n\016GetMessageList\022\032.muicore.Mantic" +
+      "oreInstance\032\027.muicore.MUIMessageList\"\000\022V" +
+      "\n\025CheckManticoreRunning\022\032.muicore.Mantic" +
+      "oreInstance\032\037.muicore.ManticoreRunningSt" +
+      "atus\"\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -8993,12 +8815,6 @@ public final class MUICore {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_muicore_CLIArguments_descriptor,
         new java.lang.String[] { "ProgramPath", "BinaryArgs", "Envp", "SymbolicFiles", "ConcreteStart", "StdinSize", "AdditionalMcoreArgs", });
-    internal_static_muicore_CLIArguments_AdditionalMcoreArgsEntry_descriptor =
-      internal_static_muicore_CLIArguments_descriptor.getNestedTypes().get(0);
-    internal_static_muicore_CLIArguments_AdditionalMcoreArgsEntry_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_muicore_CLIArguments_AdditionalMcoreArgsEntry_descriptor,
-        new java.lang.String[] { "Key", "Value", });
     internal_static_muicore_AddressRequest_descriptor =
       getDescriptor().getMessageTypes().get(7);
     internal_static_muicore_AddressRequest_fieldAccessorTable = new

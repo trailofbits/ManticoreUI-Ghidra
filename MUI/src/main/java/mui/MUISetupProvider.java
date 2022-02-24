@@ -208,7 +208,7 @@ public class MUISetupProvider extends ComponentProviderAdapter {
 								tokenizeArrayInput(formOptions.get("file").getText()))
 							.setStdinSize(formOptions.get("native.stdin_size").getText())
 							.setConcreteStart(formOptions.get("data").getText())
-							.putAllAdditionalMcoreArgs(moreArgsMap)
+							.setAdditionalMcoreArgs(moreArgs.getText())
 							.build();
 
 					ManticoreRunner runner = new ManticoreRunner();
