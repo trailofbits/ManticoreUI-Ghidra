@@ -121,6 +121,7 @@ tasks.whenTaskAdded { task ->
     } else if (task.name == 'generateProto'){
         zipSource.dependsOn task
         processResources.dependsOn task
+        spotlessJava.dependsOn task
     }
 }
 
