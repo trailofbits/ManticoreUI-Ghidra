@@ -29,8 +29,6 @@
 // application.gradle.version property in <GHIDRA_INSTALL_DIR>/Ghidra/application.properties
 // for the correction version of Gradle to use for the Ghidra installation you specify.
 
-
-
 plugins {
     id "com.diffplug.spotless" version "6.1.0"
     id "com.google.protobuf" version "0.8.18"
@@ -124,7 +122,6 @@ tasks.whenTaskAdded { task ->
         zipSource.dependsOn task
         processResources.dependsOn task
     }
-
 }
 
 // The following installation helpers were copied from
