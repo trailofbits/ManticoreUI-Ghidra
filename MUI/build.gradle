@@ -29,6 +29,8 @@
 // application.gradle.version property in <GHIDRA_INSTALL_DIR>/Ghidra/application.properties
 // for the correction version of Gradle to use for the Ghidra installation you specify.
 
+
+
 plugins {
     id "com.diffplug.spotless" version "6.1.0"
     id "com.google.protobuf" version "0.8.18"
@@ -115,6 +117,15 @@ protobuf {
     }
 }
 
+tasks.whenTaskAdded { task ->
+    if (task.name == 'extractIncludeProto'){
+        task.getDependsOn().add(copyDependencies)
+    } else if (task.name == 'generateProto'){
+        zipSource.dependsOn task
+        processResources.dependsOn task
+    }
+
+}
 
 // The following installation helpers were copied from
 // https://github.com/cmu-sei/kaiju/blob/c00a351aa4332e8b6e2be94f6fe52418f8946b11/build.gradle
