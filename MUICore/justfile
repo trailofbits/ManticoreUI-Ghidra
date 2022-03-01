@@ -1,0 +1,8 @@
+generate:
+  python3 setup.py generate
+
+build: generate
+  python3 setup.py build
+
+install: build
+  python3 setup.py install
