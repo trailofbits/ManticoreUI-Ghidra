@@ -1,4 +1,74 @@
-import setuptools
+from setuptools import setup, find_packages, Command
+
+
+class GenerateCommand(Command):
+    description = "custom clean command that forcefully removes dist/build directories"
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        from grpc.tools import command
+
+        print(self.distribution)
+        command.build_package_protos(".")
+
+
+shiv_args = {
+    "output_file": "muicore_server",
+    "entry_point": None,
+    "console_script": "muicore",
+    "python": None,
+    "site_packages": None,
+    "build_id": None,
+    "compressed": True,
+    "compile_pyc": False,
+    "extend_pythonpath": False,
+    "reproducible": False,
+    "no_modify": False,
+    "preamble": None,
+    "root": None,
+    "pip_args": ["."],
+}
+
+
+class BuildCommand(Command):
+    description = ""
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        import shiv.cli
+
+        shiv.cli.main.callback(*shiv_args.values())
+
+
+class CopyBinaryCommand(Command):
+    description = ""
+    user_options = [("output-dir=", "o", "directory to copy the binary to")]
+
+    def initialize_options(self):
+        self.output_dir = None
+
+    def finalize_options(self):
+        import os
+
+        if not os.path.isdir(self.output_dir):
+            raise Exception(f"Output directory does not exist: {self.output_dir}")
+
+    def run(self):
+        import shutil
+
+        shutil.copy("muicore_server", self.output_dir)
 
 
 native_deps = [
@@ -7,10 +77,10 @@ native_deps = [
     "unicorn==1.0.2",
 ]
 
-setuptools.setup(
+setup(
     name="muicore",
     version="0.0.1",
-    packages=setuptools.find_packages(),
+    packages=find_packages(),
     install_requires=[
         "manticore @ git+https://github.com/trailofbits/manticore.git@chess",
         "grpcio",
@@ -20,5 +90,10 @@ setuptools.setup(
         "console_scripts": [
             "muicore=muicore.mui_server:main",
         ]
+    },
+    cmdclass={
+        "generate": GenerateCommand,
+        "build": BuildCommand,
+        "install": CopyBinaryCommand,
     },
 )
