@@ -34,6 +34,9 @@ setup(
         "grpcio",
     ]
     + native_deps,
+    extras_require = {
+        "dev": ["grpcio-tools"]
+    },
     entry_points={
         "console_scripts": [
             "muicore=muicore.mui_server:main",
