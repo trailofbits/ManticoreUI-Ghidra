@@ -2,7 +2,9 @@ from setuptools import setup, find_packages, Command
 
 
 class GenerateCommand(Command):
-    description = "custom clean command that forcefully removes dist/build directories"
+    description = (
+        "generates muicore server protobuf + grpc code from protobuf specification file"
+    )
     user_options = []
 
     def initialize_options(self):
@@ -14,7 +16,6 @@ class GenerateCommand(Command):
     def run(self):
         from grpc.tools import command
 
-        print(self.distribution)
         command.build_package_protos(".")
 
 
@@ -37,7 +38,7 @@ shiv_args = {
 
 
 class BuildCommand(Command):
-    description = ""
+    description = "packages and creates a muicore_server binary with shiv"
     user_options = []
 
     def initialize_options(self):
@@ -53,7 +54,7 @@ class BuildCommand(Command):
 
 
 class CopyBinaryCommand(Command):
-    description = ""
+    description = "copies muicore_server binary to specified directory"
     user_options = [("output-dir=", "o", "directory to copy the binary to")]
 
     def initialize_options(self):
