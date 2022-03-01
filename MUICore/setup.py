@@ -20,7 +20,7 @@ class GenerateCommand(Command):
 
 
 shiv_args = {
-    "output_file": "muicore_server",
+    "output_file": "dist/muicore_server",
     "entry_point": None,
     "console_script": "muicore",
     "python": None,
@@ -29,15 +29,15 @@ shiv_args = {
     "compressed": True,
     "compile_pyc": False,
     "extend_pythonpath": False,
-    "reproducible": False,
-    "no_modify": False,
+    "reproducible": True,
+    "no_modify": True,
     "preamble": None,
     "root": None,
     "pip_args": ["."],
 }
 
 
-class BuildCommand(Command):
+class BuildBinaryCommand(Command):
     description = "packages and creates a muicore_server binary with shiv"
     user_options = []
 
@@ -49,27 +49,11 @@ class BuildCommand(Command):
 
     def run(self):
         import shiv.cli
-
-        shiv.cli.main.callback(*shiv_args.values())
-
-
-class CopyBinaryCommand(Command):
-    description = "copies muicore_server binary to specified directory"
-    user_options = [("output-dir=", "o", "directory to copy the binary to")]
-
-    def initialize_options(self):
-        self.output_dir = None
-
-    def finalize_options(self):
         import os
 
-        if not os.path.isdir(self.output_dir):
-            raise Exception(f"Output directory does not exist: {self.output_dir}")
-
-    def run(self):
-        import shutil
-
-        shutil.copy("muicore_server", self.output_dir)
+        if not os.path.exists("dist"):
+            os.makedirs("dist")
+        shiv.cli.main.callback(*shiv_args.values())
 
 
 native_deps = [
@@ -90,11 +74,11 @@ setup(
     entry_points={
         "console_scripts": [
             "muicore=muicore.mui_server:main",
-        ]
+        ],
+        "distutils.commands": ["generate = GenerateCommand"],
     },
     cmdclass={
         "generate": GenerateCommand,
-        "build": BuildCommand,
-        "install": CopyBinaryCommand,
+        "build_binary": BuildBinaryCommand,
     },
 )
