@@ -7,7 +7,7 @@ from crytic_compile import cryticparser
 from manticore.utils.log import set_verbosity
 
 
-def parse_additional_arguments(additional_args: str) -> argparse.Namespace:
+def parse_native_arguments(additional_args: str) -> argparse.Namespace:
     def positive(value):
         ivalue = int(value)
         if ivalue <= 0:
