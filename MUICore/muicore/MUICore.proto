@@ -57,6 +57,7 @@ message NativeArguments {
 message EVMArguments {
 	string contract_path = 12;
 	string contract_name = 13;
+	string solc_bin = 14;
 	string tx_limit = 22;
 	string tx_account = 23;
 	repeated string detectors_to_exclude = 24;
@@ -76,7 +77,7 @@ message AddressRequest {
 }
 
 message TargetResponse {
-    bool success = 14;
+    bool success = 28;
 }
 
 message ManticoreRunningStatus {

@@ -7014,28 +7014,40 @@ public final class MUICore {
         getContractNameBytes();
 
     /**
-     * <code>string txlimit = 22;</code>
-     * @return The txlimit.
+     * <code>string solc_bin = 14;</code>
+     * @return The solcBin.
      */
-    java.lang.String getTxlimit();
+    java.lang.String getSolcBin();
     /**
-     * <code>string txlimit = 22;</code>
-     * @return The bytes for txlimit.
+     * <code>string solc_bin = 14;</code>
+     * @return The bytes for solcBin.
      */
     com.google.protobuf.ByteString
-        getTxlimitBytes();
+        getSolcBinBytes();
 
     /**
-     * <code>string txaccount = 23;</code>
-     * @return The txaccount.
+     * <code>string tx_limit = 22;</code>
+     * @return The txLimit.
      */
-    java.lang.String getTxaccount();
+    java.lang.String getTxLimit();
     /**
-     * <code>string txaccount = 23;</code>
-     * @return The bytes for txaccount.
+     * <code>string tx_limit = 22;</code>
+     * @return The bytes for txLimit.
      */
     com.google.protobuf.ByteString
-        getTxaccountBytes();
+        getTxLimitBytes();
+
+    /**
+     * <code>string tx_account = 23;</code>
+     * @return The txAccount.
+     */
+    java.lang.String getTxAccount();
+    /**
+     * <code>string tx_account = 23;</code>
+     * @return The bytes for txAccount.
+     */
+    com.google.protobuf.ByteString
+        getTxAccountBytes();
 
     /**
      * <code>repeated string detectors_to_exclude = 24;</code>
@@ -7063,29 +7075,16 @@ public final class MUICore {
         getDetectorsToExcludeBytes(int index);
 
     /**
-     * <code>repeated string additional_flags = 25;</code>
-     * @return A list containing the additionalFlags.
+     * <code>string additional_flags = 25;</code>
+     * @return The additionalFlags.
      */
-    java.util.List<java.lang.String>
-        getAdditionalFlagsList();
+    java.lang.String getAdditionalFlags();
     /**
-     * <code>repeated string additional_flags = 25;</code>
-     * @return The count of additionalFlags.
-     */
-    int getAdditionalFlagsCount();
-    /**
-     * <code>repeated string additional_flags = 25;</code>
-     * @param index The index of the element to return.
-     * @return The additionalFlags at the given index.
-     */
-    java.lang.String getAdditionalFlags(int index);
-    /**
-     * <code>repeated string additional_flags = 25;</code>
-     * @param index The index of the value to return.
-     * @return The bytes of the additionalFlags at the given index.
+     * <code>string additional_flags = 25;</code>
+     * @return The bytes for additionalFlags.
      */
     com.google.protobuf.ByteString
-        getAdditionalFlagsBytes(int index);
+        getAdditionalFlagsBytes();
   }
   /**
    * Protobuf type {@code muicore.EVMArguments}
@@ -7102,10 +7101,11 @@ public final class MUICore {
     private EVMArguments() {
       contractPath_ = "";
       contractName_ = "";
-      txlimit_ = "";
-      txaccount_ = "";
+      solcBin_ = "";
+      txLimit_ = "";
+      txAccount_ = "";
       detectorsToExclude_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      additionalFlags_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      additionalFlags_ = "";
     }
 
     @java.lang.Override
@@ -7151,16 +7151,22 @@ public final class MUICore {
               contractName_ = s;
               break;
             }
+            case 114: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              solcBin_ = s;
+              break;
+            }
             case 178: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              txlimit_ = s;
+              txLimit_ = s;
               break;
             }
             case 186: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              txaccount_ = s;
+              txAccount_ = s;
               break;
             }
             case 194: {
@@ -7174,11 +7180,8 @@ public final class MUICore {
             }
             case 202: {
               java.lang.String s = input.readStringRequireUtf8();
-              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                additionalFlags_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000002;
-              }
-              additionalFlags_.add(s);
+
+              additionalFlags_ = s;
               break;
             }
             default: {
@@ -7198,9 +7201,6 @@ public final class MUICore {
       } finally {
         if (((mutable_bitField0_ & 0x00000001) != 0)) {
           detectorsToExclude_ = detectorsToExclude_.getUnmodifiableView();
-        }
-        if (((mutable_bitField0_ & 0x00000002) != 0)) {
-          additionalFlags_ = additionalFlags_.getUnmodifiableView();
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -7295,76 +7295,114 @@ public final class MUICore {
       }
     }
 
-    public static final int TXLIMIT_FIELD_NUMBER = 22;
-    private volatile java.lang.Object txlimit_;
+    public static final int SOLC_BIN_FIELD_NUMBER = 14;
+    private volatile java.lang.Object solcBin_;
     /**
-     * <code>string txlimit = 22;</code>
-     * @return The txlimit.
+     * <code>string solc_bin = 14;</code>
+     * @return The solcBin.
      */
     @java.lang.Override
-    public java.lang.String getTxlimit() {
-      java.lang.Object ref = txlimit_;
+    public java.lang.String getSolcBin() {
+      java.lang.Object ref = solcBin_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        txlimit_ = s;
+        solcBin_ = s;
         return s;
       }
     }
     /**
-     * <code>string txlimit = 22;</code>
-     * @return The bytes for txlimit.
+     * <code>string solc_bin = 14;</code>
+     * @return The bytes for solcBin.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString
-        getTxlimitBytes() {
-      java.lang.Object ref = txlimit_;
+        getSolcBinBytes() {
+      java.lang.Object ref = solcBin_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        txlimit_ = b;
+        solcBin_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    public static final int TXACCOUNT_FIELD_NUMBER = 23;
-    private volatile java.lang.Object txaccount_;
+    public static final int TX_LIMIT_FIELD_NUMBER = 22;
+    private volatile java.lang.Object txLimit_;
     /**
-     * <code>string txaccount = 23;</code>
-     * @return The txaccount.
+     * <code>string tx_limit = 22;</code>
+     * @return The txLimit.
      */
     @java.lang.Override
-    public java.lang.String getTxaccount() {
-      java.lang.Object ref = txaccount_;
+    public java.lang.String getTxLimit() {
+      java.lang.Object ref = txLimit_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        txaccount_ = s;
+        txLimit_ = s;
         return s;
       }
     }
     /**
-     * <code>string txaccount = 23;</code>
-     * @return The bytes for txaccount.
+     * <code>string tx_limit = 22;</code>
+     * @return The bytes for txLimit.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString
-        getTxaccountBytes() {
-      java.lang.Object ref = txaccount_;
+        getTxLimitBytes() {
+      java.lang.Object ref = txLimit_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        txaccount_ = b;
+        txLimit_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int TX_ACCOUNT_FIELD_NUMBER = 23;
+    private volatile java.lang.Object txAccount_;
+    /**
+     * <code>string tx_account = 23;</code>
+     * @return The txAccount.
+     */
+    @java.lang.Override
+    public java.lang.String getTxAccount() {
+      java.lang.Object ref = txAccount_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        txAccount_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string tx_account = 23;</code>
+     * @return The bytes for txAccount.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getTxAccountBytes() {
+      java.lang.Object ref = txAccount_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        txAccount_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -7407,38 +7445,41 @@ public final class MUICore {
     }
 
     public static final int ADDITIONAL_FLAGS_FIELD_NUMBER = 25;
-    private com.google.protobuf.LazyStringList additionalFlags_;
+    private volatile java.lang.Object additionalFlags_;
     /**
-     * <code>repeated string additional_flags = 25;</code>
-     * @return A list containing the additionalFlags.
+     * <code>string additional_flags = 25;</code>
+     * @return The additionalFlags.
      */
-    public com.google.protobuf.ProtocolStringList
-        getAdditionalFlagsList() {
-      return additionalFlags_;
+    @java.lang.Override
+    public java.lang.String getAdditionalFlags() {
+      java.lang.Object ref = additionalFlags_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        additionalFlags_ = s;
+        return s;
+      }
     }
     /**
-     * <code>repeated string additional_flags = 25;</code>
-     * @return The count of additionalFlags.
+     * <code>string additional_flags = 25;</code>
+     * @return The bytes for additionalFlags.
      */
-    public int getAdditionalFlagsCount() {
-      return additionalFlags_.size();
-    }
-    /**
-     * <code>repeated string additional_flags = 25;</code>
-     * @param index The index of the element to return.
-     * @return The additionalFlags at the given index.
-     */
-    public java.lang.String getAdditionalFlags(int index) {
-      return additionalFlags_.get(index);
-    }
-    /**
-     * <code>repeated string additional_flags = 25;</code>
-     * @param index The index of the value to return.
-     * @return The bytes of the additionalFlags at the given index.
-     */
+    @java.lang.Override
     public com.google.protobuf.ByteString
-        getAdditionalFlagsBytes(int index) {
-      return additionalFlags_.getByteString(index);
+        getAdditionalFlagsBytes() {
+      java.lang.Object ref = additionalFlags_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        additionalFlags_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     private byte memoizedIsInitialized = -1;
@@ -7461,17 +7502,20 @@ public final class MUICore {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(contractName_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 13, contractName_);
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(txlimit_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 22, txlimit_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(solcBin_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 14, solcBin_);
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(txaccount_)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 23, txaccount_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(txLimit_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 22, txLimit_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(txAccount_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 23, txAccount_);
       }
       for (int i = 0; i < detectorsToExclude_.size(); i++) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 24, detectorsToExclude_.getRaw(i));
       }
-      for (int i = 0; i < additionalFlags_.size(); i++) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 25, additionalFlags_.getRaw(i));
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(additionalFlags_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 25, additionalFlags_);
       }
       unknownFields.writeTo(output);
     }
@@ -7488,11 +7532,14 @@ public final class MUICore {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(contractName_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(13, contractName_);
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(txlimit_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(22, txlimit_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(solcBin_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(14, solcBin_);
       }
-      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(txaccount_)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(23, txaccount_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(txLimit_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(22, txLimit_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(txAccount_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(23, txAccount_);
       }
       {
         int dataSize = 0;
@@ -7502,13 +7549,8 @@ public final class MUICore {
         size += dataSize;
         size += 2 * getDetectorsToExcludeList().size();
       }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < additionalFlags_.size(); i++) {
-          dataSize += computeStringSizeNoTag(additionalFlags_.getRaw(i));
-        }
-        size += dataSize;
-        size += 2 * getAdditionalFlagsList().size();
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(additionalFlags_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(25, additionalFlags_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -7529,14 +7571,16 @@ public final class MUICore {
           .equals(other.getContractPath())) return false;
       if (!getContractName()
           .equals(other.getContractName())) return false;
-      if (!getTxlimit()
-          .equals(other.getTxlimit())) return false;
-      if (!getTxaccount()
-          .equals(other.getTxaccount())) return false;
+      if (!getSolcBin()
+          .equals(other.getSolcBin())) return false;
+      if (!getTxLimit()
+          .equals(other.getTxLimit())) return false;
+      if (!getTxAccount()
+          .equals(other.getTxAccount())) return false;
       if (!getDetectorsToExcludeList()
           .equals(other.getDetectorsToExcludeList())) return false;
-      if (!getAdditionalFlagsList()
-          .equals(other.getAdditionalFlagsList())) return false;
+      if (!getAdditionalFlags()
+          .equals(other.getAdditionalFlags())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -7552,18 +7596,18 @@ public final class MUICore {
       hash = (53 * hash) + getContractPath().hashCode();
       hash = (37 * hash) + CONTRACT_NAME_FIELD_NUMBER;
       hash = (53 * hash) + getContractName().hashCode();
-      hash = (37 * hash) + TXLIMIT_FIELD_NUMBER;
-      hash = (53 * hash) + getTxlimit().hashCode();
-      hash = (37 * hash) + TXACCOUNT_FIELD_NUMBER;
-      hash = (53 * hash) + getTxaccount().hashCode();
+      hash = (37 * hash) + SOLC_BIN_FIELD_NUMBER;
+      hash = (53 * hash) + getSolcBin().hashCode();
+      hash = (37 * hash) + TX_LIMIT_FIELD_NUMBER;
+      hash = (53 * hash) + getTxLimit().hashCode();
+      hash = (37 * hash) + TX_ACCOUNT_FIELD_NUMBER;
+      hash = (53 * hash) + getTxAccount().hashCode();
       if (getDetectorsToExcludeCount() > 0) {
         hash = (37 * hash) + DETECTORS_TO_EXCLUDE_FIELD_NUMBER;
         hash = (53 * hash) + getDetectorsToExcludeList().hashCode();
       }
-      if (getAdditionalFlagsCount() > 0) {
-        hash = (37 * hash) + ADDITIONAL_FLAGS_FIELD_NUMBER;
-        hash = (53 * hash) + getAdditionalFlagsList().hashCode();
-      }
+      hash = (37 * hash) + ADDITIONAL_FLAGS_FIELD_NUMBER;
+      hash = (53 * hash) + getAdditionalFlags().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -7701,14 +7745,16 @@ public final class MUICore {
 
         contractName_ = "";
 
-        txlimit_ = "";
+        solcBin_ = "";
 
-        txaccount_ = "";
+        txLimit_ = "";
+
+        txAccount_ = "";
 
         detectorsToExclude_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000001);
-        additionalFlags_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000002);
+        additionalFlags_ = "";
+
         return this;
       }
 
@@ -7738,17 +7784,14 @@ public final class MUICore {
         int from_bitField0_ = bitField0_;
         result.contractPath_ = contractPath_;
         result.contractName_ = contractName_;
-        result.txlimit_ = txlimit_;
-        result.txaccount_ = txaccount_;
+        result.solcBin_ = solcBin_;
+        result.txLimit_ = txLimit_;
+        result.txAccount_ = txAccount_;
         if (((bitField0_ & 0x00000001) != 0)) {
           detectorsToExclude_ = detectorsToExclude_.getUnmodifiableView();
           bitField0_ = (bitField0_ & ~0x00000001);
         }
         result.detectorsToExclude_ = detectorsToExclude_;
-        if (((bitField0_ & 0x00000002) != 0)) {
-          additionalFlags_ = additionalFlags_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000002);
-        }
         result.additionalFlags_ = additionalFlags_;
         onBuilt();
         return result;
@@ -7806,12 +7849,16 @@ public final class MUICore {
           contractName_ = other.contractName_;
           onChanged();
         }
-        if (!other.getTxlimit().isEmpty()) {
-          txlimit_ = other.txlimit_;
+        if (!other.getSolcBin().isEmpty()) {
+          solcBin_ = other.solcBin_;
           onChanged();
         }
-        if (!other.getTxaccount().isEmpty()) {
-          txaccount_ = other.txaccount_;
+        if (!other.getTxLimit().isEmpty()) {
+          txLimit_ = other.txLimit_;
+          onChanged();
+        }
+        if (!other.getTxAccount().isEmpty()) {
+          txAccount_ = other.txAccount_;
           onChanged();
         }
         if (!other.detectorsToExclude_.isEmpty()) {
@@ -7824,14 +7871,8 @@ public final class MUICore {
           }
           onChanged();
         }
-        if (!other.additionalFlags_.isEmpty()) {
-          if (additionalFlags_.isEmpty()) {
-            additionalFlags_ = other.additionalFlags_;
-            bitField0_ = (bitField0_ & ~0x00000002);
-          } else {
-            ensureAdditionalFlagsIsMutable();
-            additionalFlags_.addAll(other.additionalFlags_);
-          }
+        if (!other.getAdditionalFlags().isEmpty()) {
+          additionalFlags_ = other.additionalFlags_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -8016,154 +8057,230 @@ public final class MUICore {
         return this;
       }
 
-      private java.lang.Object txlimit_ = "";
+      private java.lang.Object solcBin_ = "";
       /**
-       * <code>string txlimit = 22;</code>
-       * @return The txlimit.
+       * <code>string solc_bin = 14;</code>
+       * @return The solcBin.
        */
-      public java.lang.String getTxlimit() {
-        java.lang.Object ref = txlimit_;
+      public java.lang.String getSolcBin() {
+        java.lang.Object ref = solcBin_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          txlimit_ = s;
+          solcBin_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>string txlimit = 22;</code>
-       * @return The bytes for txlimit.
+       * <code>string solc_bin = 14;</code>
+       * @return The bytes for solcBin.
        */
       public com.google.protobuf.ByteString
-          getTxlimitBytes() {
-        java.lang.Object ref = txlimit_;
+          getSolcBinBytes() {
+        java.lang.Object ref = solcBin_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          txlimit_ = b;
+          solcBin_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string txlimit = 22;</code>
-       * @param value The txlimit to set.
+       * <code>string solc_bin = 14;</code>
+       * @param value The solcBin to set.
        * @return This builder for chaining.
        */
-      public Builder setTxlimit(
+      public Builder setSolcBin(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        txlimit_ = value;
+        solcBin_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string txlimit = 22;</code>
+       * <code>string solc_bin = 14;</code>
        * @return This builder for chaining.
        */
-      public Builder clearTxlimit() {
+      public Builder clearSolcBin() {
         
-        txlimit_ = getDefaultInstance().getTxlimit();
+        solcBin_ = getDefaultInstance().getSolcBin();
         onChanged();
         return this;
       }
       /**
-       * <code>string txlimit = 22;</code>
-       * @param value The bytes for txlimit to set.
+       * <code>string solc_bin = 14;</code>
+       * @param value The bytes for solcBin to set.
        * @return This builder for chaining.
        */
-      public Builder setTxlimitBytes(
+      public Builder setSolcBinBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        txlimit_ = value;
+        solcBin_ = value;
         onChanged();
         return this;
       }
 
-      private java.lang.Object txaccount_ = "";
+      private java.lang.Object txLimit_ = "";
       /**
-       * <code>string txaccount = 23;</code>
-       * @return The txaccount.
+       * <code>string tx_limit = 22;</code>
+       * @return The txLimit.
        */
-      public java.lang.String getTxaccount() {
-        java.lang.Object ref = txaccount_;
+      public java.lang.String getTxLimit() {
+        java.lang.Object ref = txLimit_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          txaccount_ = s;
+          txLimit_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>string txaccount = 23;</code>
-       * @return The bytes for txaccount.
+       * <code>string tx_limit = 22;</code>
+       * @return The bytes for txLimit.
        */
       public com.google.protobuf.ByteString
-          getTxaccountBytes() {
-        java.lang.Object ref = txaccount_;
+          getTxLimitBytes() {
+        java.lang.Object ref = txLimit_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          txaccount_ = b;
+          txLimit_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string txaccount = 23;</code>
-       * @param value The txaccount to set.
+       * <code>string tx_limit = 22;</code>
+       * @param value The txLimit to set.
        * @return This builder for chaining.
        */
-      public Builder setTxaccount(
+      public Builder setTxLimit(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        txaccount_ = value;
+        txLimit_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string txaccount = 23;</code>
+       * <code>string tx_limit = 22;</code>
        * @return This builder for chaining.
        */
-      public Builder clearTxaccount() {
+      public Builder clearTxLimit() {
         
-        txaccount_ = getDefaultInstance().getTxaccount();
+        txLimit_ = getDefaultInstance().getTxLimit();
         onChanged();
         return this;
       }
       /**
-       * <code>string txaccount = 23;</code>
-       * @param value The bytes for txaccount to set.
+       * <code>string tx_limit = 22;</code>
+       * @param value The bytes for txLimit to set.
        * @return This builder for chaining.
        */
-      public Builder setTxaccountBytes(
+      public Builder setTxLimitBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        txaccount_ = value;
+        txLimit_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object txAccount_ = "";
+      /**
+       * <code>string tx_account = 23;</code>
+       * @return The txAccount.
+       */
+      public java.lang.String getTxAccount() {
+        java.lang.Object ref = txAccount_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          txAccount_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string tx_account = 23;</code>
+       * @return The bytes for txAccount.
+       */
+      public com.google.protobuf.ByteString
+          getTxAccountBytes() {
+        java.lang.Object ref = txAccount_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          txAccount_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string tx_account = 23;</code>
+       * @param value The txAccount to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTxAccount(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        txAccount_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string tx_account = 23;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearTxAccount() {
+        
+        txAccount_ = getDefaultInstance().getTxAccount();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string tx_account = 23;</code>
+       * @param value The bytes for txAccount to set.
+       * @return This builder for chaining.
+       */
+      public Builder setTxAccountBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        txAccount_ = value;
         onChanged();
         return this;
       }
@@ -8278,112 +8395,78 @@ public final class MUICore {
         return this;
       }
 
-      private com.google.protobuf.LazyStringList additionalFlags_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      private void ensureAdditionalFlagsIsMutable() {
-        if (!((bitField0_ & 0x00000002) != 0)) {
-          additionalFlags_ = new com.google.protobuf.LazyStringArrayList(additionalFlags_);
-          bitField0_ |= 0x00000002;
-         }
-      }
+      private java.lang.Object additionalFlags_ = "";
       /**
-       * <code>repeated string additional_flags = 25;</code>
-       * @return A list containing the additionalFlags.
+       * <code>string additional_flags = 25;</code>
+       * @return The additionalFlags.
        */
-      public com.google.protobuf.ProtocolStringList
-          getAdditionalFlagsList() {
-        return additionalFlags_.getUnmodifiableView();
+      public java.lang.String getAdditionalFlags() {
+        java.lang.Object ref = additionalFlags_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          additionalFlags_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>repeated string additional_flags = 25;</code>
-       * @return The count of additionalFlags.
-       */
-      public int getAdditionalFlagsCount() {
-        return additionalFlags_.size();
-      }
-      /**
-       * <code>repeated string additional_flags = 25;</code>
-       * @param index The index of the element to return.
-       * @return The additionalFlags at the given index.
-       */
-      public java.lang.String getAdditionalFlags(int index) {
-        return additionalFlags_.get(index);
-      }
-      /**
-       * <code>repeated string additional_flags = 25;</code>
-       * @param index The index of the value to return.
-       * @return The bytes of the additionalFlags at the given index.
+       * <code>string additional_flags = 25;</code>
+       * @return The bytes for additionalFlags.
        */
       public com.google.protobuf.ByteString
-          getAdditionalFlagsBytes(int index) {
-        return additionalFlags_.getByteString(index);
+          getAdditionalFlagsBytes() {
+        java.lang.Object ref = additionalFlags_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          additionalFlags_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
-       * <code>repeated string additional_flags = 25;</code>
-       * @param index The index to set the value at.
+       * <code>string additional_flags = 25;</code>
        * @param value The additionalFlags to set.
        * @return This builder for chaining.
        */
       public Builder setAdditionalFlags(
-          int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureAdditionalFlagsIsMutable();
-        additionalFlags_.set(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string additional_flags = 25;</code>
-       * @param value The additionalFlags to add.
-       * @return This builder for chaining.
-       */
-      public Builder addAdditionalFlags(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  ensureAdditionalFlagsIsMutable();
-        additionalFlags_.add(value);
+  
+        additionalFlags_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string additional_flags = 25;</code>
-       * @param values The additionalFlags to add.
-       * @return This builder for chaining.
-       */
-      public Builder addAllAdditionalFlags(
-          java.lang.Iterable<java.lang.String> values) {
-        ensureAdditionalFlagsIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, additionalFlags_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string additional_flags = 25;</code>
+       * <code>string additional_flags = 25;</code>
        * @return This builder for chaining.
        */
       public Builder clearAdditionalFlags() {
-        additionalFlags_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000002);
+        
+        additionalFlags_ = getDefaultInstance().getAdditionalFlags();
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string additional_flags = 25;</code>
-       * @param value The bytes of the additionalFlags to add.
+       * <code>string additional_flags = 25;</code>
+       * @param value The bytes for additionalFlags to set.
        * @return This builder for chaining.
        */
-      public Builder addAdditionalFlagsBytes(
+      public Builder setAdditionalFlagsBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        ensureAdditionalFlagsIsMutable();
-        additionalFlags_.add(value);
+        
+        additionalFlags_ = value;
         onChanged();
         return this;
       }
@@ -9158,7 +9241,7 @@ public final class MUICore {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>bool success = 14;</code>
+     * <code>bool success = 28;</code>
      * @return The success.
      */
     boolean getSuccess();
@@ -9208,7 +9291,7 @@ public final class MUICore {
             case 0:
               done = true;
               break;
-            case 112: {
+            case 224: {
 
               success_ = input.readBool();
               break;
@@ -9245,10 +9328,10 @@ public final class MUICore {
               muicore.MUICore.TargetResponse.class, muicore.MUICore.TargetResponse.Builder.class);
     }
 
-    public static final int SUCCESS_FIELD_NUMBER = 14;
+    public static final int SUCCESS_FIELD_NUMBER = 28;
     private boolean success_;
     /**
-     * <code>bool success = 14;</code>
+     * <code>bool success = 28;</code>
      * @return The success.
      */
     @java.lang.Override
@@ -9271,7 +9354,7 @@ public final class MUICore {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (success_ != false) {
-        output.writeBool(14, success_);
+        output.writeBool(28, success_);
       }
       unknownFields.writeTo(output);
     }
@@ -9284,7 +9367,7 @@ public final class MUICore {
       size = 0;
       if (success_ != false) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(14, success_);
+          .computeBoolSize(28, success_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -9561,7 +9644,7 @@ public final class MUICore {
 
       private boolean success_ ;
       /**
-       * <code>bool success = 14;</code>
+       * <code>bool success = 28;</code>
        * @return The success.
        */
       @java.lang.Override
@@ -9569,7 +9652,7 @@ public final class MUICore {
         return success_;
       }
       /**
-       * <code>bool success = 14;</code>
+       * <code>bool success = 28;</code>
        * @param value The success to set.
        * @return This builder for chaining.
        */
@@ -9580,7 +9663,7 @@ public final class MUICore {
         return this;
       }
       /**
-       * <code>bool success = 14;</code>
+       * <code>bool success = 28;</code>
        * @return This builder for chaining.
        */
       public Builder clearSuccess() {
@@ -10210,30 +10293,30 @@ public final class MUICore {
       "ram_path\030\013 \001(\t\022\023\n\013binary_args\030\020 \003(\t\022\014\n\004e" +
       "nvp\030\021 \003(\t\022\026\n\016symbolic_files\030\022 \003(\t\022\026\n\016con" +
       "crete_start\030\023 \001(\t\022\022\n\nstdin_size\030\024 \001(\t\022\035\n" +
-      "\025additional_mcore_args\030\025 \001(\t\"\230\001\n\014EVMArgu" +
+      "\025additional_mcore_args\030\025 \001(\t\"\254\001\n\014EVMArgu" +
       "ments\022\025\n\rcontract_path\030\014 \001(\t\022\025\n\rcontract" +
-      "_name\030\r \001(\t\022\017\n\007txlimit\030\026 \001(\t\022\021\n\ttxaccoun" +
-      "t\030\027 \001(\t\022\034\n\024detectors_to_exclude\030\030 \003(\t\022\030\n" +
-      "\020additional_flags\030\031 \003(\t\"\201\001\n\016AddressReque" +
-      "st\022\017\n\007address\030\032 \001(\004\0220\n\004type\030\033 \001(\0162\".muic" +
-      "ore.AddressRequest.TargetType\",\n\nTargetT" +
-      "ype\022\010\n\004FIND\020\000\022\t\n\005AVOID\020\001\022\t\n\005CLEAR\020\002\"!\n\016T" +
-      "argetResponse\022\017\n\007success\030\016 \001(\010\",\n\026Mantic" +
-      "oreRunningStatus\022\022\n\nis_running\030\017 \001(\0102\215\004\n" +
-      "\013ManticoreUI\022E\n\013StartNative\022\030.muicore.Na" +
-      "tiveArguments\032\032.muicore.ManticoreInstanc" +
-      "e\"\000\022?\n\010StartEVM\022\025.muicore.EVMArguments\032\032" +
-      ".muicore.ManticoreInstance\"\000\022E\n\tTerminat" +
-      "e\022\032.muicore.ManticoreInstance\032\032.muicore." +
-      "TerminateResponse\"\000\022C\n\014GetStateList\022\032.mu" +
-      "icore.ManticoreInstance\032\025.muicore.MUISta" +
-      "teList\"\000\022G\n\016GetMessageList\022\032.muicore.Man" +
-      "ticoreInstance\032\027.muicore.MUIMessageList\"" +
-      "\000\022V\n\025CheckManticoreRunning\022\032.muicore.Man" +
-      "ticoreInstance\032\037.muicore.ManticoreRunnin" +
-      "gStatus\"\000\022I\n\023TargetAddressNative\022\027.muico" +
-      "re.AddressRequest\032\027.muicore.TargetRespon" +
-      "se\"\000b\006proto3"
+      "_name\030\r \001(\t\022\020\n\010solc_bin\030\016 \001(\t\022\020\n\010tx_limi" +
+      "t\030\026 \001(\t\022\022\n\ntx_account\030\027 \001(\t\022\034\n\024detectors" +
+      "_to_exclude\030\030 \003(\t\022\030\n\020additional_flags\030\031 " +
+      "\001(\t\"\201\001\n\016AddressRequest\022\017\n\007address\030\032 \001(\004\022" +
+      "0\n\004type\030\033 \001(\0162\".muicore.AddressRequest.T" +
+      "argetType\",\n\nTargetType\022\010\n\004FIND\020\000\022\t\n\005AVO" +
+      "ID\020\001\022\t\n\005CLEAR\020\002\"!\n\016TargetResponse\022\017\n\007suc" +
+      "cess\030\034 \001(\010\",\n\026ManticoreRunningStatus\022\022\n\n" +
+      "is_running\030\017 \001(\0102\215\004\n\013ManticoreUI\022E\n\013Star" +
+      "tNative\022\030.muicore.NativeArguments\032\032.muic" +
+      "ore.ManticoreInstance\"\000\022?\n\010StartEVM\022\025.mu" +
+      "icore.EVMArguments\032\032.muicore.ManticoreIn" +
+      "stance\"\000\022E\n\tTerminate\022\032.muicore.Manticor" +
+      "eInstance\032\032.muicore.TerminateResponse\"\000\022" +
+      "C\n\014GetStateList\022\032.muicore.ManticoreInsta" +
+      "nce\032\025.muicore.MUIStateList\"\000\022G\n\016GetMessa" +
+      "geList\022\032.muicore.ManticoreInstance\032\027.mui" +
+      "core.MUIMessageList\"\000\022V\n\025CheckManticoreR" +
+      "unning\022\032.muicore.ManticoreInstance\032\037.mui" +
+      "core.ManticoreRunningStatus\"\000\022I\n\023TargetA" +
+      "ddressNative\022\027.muicore.AddressRequest\032\027." +
+      "muicore.TargetResponse\"\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -10286,7 +10369,7 @@ public final class MUICore {
     internal_static_muicore_EVMArguments_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_muicore_EVMArguments_descriptor,
-        new java.lang.String[] { "ContractPath", "ContractName", "Txlimit", "Txaccount", "DetectorsToExclude", "AdditionalFlags", });
+        new java.lang.String[] { "ContractPath", "ContractName", "SolcBin", "TxLimit", "TxAccount", "DetectorsToExclude", "AdditionalFlags", });
     internal_static_muicore_AddressRequest_descriptor =
       getDescriptor().getMessageTypes().get(8);
     internal_static_muicore_AddressRequest_fieldAccessorTable = new

@@ -128,10 +128,10 @@ class MUIServicer(ManticoreUIServicer):
                     contract_name = evm_arguments.contract_name,
                     tx_limit=-1 if not evm_arguments.tx_limit else evm_arguments.tx_limit,
                     tx_use_coverage=True if args.txnocoverage == None else args.txnocoverage,
-                    tx_send_ether=True if args.txsendether == None else args.txsendether,
+                    tx_send_ether=True if args.txnoether == None else args.txnoether,
                     tx_account="attacker" if not evm_arguments.tx_account else evm_arguments.tx_account,
                     tx_preconstrain=False if args.txpreconstrain == None else args.txpreconstrain,
-                    compile_args={"solc_solcs_bin": "solc"},
+                    compile_args={"solc_solcs_bin": evm_arguments.solc_bin},
                 )
                 
                 if not options["no_testcases"]:
@@ -230,7 +230,7 @@ class MUIServicer(ManticoreUIServicer):
         Currently, implementation is based on TUI."""
         if mcore_instance.uuid not in self.manticore_instances:
             return MUIMessageList(
-                messages=[LogMessage(content="Manticore instance not found!")]
+                messages=[MUILogMessage(content="Manticore instance not found!")]
             )
         m = self.manticore_instances[mcore_instance.uuid][0]
         q = m._log_queue

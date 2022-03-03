@@ -1,7 +1,9 @@
 import argparse
 from typing import List, Type
+import shlex
 
 from manticore.ethereum import ManticoreEVM
+from manticore.utils import config
 
 from manticore.ethereum import (
     Detector,
@@ -67,6 +69,20 @@ def setup_detectors_flags(detectors_to_exclude: List[str], additional_flags: str
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
 
+    consts = config.get_group("main")
+    consts.add("profile", default=False, description="Enable worker profiling mode")
+    consts.add(
+        "explore_balance",
+        default=False,
+        description="Explore states in which only the balance was changed",
+    )
+    
+    consts.add(
+        "skip_reverts",
+        default=False,
+        description="Simply avoid exploring basic blocks that end in a REVERT",
+    )
+
     # Add crytic compile arguments
     # See https://github.com/crytic/crytic-compile/wiki/Configuration
     cryticparser.init(parser)
@@ -122,8 +138,12 @@ def setup_detectors_flags(detectors_to_exclude: List[str], additional_flags: str
         "explore constant functions, and run a small suite of detectors.",
     )
     
-    args = parser.parse_args(shlex.split(additional_flags))
+    config_flags = parser.add_argument_group("Constants")
+    config.add_config_vars_to_argparse(config_flags)
     
+    args = parser.parse_args(shlex.split(additional_flags))
+    config.process_config_values(parser, args)
+
     if not args.thorough_mode:
         args.avoid_constant = True
         args.exclude_all = True
@@ -159,7 +179,7 @@ def setup_detectors_flags(detectors_to_exclude: List[str], additional_flags: str
         m.register_plugin(filter_nohuman_constants)
 
     if m.plugins:
-        logger.info(f'Registered plugins: {", ".join(d.name for d in m.plugins.values())}')
+        print(f'Registered plugins: {", ".join(d.name for d in m.plugins.values())}')
 
     
     return args
