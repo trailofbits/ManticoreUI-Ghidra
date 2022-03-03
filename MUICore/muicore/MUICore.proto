@@ -57,10 +57,10 @@ message NativeArguments {
 message EVMArguments {
 	string contract_path = 12;
 	string contract_name = 13;
-	string txlimit = 22;
-	string txaccount = 23;
+	string tx_limit = 22;
+	string tx_account = 23;
 	repeated string detectors_to_exclude = 24;
-	repeated string additional_flags = 25;
+	string additional_flags = 25;
 }
 
 message AddressRequest {

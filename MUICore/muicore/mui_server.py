@@ -1,5 +1,6 @@
 from concurrent import futures
 from threading import Thread
+import argparse
 
 import grpc
 from grpc._server import _Context
@@ -9,6 +10,7 @@ from .introspect_plugin import MUIIntrospectionPlugin
 
 from manticore.core.state import StateBase
 from manticore.native import Manticore
+from manticore.ethereum import ManticoreEVM
 from manticore.core.plugin import (
     InstructionCounter,
     Visited,
@@ -21,8 +23,8 @@ from manticore.utils.enums import StateStatus, StateLists
 import uuid
 from manticore.core.state_pb2 import MessageList
 
-from .utils import parse_native_arguments
-
+from .native_utils import parse_native_arguments
+from .evm_utils import setup_detectors_flags
 
 class MUIServicer(ManticoreUIServicer):
     """Provides functionality for the methods set out in the protobuf spec"""
@@ -93,11 +95,11 @@ class MUIServicer(ManticoreUIServicer):
             for addr in self.find:
                 m.add_hook(addr, find_f)
 
-            def manticore_runner(mcore: Manticore):
+            def manticore_native_runner(mcore: Manticore):
                 mcore.run()
                 mcore.finalize()
 
-            mthread = Thread(target=manticore_runner, args=(m,), daemon=True)
+            mthread = Thread(target=manticore_native_runner, args=(m,), daemon=True)
             mthread.start()
             self.manticore_instances[id] = (m, mthread)
 
@@ -106,7 +108,48 @@ class MUIServicer(ManticoreUIServicer):
             raise e
             return ManticoreInstance()
         return ManticoreInstance(uuid=id)
+    
+    
+    
+    
+    
+    
+    def StartEVM(
+            self, evm_arguments: EVMArguments, context: _Context) -> ManticoreInstance:
+        id = uuid.uuid4().hex
+        try:
+            m = ManticoreEVM()
+            
+            args = setup_detectors_flags(evm_arguments.detectors_to_exclude,evm_arguments.additional_flags, m)
+            
+            def manticore_evm_runner(m: ManticoreEVM, args: argparse.Namespace):
+                m.multi_tx_analysis(
+                    evm_arguments.contract_path,
+                    contract_name = evm_arguments.contract_name,
+                    tx_limit=-1 if not evm_arguments.tx_limit else evm_arguments.tx_limit,
+                    tx_use_coverage=True if args.txnocoverage == None else args.txnocoverage,
+                    tx_send_ether=True if args.txsendether == None else args.txsendether,
+                    tx_account="attacker" if not evm_arguments.tx_account else evm_arguments.tx_account,
+                    tx_preconstrain=False if args.txpreconstrain == None else args.txpreconstrain,
+                    compile_args={"solc_solcs_bin": "solc"},
+                )
+                
+                if not options["no_testcases"]:
+                    m.finalize(only_alive_states=options["only_alive_testcases"])
+                else:
+                    m.kill()
+            
+            mthread = Thread(target=manticore_evm_runner,args=(m,args),daemon=True)
+            mthread.start()
+            self.manticore_instances[id] = (m,mthread)
 
+        except Exception as e:
+            print(e)
+            raise e
+        return ManticoreInstance()
+    
+    
+    
     def Terminate(
         self, mcore_instance: ManticoreInstance, context: _Context
     ) -> TerminateResponse:
