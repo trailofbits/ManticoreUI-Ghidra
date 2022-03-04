@@ -117,4 +117,3 @@ def parse_native_arguments(additional_args: str) -> argparse.Namespace:
     set_verbosity(parsed.v)
 
     return parsed
-
