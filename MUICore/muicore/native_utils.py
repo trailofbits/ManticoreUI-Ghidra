@@ -7,6 +7,8 @@ from manticore.utils.log import set_verbosity
 
 
 def parse_native_arguments(additional_args: str) -> argparse.Namespace:
+    """parse additional arguments for manticore native execution, CLI-style"""
+
     def positive(value):
         ivalue = int(value)
         if ivalue <= 0:

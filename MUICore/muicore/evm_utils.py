@@ -32,7 +32,7 @@ from manticore.ethereum.plugins import (
 from crytic_compile import cryticparser
 
 
-def get_detectors_classes():
+def get_detectors_classes() -> List[Type[Detector]]:
     return [
         DetectInvalid,
         DetectIntegerOverflow,
@@ -52,6 +52,7 @@ def get_detectors_classes():
 
 
 def parse_detectors(detectors_to_exclude: List[str]) -> List[Type[Detector]]:
+    """returns a list of detectors that should be used"""
     all_detector_classes = get_detectors_classes()
     all_detector_args = map(lambda x: x.ARGUMENT, all_detector_classes)
     for d in detectors_to_exclude:
@@ -66,6 +67,7 @@ def parse_detectors(detectors_to_exclude: List[str]) -> List[Type[Detector]]:
 def setup_detectors_flags(
     detectors_to_exclude: List[str], additional_flags: str, m: ManticoreEVM
 ) -> argparse.Namespace:
+    """parse and apply additional arguments for manticore EVM execution, CLI-style"""
 
     parser = argparse.ArgumentParser(
         description="Symbolic execution tool",

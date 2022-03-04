@@ -41,7 +41,7 @@ class MUIServicer(ManticoreUIServicer):
     def StartNative(
         self, native_arguments: NativeArguments, context: _Context
     ) -> ManticoreInstance:
-        """Starts a singular Manticore instance with the given CLI Arguments to analyze a native binary"""
+        """Starts a singular Manticore instance to analyze a native binary"""
         id = uuid.uuid4().hex
         try:
 
@@ -115,6 +115,7 @@ class MUIServicer(ManticoreUIServicer):
     def StartEVM(
         self, evm_arguments: EVMArguments, context: _Context
     ) -> ManticoreInstance:
+        """Starts a singular Manticore instance to analyze a solidity contract"""
         id = uuid.uuid4().hex
         try:
             m = ManticoreEVM()
@@ -122,7 +123,7 @@ class MUIServicer(ManticoreUIServicer):
             args = setup_detectors_flags(
                 evm_arguments.detectors_to_exclude, evm_arguments.additional_flags, m
             )
-            
+
             print(Path.cwd())
 
             def manticore_evm_runner(m: ManticoreEVM, args: argparse.Namespace):
