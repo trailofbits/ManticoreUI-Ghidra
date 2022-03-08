@@ -3,6 +3,7 @@ import unittest
 from muicore import mui_server
 from muicore.MUICore_pb2 import *
 
+from inspect import currentframe, getframeinfo
 from pathlib import Path
 from uuid import UUID, uuid4
 from shutil import rmtree
@@ -12,7 +13,7 @@ import time
 
 class MUICoreNativeTest(unittest.TestCase):
     def setUp(self):
-        self.dirname = Path().absolute()
+        self.dirname = str(Path(getframeinfo(currentframe()).filename).resolve().parent)
         self.binary_path = str(
             self.dirname / Path("binaries") / Path("arguments_linux_amd64")
         )
