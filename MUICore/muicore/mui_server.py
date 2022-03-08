@@ -116,7 +116,7 @@ class MUIServicer(ManticoreUIServicer):
 
         m, mthread = self.manticore_instances[mcore_instance.uuid]
 
-        if m.is_killed() or not mthread.is_alive():
+        if not (m.is_running() and mthread.is_alive()):
             return TerminateResponse(success=True)
         m.kill()
         return TerminateResponse(success=True)
@@ -209,7 +209,7 @@ class MUIServicer(ManticoreUIServicer):
         m, mthread = self.manticore_instances[mcore_instance.uuid]
 
         return ManticoreRunningStatus(
-            is_running=(not m.is_killed() and mthread.is_alive())
+            is_running=(m.is_running() and mthread.is_alive())
         )
 
 
