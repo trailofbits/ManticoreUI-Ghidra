@@ -166,3 +166,73 @@ class MUICoreNativeTest(unittest.TestCase):
         self.assertEqual(
             message_list.messages[0].content, "Manticore instance not found!"
         )
+
+    def test_get_state_list_running_manticore(self):
+        mcore_instance = self.servicer.Start(
+            CLIArguments(program_path=self.binary_path), None
+        )
+        m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
+
+        stime = time.time()
+        for i in range(5):
+            time.sleep(1)
+            state_list = self.servicer.GetStateList(mcore_instance, None)
+            all_states = list(
+                map(
+                    lambda x: x.state_id,
+                    list(state_list.active_states)
+                    + list(state_list.waiting_states)
+                    + list(state_list.forked_states)
+                    + list(state_list.errored_states)
+                    + list(state_list.complete_states),
+                )
+            )
+            state_ids = m.introspect().keys()
+
+            for sid in state_ids:
+                self.assertIn(sid, all_states)
+
+    def test_get_state_list_stopped_manticore(self):
+        mcore_instance = self.servicer.Start(
+            CLIArguments(program_path=self.binary_path), None
+        )
+        m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
+
+        m.kill()
+        stime = time.time()
+        while m.is_running():
+            if (time.time() - stime) > 10:
+                self.fail(
+                    f"Manticore instance {mcore_instance.uuid} could not be killed before timeout"
+                )
+                time.sleep(1)
+
+        stime = time.time()
+        for i in range(5):
+            time.sleep(1)
+            state_list = self.servicer.GetStateList(mcore_instance, None)
+            all_states = list(
+                map(
+                    lambda x: x.state_id,
+                    list(state_list.active_states)
+                    + list(state_list.waiting_states)
+                    + list(state_list.forked_states)
+                    + list(state_list.errored_states)
+                    + list(state_list.complete_states),
+                )
+            )
+            state_ids = m.introspect().keys()
+
+            for sid in state_ids:
+                self.assertIn(sid, all_states)
+
+    def test_get_state_list_invalid_manticore(self):
+        state_list = self.servicer.GetStateList(
+            ManticoreInstance(uuid=uuid4().hex), None
+        )
+
+        self.assertFalse(state_list.active_states)
+        self.assertFalse(state_list.waiting_states)
+        self.assertFalse(state_list.forked_states)
+        self.assertFalse(state_list.errored_states)
+        self.assertFalse(state_list.complete_states)
