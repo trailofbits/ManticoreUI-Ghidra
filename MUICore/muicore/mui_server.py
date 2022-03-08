@@ -187,7 +187,7 @@ class MUIServicer(ManticoreUIServicer):
         Currently, implementation is based on TUI."""
         if mcore_instance.uuid not in self.manticore_instances:
             return MUIMessageList(
-                messages=[LogMessage(content="Manticore instance not found!")]
+                messages=[MUILogMessage(content="Manticore instance not found!")]
             )
         m = self.manticore_instances[mcore_instance.uuid][0]
         q = m._log_queue

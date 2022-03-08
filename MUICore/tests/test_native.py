@@ -116,3 +116,53 @@ class MUICoreNativeTest(unittest.TestCase):
     def test_terminate_invalid_manticore(self):
         t_status = self.servicer.Terminate(ManticoreInstance(uuid=uuid4().hex), None)
         self.assertFalse(t_status.success)
+
+    def test_get_message_list_running_manticore(self):
+        mcore_instance = self.servicer.Start(
+            CLIArguments(program_path=self.binary_path), None
+        )
+        m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
+
+        stime = time.time()
+        while m._log_queue.empty() and time.time() - stime < 5:
+            time.sleep(1)
+            if not m._log_queue.empty():
+                deque_messages = list(m._log_queue)
+                messages = self.servicer.GetMessageList(mcore_instance, None).messages
+                for i in range(len(messages)):
+                    self.assertEqual(messages[i].content, deque_messages[i])
+                break
+
+    def test_get_message_list_stopped_manticore(self):
+        mcore_instance = self.servicer.Start(
+            CLIArguments(program_path=self.binary_path), None
+        )
+        m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
+
+        m.kill()
+        stime = time.time()
+        while m.is_running():
+            if (time.time() - stime) > 10:
+                self.fail(
+                    f"Manticore instance {mcore_instance.uuid} could not be killed before timeout"
+                )
+                time.sleep(1)
+
+        stime = time.time()
+        while m._log_queue.empty() and time.time() - stime < 5:
+            time.sleep(1)
+            if not m._log_queue.empty():
+                deque_messages = list(m._log_queue)
+                messages = self.servicer.GetMessageList(mcore_instance, None).messages
+                for i in range(len(messages)):
+                    self.assertEqual(messages[i].content, deque_messages[i])
+                break
+
+    def test_get_message_list_invalid_manticore(self):
+        message_list = self.servicer.GetMessageList(
+            ManticoreInstance(uuid=uuid4().hex), None
+        )
+        self.assertEqual(len(message_list.messages), 1)
+        self.assertEqual(
+            message_list.messages[0].content, "Manticore instance not found!"
+        )
