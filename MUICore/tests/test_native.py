@@ -105,7 +105,7 @@ class MUICoreNativeTest(unittest.TestCase):
         while m.is_running():
             if (time.time() - stime) > 10:
                 self.fail(
-                    f"Manticore instance {mcore_instance.uuid} could not be killed before timeout"
+                    f"Manticore instance {mcore_instance.uuid} failed to stop running before timeout"
                 )
                 time.sleep(1)
 
@@ -144,7 +144,7 @@ class MUICoreNativeTest(unittest.TestCase):
         while m.is_running():
             if (time.time() - stime) > 10:
                 self.fail(
-                    f"Manticore instance {mcore_instance.uuid} could not be killed before timeout"
+                    f"Manticore instance {mcore_instance.uuid} failed to stop running before timeout"
                 )
                 time.sleep(1)
 
@@ -173,7 +173,6 @@ class MUICoreNativeTest(unittest.TestCase):
         )
         m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
 
-        stime = time.time()
         for i in range(5):
             time.sleep(1)
             state_list = self.servicer.GetStateList(mcore_instance, None)
@@ -203,7 +202,7 @@ class MUICoreNativeTest(unittest.TestCase):
         while m.is_running():
             if (time.time() - stime) > 10:
                 self.fail(
-                    f"Manticore instance {mcore_instance.uuid} could not be killed before timeout"
+                    f"Manticore instance {mcore_instance.uuid} failed to stop running before timeout"
                 )
                 time.sleep(1)
 
@@ -236,3 +235,42 @@ class MUICoreNativeTest(unittest.TestCase):
         self.assertFalse(state_list.forked_states)
         self.assertFalse(state_list.errored_states)
         self.assertFalse(state_list.complete_states)
+
+    def test_check_manticore_running(self):
+        mcore_instance = self.servicer.Start(
+            CLIArguments(program_path=self.binary_path), None
+        )
+        m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
+
+        stime = time.time()
+        while not m.is_running():
+            if (time.time() - stime) > 10:
+                self.fail(
+                    f"Manticore instance {mcore_instance.uuid} failed to start running before timeout"
+                )
+                time.sleep(1)
+
+        self.assertTrue(
+            self.servicer.CheckManticoreRunning(mcore_instance, None).is_running
+        )
+
+        m.kill()
+
+        stime = time.time()
+        while m.is_running():
+            if (time.time() - stime) > 10:
+                self.fail(
+                    f"Manticore instance {mcore_instance.uuid} failed to stop running before timeout"
+                )
+                time.sleep(1)
+
+        self.assertFalse(
+            self.servicer.CheckManticoreRunning(mcore_instance, None).is_running
+        )
+
+    def test_check_manticore_running_invalid_manticore(self):
+        self.assertFalse(
+            self.servicer.CheckManticoreRunning(
+                ManticoreInstance(uuid=uuid4().hex), None
+            ).is_running
+        )
