@@ -22,7 +22,8 @@ from manticore.core.plugin import (
 from manticore.utils.enums import StateStatus, StateLists
 
 import uuid
-from manticore.core.state_pb2 import MessageList
+import shutil
+from inspect import currentframe, getframeinfo
 
 from .native_utils import parse_native_arguments
 from .evm_utils import setup_detectors_flags
@@ -110,6 +111,7 @@ class MUIServicer(ManticoreUIServicer):
             print(e)
             raise e
             return ManticoreInstance()
+
         return ManticoreInstance(uuid=id)
 
     def StartEVM(
@@ -124,9 +126,16 @@ class MUIServicer(ManticoreUIServicer):
                 evm_arguments.detectors_to_exclude, evm_arguments.additional_flags, m
             )
 
-            print(Path.cwd())
-
             def manticore_evm_runner(m: ManticoreEVM, args: argparse.Namespace):
+                if evm_arguments.solc_bin:
+                    solc_bin_path = evm_arguments.solc_bin
+                elif shutil.which("solc"):
+                    solc_bin_path = shutil.which("solc")
+                else:
+                    raise Exception(
+                        "solc binary neither specified in EVMArguments nor found in PATH!"
+                    )
+
                 m.multi_tx_analysis(
                     evm_arguments.contract_path,
                     contract_name=evm_arguments.contract_name,
@@ -143,11 +152,7 @@ class MUIServicer(ManticoreUIServicer):
                     tx_preconstrain=False
                     if args.txpreconstrain == None
                     else args.txpreconstrain,
-                    compile_args={
-                        "solc_solcs_bin": str(Path.cwd() / "solc")
-                        if not evm_arguments.solc_bin
-                        else evm_arguments.solc_bin
-                    },
+                    compile_args={"solc_solcs_bin": solc_bin_path},
                 )
 
                 if not args.no_testcases:
@@ -163,6 +168,7 @@ class MUIServicer(ManticoreUIServicer):
             print(e)
             raise e
             return ManticoreInstance()
+
         return ManticoreInstance(uuid=id)
 
     def Terminate(
