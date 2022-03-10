@@ -118,6 +118,14 @@ class MUIServicer(ManticoreUIServicer):
         self, evm_arguments: EVMArguments, context: _Context
     ) -> ManticoreInstance:
         """Starts a singular Manticore instance to analyze a solidity contract"""
+
+        if evm_arguments.contract_path == "":
+            raise FileNotFoundError("Contract path not specified!")
+        if not Path(evm_arguments.contract_path).is_file():
+            raise FileNotFoundError(
+                f"Contract path invalid: '{evm_arguments.contract_path}'"
+            )
+
         id = uuid.uuid4().hex
         try:
             m = ManticoreEVM()
