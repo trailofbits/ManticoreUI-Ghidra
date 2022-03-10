@@ -35,7 +35,7 @@ class MUICoreNativeTest(unittest.TestCase):
 
     def test_start_with_no_or_invalid_binary_path(self):
         with self.assertRaises(FileNotFoundError) as e:
-            self.servicer.Start(CLIArguments(), None)
+            self.servicer.StartNative(NativeArguments(), None)
 
         expected_exception = "[Errno 2] No such file or directory: ''"
 
@@ -45,7 +45,9 @@ class MUICoreNativeTest(unittest.TestCase):
             self.dirname / Path("binaries") / Path("invalid_binary")
         )
         with self.assertRaises(FileNotFoundError) as e:
-            self.servicer.Start(CLIArguments(program_path=invalid_binary_path), None)
+            self.servicer.StartNative(
+                NativeArguments(program_path=invalid_binary_path), None
+            )
 
         expected_exception = (
             f"[Errno 2] No such file or directory: '{invalid_binary_path}'"
@@ -54,8 +56,8 @@ class MUICoreNativeTest(unittest.TestCase):
         self.assertEqual(str(e.exception), expected_exception)
 
     def test_start(self):
-        mcore_instance = self.servicer.Start(
-            CLIArguments(program_path=self.binary_path), None
+        mcore_instance = self.servicer.StartNative(
+            NativeArguments(program_path=self.binary_path), None
         )
 
         try:
@@ -71,8 +73,8 @@ class MUICoreNativeTest(unittest.TestCase):
         self.assertTrue(Path(mcore.workspace).is_dir())
 
     def test_terminate_running_manticore(self):
-        mcore_instance = self.servicer.Start(
-            CLIArguments(program_path=self.binary_path), None
+        mcore_instance = self.servicer.StartNative(
+            NativeArguments(program_path=self.binary_path), None
         )
         m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
 
@@ -97,8 +99,8 @@ class MUICoreNativeTest(unittest.TestCase):
                 time.sleep(1)
 
     def test_terminate_killed_manticore(self):
-        mcore_instance = self.servicer.Start(
-            CLIArguments(program_path=self.binary_path), None
+        mcore_instance = self.servicer.StartNative(
+            NativeArguments(program_path=self.binary_path), None
         )
         m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
         m.kill()
@@ -119,8 +121,8 @@ class MUICoreNativeTest(unittest.TestCase):
         self.assertFalse(t_status.success)
 
     def test_get_message_list_running_manticore(self):
-        mcore_instance = self.servicer.Start(
-            CLIArguments(program_path=self.binary_path), None
+        mcore_instance = self.servicer.StartNative(
+            NativeArguments(program_path=self.binary_path), None
         )
         m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
 
@@ -135,8 +137,8 @@ class MUICoreNativeTest(unittest.TestCase):
                 break
 
     def test_get_message_list_stopped_manticore(self):
-        mcore_instance = self.servicer.Start(
-            CLIArguments(program_path=self.binary_path), None
+        mcore_instance = self.servicer.StartNative(
+            NativeArguments(program_path=self.binary_path), None
         )
         m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
 
@@ -169,8 +171,8 @@ class MUICoreNativeTest(unittest.TestCase):
         )
 
     def test_get_state_list_running_manticore(self):
-        mcore_instance = self.servicer.Start(
-            CLIArguments(program_path=self.binary_path), None
+        mcore_instance = self.servicer.StartNative(
+            NativeArguments(program_path=self.binary_path), None
         )
         m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
 
@@ -193,8 +195,8 @@ class MUICoreNativeTest(unittest.TestCase):
                 self.assertIn(sid, all_states)
 
     def test_get_state_list_stopped_manticore(self):
-        mcore_instance = self.servicer.Start(
-            CLIArguments(program_path=self.binary_path), None
+        mcore_instance = self.servicer.StartNative(
+            NativeArguments(program_path=self.binary_path), None
         )
         m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
 
@@ -238,8 +240,8 @@ class MUICoreNativeTest(unittest.TestCase):
         self.assertFalse(state_list.complete_states)
 
     def test_check_manticore_running(self):
-        mcore_instance = self.servicer.Start(
-            CLIArguments(program_path=self.binary_path), None
+        mcore_instance = self.servicer.StartNative(
+            NativeArguments(program_path=self.binary_path), None
         )
         m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
 
