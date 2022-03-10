@@ -126,6 +126,15 @@ class MUIServicer(ManticoreUIServicer):
                 f"Contract path invalid: '{evm_arguments.contract_path}'"
             )
 
+        if evm_arguments.solc_bin:
+            solc_bin_path = evm_arguments.solc_bin
+        elif shutil.which("solc"):
+            solc_bin_path = shutil.which("solc")
+        else:
+            raise Exception(
+                "solc binary neither specified in EVMArguments nor found in PATH!"
+            )
+
         id = uuid.uuid4().hex
         try:
             m = ManticoreEVM()
@@ -135,14 +144,6 @@ class MUIServicer(ManticoreUIServicer):
             )
 
             def manticore_evm_runner(m: ManticoreEVM, args: argparse.Namespace):
-                if evm_arguments.solc_bin:
-                    solc_bin_path = evm_arguments.solc_bin
-                elif shutil.which("solc"):
-                    solc_bin_path = shutil.which("solc")
-                else:
-                    raise Exception(
-                        "solc binary neither specified in EVMArguments nor found in PATH!"
-                    )
 
                 m.multi_tx_analysis(
                     evm_arguments.contract_path,

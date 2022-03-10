@@ -1,4 +1,5 @@
 import unittest
+import unittest.mock
 
 from muicore import mui_server
 from muicore.MUICore_pb2 import *
@@ -6,9 +7,10 @@ from muicore.MUICore_pb2 import *
 from inspect import currentframe, getframeinfo
 from pathlib import Path
 from uuid import UUID, uuid4
-from shutil import rmtree
+from shutil import rmtree, which
 import glob
 import time
+import os
 
 
 class MUICoreEVMTest(unittest.TestCase):
@@ -54,6 +56,30 @@ class MUICoreEVMTest(unittest.TestCase):
         expected_exception = f"Contract path invalid: '{invalid_contract_path}'"
 
         self.assertEqual(str(e.exception), expected_exception)
+
+    def test_start_with_no_solc_specified_or_in_path(self):
+        path_to_use = os.environ["PATH"]
+        solc_on_path = which("solc")
+
+        if solc_on_path:
+            solc_dir = str(Path(solc_on_path).parent)
+            cur_paths = os.environ["PATH"].split(os.pathsep)
+
+            path_to_use = str(os.pathsep).join(
+                [dir for dir in cur_paths if dir != solc_dir]
+            )
+
+        with self.assertRaises(Exception) as e:
+            with unittest.mock.patch.dict(os.environ, {"PATH": path_to_use}):
+                mcore_instance = self.servicer.StartEVM(
+                    EVMArguments(contract_path=self.contract_path),
+                    None,
+                )
+
+        self.assertEqual(
+            str(e.exception),
+            "solc binary neither specified in EVMArguments nor found in PATH!",
+        )
 
     def test_start(self):
         mcore_instance = self.servicer.StartEVM(
