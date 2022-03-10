@@ -16,6 +16,7 @@ class MUICoreEVMTest(unittest.TestCase):
         self.dirname = str(Path(getframeinfo(currentframe()).filename).resolve().parent)
         self.contract_path = str(self.dirname / Path("contracts") / Path("adder.sol"))
         self.servicer = mui_server.MUIServicer()
+        self.solc_path = str(self.dirname / Path("solc"))
 
     def tearDown(self):
         for m, mthread in self.servicer.manticore_instances.values():
@@ -33,7 +34,7 @@ class MUICoreEVMTest(unittest.TestCase):
 
     def test_start_with_no_or_invalid_contract_path(self):
         with self.assertRaises(FileNotFoundError) as e:
-            self.servicer.StartEVM(EVMArguments(), None)
+            self.servicer.StartEVM(EVMArguments(solc_bin=self.solc_path), None)
 
         expected_exception = "Contract path not specified!"
 
@@ -44,7 +45,10 @@ class MUICoreEVMTest(unittest.TestCase):
         )
         with self.assertRaises(FileNotFoundError) as e:
             self.servicer.StartEVM(
-                EVMArguments(contract_path=invalid_contract_path), None
+                EVMArguments(
+                    contract_path=invalid_contract_path, solc_bin=self.solc_path
+                ),
+                None,
             )
 
         expected_exception = f"Contract path invalid: '{invalid_contract_path}'"
@@ -53,7 +57,8 @@ class MUICoreEVMTest(unittest.TestCase):
 
     def test_start(self):
         mcore_instance = self.servicer.StartEVM(
-            EVMArguments(contract_path=self.contract_path), None
+            EVMArguments(contract_path=self.contract_path, solc_bin=self.solc_path),
+            None,
         )
 
         try:
@@ -70,7 +75,8 @@ class MUICoreEVMTest(unittest.TestCase):
 
     def test_terminate_running_manticore(self):
         mcore_instance = self.servicer.StartEVM(
-            EVMArguments(contract_path=self.contract_path), None
+            EVMArguments(contract_path=self.contract_path, solc_bin=self.solc_path),
+            None,
         )
         m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
 
@@ -96,7 +102,8 @@ class MUICoreEVMTest(unittest.TestCase):
 
     def test_terminate_killed_manticore(self):
         mcore_instance = self.servicer.StartEVM(
-            EVMArguments(contract_path=self.contract_path), None
+            EVMArguments(contract_path=self.contract_path, solc_bin=self.solc_path),
+            None,
         )
         m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
         m.kill()
@@ -118,7 +125,8 @@ class MUICoreEVMTest(unittest.TestCase):
 
     def test_get_message_list_running_manticore(self):
         mcore_instance = self.servicer.StartEVM(
-            EVMArguments(contract_path=self.contract_path), None
+            EVMArguments(contract_path=self.contract_path, solc_bin=self.solc_path),
+            None,
         )
         m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
 
@@ -134,7 +142,8 @@ class MUICoreEVMTest(unittest.TestCase):
 
     def test_get_message_list_stopped_manticore(self):
         mcore_instance = self.servicer.StartEVM(
-            EVMArguments(contract_path=self.contract_path), None
+            EVMArguments(contract_path=self.contract_path, solc_bin=self.solc_path),
+            None,
         )
         m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
 
@@ -168,7 +177,8 @@ class MUICoreEVMTest(unittest.TestCase):
 
     def test_get_state_list_running_manticore(self):
         mcore_instance = self.servicer.StartEVM(
-            EVMArguments(contract_path=self.contract_path), None
+            EVMArguments(contract_path=self.contract_path, solc_bin=self.solc_path),
+            None,
         )
         m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
 
@@ -192,7 +202,8 @@ class MUICoreEVMTest(unittest.TestCase):
 
     def test_get_state_list_stopped_manticore(self):
         mcore_instance = self.servicer.StartEVM(
-            EVMArguments(contract_path=self.contract_path), None
+            EVMArguments(contract_path=self.contract_path, solc_bin=self.solc_path),
+            None,
         )
         m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
 
@@ -237,7 +248,8 @@ class MUICoreEVMTest(unittest.TestCase):
 
     def test_check_manticore_running(self):
         mcore_instance = self.servicer.StartEVM(
-            EVMArguments(contract_path=self.contract_path), None
+            EVMArguments(contract_path=self.contract_path, solc_bin=self.solc_path),
+            None,
         )
         m, mthread = self.servicer.manticore_instances[mcore_instance.uuid]
 
