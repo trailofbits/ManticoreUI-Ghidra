@@ -34,6 +34,20 @@ from .evm_utils import setup_detectors_flags
 from manticore.utils.log import CallbackStream
 
 
+class ManticoreWrapper:
+    def __init__(self, mcore_object, mthread):
+        self.uuid = uuid.uuid4().hex
+        self.manticore_object = mcore_object
+        self.thread = mthread
+        self.log_queue = collections.deque(maxlen=5000)
+
+    def __hash__(self):
+        return hash(self.uuid)
+
+    def __eq__(self, other):
+        return self.uuid == other.uuid
+
+
 class MUIServicer(ManticoreUIServicer):
     """Provides functionality for the methods set out in the protobuf spec"""
 
@@ -62,14 +76,13 @@ class MUIServicer(ManticoreUIServicer):
         msg_split = msg.split()
         thread_name = msg_split[0]
         if thread_name in self.manticore_instances:
-            m_log = self.manticore_instances[thread_name][2]
+            m_log = self.manticore_instances[thread_name].log_queue
             m_log.append(" ".join(msg_split[1:]))
 
     def StartNative(
         self, native_arguments: NativeArguments, context: _Context
     ) -> ManticoreInstance:
         """Starts a singular Manticore instance to analyze a native binary"""
-        id = uuid.uuid4().hex
         try:
 
             parsed = parse_native_arguments(native_arguments.additional_mcore_args)
@@ -130,16 +143,17 @@ class MUIServicer(ManticoreUIServicer):
                 mcore.finalize()
 
             mthread = Thread(target=manticore_native_runner, args=(m,), daemon=True)
-            mthread.name = id
+            manticore_wrapper = ManticoreWrapper(m, mthread)
+            mthread.name = manticore_wrapper.uuid
             mthread.start()
-            self.manticore_instances[id] = (m, mthread, collections.deque(maxlen=5000))
+            self.manticore_instances[manticore_wrapper.uuid] = manticore_wrapper
 
         except Exception as e:
             print(e)
             raise e
             return ManticoreInstance()
 
-        return ManticoreInstance(uuid=id)
+        return ManticoreInstance(uuid=manticore_wrapper.uuid)
 
     def StartEVM(
         self, evm_arguments: EVMArguments, context: _Context
@@ -162,7 +176,6 @@ class MUIServicer(ManticoreUIServicer):
                 "solc binary neither specified in EVMArguments nor found in PATH!"
             )
 
-        id = uuid.uuid4().hex
         try:
             m = ManticoreEVM()
 
@@ -197,16 +210,17 @@ class MUIServicer(ManticoreUIServicer):
                     m.kill()
 
             mthread = Thread(target=manticore_evm_runner, args=(m, args), daemon=True)
-            mthread.name = id
+            manticore_wrapper = ManticoreWrapper(m, mthread)
+            mthread.name = manticore_wrapper.uuid
             mthread.start()
-            self.manticore_instances[id] = (m, mthread, collections.deque(maxlen=5000))
+            self.manticore_instances[manticore_wrapper.uuid] = manticore_wrapper
 
         except Exception as e:
             print(e)
             raise e
             return ManticoreInstance()
 
-        return ManticoreInstance(uuid=id)
+        return ManticoreInstance(uuid=manticore_wrapper.uuid)
 
     def Terminate(
         self, mcore_instance: ManticoreInstance, context: _Context
@@ -215,11 +229,13 @@ class MUIServicer(ManticoreUIServicer):
         if mcore_instance.uuid not in self.manticore_instances:
             return TerminateResponse(success=False)
 
-        m, mthread = self.manticore_instances[mcore_instance.uuid][:2]
+        m_wrapper = self.manticore_instances[mcore_instance.uuid]
 
-        if not (m.is_running() and mthread.is_alive()):
+        if not (
+            m_wrapper.manticore_object.is_running() and m_wrapper.thread.is_alive()
+        ):
             return TerminateResponse(success=True)
-        m.kill()
+        m_wrapper.manticore_object.kill()
         return TerminateResponse(success=True)
 
     def TargetAddressNative(
@@ -251,7 +267,7 @@ class MUIServicer(ManticoreUIServicer):
         if mcore_instance.uuid not in self.manticore_instances:
             return MUIStateList()
 
-        m = self.manticore_instances[mcore_instance.uuid][0]
+        m = self.manticore_instances[mcore_instance.uuid].manticore_object
         states = m.introspect()
 
         for state_id, state_desc in states.items():
@@ -291,7 +307,7 @@ class MUIServicer(ManticoreUIServicer):
                 messages=[MUILogMessage(content="Manticore instance not found!")]
             )
 
-        q = self.manticore_instances[mcore_instance.uuid][2]
+        q = self.manticore_instances[mcore_instance.uuid].log_queue
 
         i = 0
         messages = []
@@ -308,10 +324,12 @@ class MUIServicer(ManticoreUIServicer):
         if mcore_instance.uuid not in self.manticore_instances:
             return ManticoreRunningStatus(is_running=False)
 
-        m, mthread = self.manticore_instances[mcore_instance.uuid][:2]
+        m_wrapper = self.manticore_instances[mcore_instance.uuid]
 
         return ManticoreRunningStatus(
-            is_running=(m.is_running() and mthread.is_alive())
+            is_running=(
+                m_wrapper.manticore_object.is_running() and m_wrapper.thread.is_alive()
+            )
         )
 
 
