@@ -2,6 +2,9 @@ from concurrent import futures
 from threading import Thread
 import argparse
 from pathlib import Path
+import logging
+import sys
+import collections
 
 import grpc
 from grpc._server import _Context
@@ -18,6 +21,7 @@ from manticore.core.plugin import (
     Tracer,
     RecordSymbolicBranches,
 )
+import manticore.utils.log
 
 from manticore.utils.enums import StateStatus, StateLists
 
@@ -27,6 +31,7 @@ from inspect import currentframe, getframeinfo
 
 from .native_utils import parse_native_arguments
 from .evm_utils import setup_detectors_flags
+from manticore.utils.log import CallbackStream
 
 
 class MUIServicer(ManticoreUIServicer):
@@ -38,6 +43,27 @@ class MUIServicer(ManticoreUIServicer):
         self.manticore_instances = {}
         self.avoid = set()
         self.find = set()
+
+        manticore_logger = logging.getLogger("manticore")
+        manticore_logger.parent = None
+        manticore_logger.setLevel(logging.WARNING)
+
+        custom_log_handler = logging.StreamHandler(CallbackStream(self.log_callback))
+        custom_log_handler.setFormatter(
+            logging.Formatter(
+                "%(threadName)s %(asctime)s: [%(process)d] %(name)s:%(levelname)s %(message)s"
+            )
+        )
+        custom_log_handler.addFilter(manticore.utils.log.ManticoreContextFilter())
+
+        manticore_logger.addHandler(custom_log_handler)
+
+    def log_callback(self, msg):
+        msg_split = msg.split()
+        thread_name = msg_split[0]
+        if thread_name in self.manticore_instances:
+            m_log = self.manticore_instances[thread_name][2]
+            m_log.append(" ".join(msg_split[1:]))
 
     def StartNative(
         self, native_arguments: NativeArguments, context: _Context
@@ -104,8 +130,9 @@ class MUIServicer(ManticoreUIServicer):
                 mcore.finalize()
 
             mthread = Thread(target=manticore_native_runner, args=(m,), daemon=True)
+            mthread.name = id
             mthread.start()
-            self.manticore_instances[id] = (m, mthread)
+            self.manticore_instances[id] = (m, mthread, collections.deque(maxlen=5000))
 
         except Exception as e:
             print(e)
@@ -170,8 +197,9 @@ class MUIServicer(ManticoreUIServicer):
                     m.kill()
 
             mthread = Thread(target=manticore_evm_runner, args=(m, args), daemon=True)
+            mthread.name = id
             mthread.start()
-            self.manticore_instances[id] = (m, mthread)
+            self.manticore_instances[id] = (m, mthread, collections.deque(maxlen=5000))
 
         except Exception as e:
             print(e)
@@ -187,7 +215,7 @@ class MUIServicer(ManticoreUIServicer):
         if mcore_instance.uuid not in self.manticore_instances:
             return TerminateResponse(success=False)
 
-        m, mthread = self.manticore_instances[mcore_instance.uuid]
+        m, mthread = self.manticore_instances[mcore_instance.uuid][:2]
 
         if not (m.is_running() and mthread.is_alive()):
             return TerminateResponse(success=True)
@@ -262,12 +290,13 @@ class MUIServicer(ManticoreUIServicer):
             return MUIMessageList(
                 messages=[MUILogMessage(content="Manticore instance not found!")]
             )
-        m = self.manticore_instances[mcore_instance.uuid][0]
-        q = m._log_queue
+
+        q = self.manticore_instances[mcore_instance.uuid][2]
+
         i = 0
         messages = []
-        while i < 50 and not q.empty():
-            msg = MUILogMessage(content=q.get())
+        while len(q) > 0:
+            msg = MUILogMessage(content=q.popleft())
             messages.append(msg)
             i += 1
         return MUIMessageList(messages=messages)
@@ -279,7 +308,7 @@ class MUIServicer(ManticoreUIServicer):
         if mcore_instance.uuid not in self.manticore_instances:
             return ManticoreRunningStatus(is_running=False)
 
-        m, mthread = self.manticore_instances[mcore_instance.uuid]
+        m, mthread = self.manticore_instances[mcore_instance.uuid][:2]
 
         return ManticoreRunningStatus(
             is_running=(m.is_running() and mthread.is_alive())
