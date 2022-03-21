@@ -22,6 +22,7 @@ from manticore.core.plugin import (
     RecordSymbolicBranches,
 )
 import manticore.utils.log
+from manticore.core.worker import WorkerThread, DaemonThread
 
 from manticore.utils.enums import StateStatus, StateLists
 
@@ -55,6 +56,7 @@ class MUIServicer(ManticoreUIServicer):
         """Initializes the dict that keeps track of all created manticore instances, as well as avoid/find address set"""
 
         self.manticore_instances = {}
+        self.thread_ident_map = {}
         self.avoid = set()
         self.find = set()
 
@@ -73,11 +75,29 @@ class MUIServicer(ManticoreUIServicer):
         manticore_logger.addHandler(custom_log_handler)
 
     def log_callback(self, msg):
+        print(msg, end="")
         msg_split = msg.split()
         thread_name = msg_split[0]
+
         if thread_name in self.manticore_instances:
-            m_log = self.manticore_instances[thread_name].log_queue
-            m_log.append(" ".join(msg_split[1:]))
+            self.manticore_instances[thread_name].log_queue.append(
+                " ".join(msg_split[1:])
+            )
+        else:
+            for mwrapper in list(self.manticore_instances.values())[
+                ::-1
+            ]:  # Thread name/idents can be reused, so start search from most recently-started instance
+                for worker in mwrapper.manticore_object._workers + list(
+                    mwrapper.manticore_object._daemon_threads.values()
+                ):
+                    if (
+                        type(worker) in (WorkerThread, DaemonThread)
+                        and type(worker._t) == Thread
+                        and worker._t.name == thread_name
+                    ):
+                        worker._t.name = mwrapper.uuid
+                        mwrapper.log_queue.append(" ".join(msg_split[1:]))
+                        return
 
     def StartNative(
         self, native_arguments: NativeArguments, context: _Context
@@ -308,7 +328,6 @@ class MUIServicer(ManticoreUIServicer):
             )
 
         q = self.manticore_instances[mcore_instance.uuid].log_queue
-
         i = 0
         messages = []
         while len(q) > 0:
