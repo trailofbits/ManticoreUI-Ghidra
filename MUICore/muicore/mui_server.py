@@ -22,9 +22,11 @@ from manticore.core.plugin import (
     RecordSymbolicBranches,
 )
 import manticore.utils.log
-from manticore.core.worker import WorkerThread, DaemonThread
-
+from manticore.core.worker import WorkerThread, WorkerProcess
+from manticore.utils.log import CallbackStream, ManticoreContextFilter
 from manticore.utils.enums import StateStatus, StateLists
+
+from manticore.utils.helpers import deque
 
 import uuid
 import shutil
@@ -32,7 +34,6 @@ from inspect import currentframe, getframeinfo
 
 from .native_utils import parse_native_arguments
 from .evm_utils import setup_detectors_flags
-from manticore.utils.log import CallbackStream
 
 
 class ManticoreWrapper:
@@ -40,7 +41,20 @@ class ManticoreWrapper:
         self.uuid = uuid.uuid4().hex
         self.manticore_object = mcore_object
         self.thread = mthread
-        self.log_queue = collections.deque(maxlen=5000)
+        self.log_queue = (
+            mcore_object._manager.Queue(15000)
+            if mcore_object._worker_type == WorkerProcess
+            else deque(maxlen=5000)
+        )
+
+    def append_log(self, msg):
+        q = self.log_queue
+        try:
+            q.append(msg)
+        except AttributeError:
+            if q.full():
+                q.get()
+            q.put(msg)
 
     def __hash__(self):
         return hash(self.uuid)
@@ -70,7 +84,7 @@ class MUIServicer(ManticoreUIServicer):
                 "%(threadName)s %(asctime)s: [%(process)d] %(name)s:%(levelname)s %(message)s"
             )
         )
-        custom_log_handler.addFilter(manticore.utils.log.ManticoreContextFilter())
+        custom_log_handler.addFilter(ManticoreContextFilter())
 
         manticore_logger.addHandler(custom_log_handler)
 
@@ -80,23 +94,20 @@ class MUIServicer(ManticoreUIServicer):
         thread_name = msg_split[0]
 
         if thread_name in self.manticore_instances:
-            self.manticore_instances[thread_name].log_queue.append(
-                " ".join(msg_split[1:])
-            )
+            # This will always be True if multiprocessing or single is used, since all WorkerProcess/WorkerSingle
+            # instances will share the same Thread name as the ManticoreWrapper's mthread which is added on Start
+            self.manticore_instances[thread_name].append_log(" ".join(msg_split[1:]))
         else:
-            for mwrapper in list(self.manticore_instances.values())[
-                ::-1
-            ]:  # Thread name/idents can be reused, so start search from most recently-started instance
+            for mwrapper in filter(
+                lambda x: x.manticore_object._worker_type == WorkerThread,
+                list(self.manticore_instances.values())[::-1],
+            ):  # Thread name/idents can be reused, so start search from most recently-started instance
                 for worker in mwrapper.manticore_object._workers + list(
                     mwrapper.manticore_object._daemon_threads.values()
                 ):
-                    if (
-                        type(worker) in (WorkerThread, DaemonThread)
-                        and type(worker._t) == Thread
-                        and worker._t.name == thread_name
-                    ):
+                    if type(worker._t) == Thread and worker._t.name == thread_name:
                         worker._t.name = mwrapper.uuid
-                        mwrapper.log_queue.append(" ".join(msg_split[1:]))
+                        mwrapper.append_log(" ".join(msg_split[1:]))
                         return
 
     def StartNative(
@@ -330,8 +341,8 @@ class MUIServicer(ManticoreUIServicer):
         q = self.manticore_instances[mcore_instance.uuid].log_queue
         i = 0
         messages = []
-        while len(q) > 0:
-            msg = MUILogMessage(content=q.popleft())
+        while not q.empty():
+            msg = MUILogMessage(content=q.get())
             messages.append(msg)
             i += 1
         return MUIMessageList(messages=messages)
