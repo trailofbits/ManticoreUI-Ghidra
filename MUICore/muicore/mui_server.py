@@ -3,8 +3,6 @@ from threading import Thread
 import argparse
 from pathlib import Path
 import logging
-import sys
-import collections
 
 import grpc
 from grpc._server import _Context
@@ -21,11 +19,9 @@ from manticore.core.plugin import (
     Tracer,
     RecordSymbolicBranches,
 )
-import manticore.utils.log
 from manticore.core.worker import WorkerThread, WorkerProcess
 from manticore.utils.log import CallbackStream, ManticoreContextFilter
 from manticore.utils.enums import StateStatus, StateLists
-
 from manticore.utils.helpers import deque
 
 import uuid
