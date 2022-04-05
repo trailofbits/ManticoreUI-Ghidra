@@ -37,6 +37,8 @@ class ManticoreWrapper:
         self.uuid = uuid.uuid4().hex
         self.manticore_object = mcore_object
         self.thread = mthread
+        # mimics Manticore repository, reasoning for the queue size difference is provided in Manticore:
+        # https://github.com/trailofbits/manticore/blob/5a258f499098394c0af25e2e3f00b1b603c2334d/manticore/core/manticore.py#L133-L135
         self.log_queue = (
             mcore_object._manager.Queue(15000)
             if mcore_object._worker_type == WorkerProcess
@@ -48,6 +50,8 @@ class ManticoreWrapper:
         try:
             q.append(msg)
         except AttributeError:
+            # mimics Manticore repository, reasoning for using append and catching an AttributeError is provided in Manticore:
+            # https://github.com/trailofbits/manticore/blob/5a258f499098394c0af25e2e3f00b1b603c2334d/manticore/core/worker.py#L297-L303
             if q.full():
                 q.get()
             q.put(msg)
