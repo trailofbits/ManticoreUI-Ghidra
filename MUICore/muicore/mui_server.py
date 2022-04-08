@@ -108,7 +108,6 @@ class MUIServicer(ManticoreUIServicer):
     ) -> ManticoreInstance:
         """Starts a singular Manticore instance to analyze a native binary"""
         try:
-
             parsed = parse_native_arguments(native_arguments.additional_mcore_args)
             m = Manticore.linux(
                 native_arguments.program_path,
@@ -174,7 +173,7 @@ class MUIServicer(ManticoreUIServicer):
 
         except Exception as e:
             print(e)
-            return ManticoreInstance()
+            raise e
 
         return ManticoreInstance(uuid=manticore_wrapper.uuid)
 
@@ -242,7 +241,7 @@ class MUIServicer(ManticoreUIServicer):
 
         except Exception as e:
             print(e)
-            return ManticoreInstance()
+            raise e
 
         return ManticoreInstance(uuid=manticore_wrapper.uuid)
 
