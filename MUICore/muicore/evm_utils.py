@@ -29,6 +29,8 @@ from manticore.ethereum.plugins import (
     SkipRevertBasicBlocks,
 )
 
+from manticore.core.plugin import Profiler
+
 from crytic_compile import cryticparser
 
 

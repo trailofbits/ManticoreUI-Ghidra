@@ -4,6 +4,9 @@ setup-dev:
 format:
   black **/*.py
 
+type-check:
+  mypy
+
 generate:
   python3 setup.py generate
 
