@@ -32,7 +32,9 @@ jobs:
           echo "GHIDRA_INSTALL_DIR=$(pwd)/ghidra_10.1.1_PUBLIC" >> $GITHUB_ENV
 
       - name: 'Lint MUI'
-        run: just lint
+        run: |
+          pip install -r MUICore/requirements-dev.txt
+          just lint
 
       - name: 'Test MUICore'
         working-directory: MUICore

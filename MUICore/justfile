@@ -1,6 +1,3 @@
-setup-dev:
-  pip3 install -r dev-requirements.txt
-
 format:
   black .
   isort .
