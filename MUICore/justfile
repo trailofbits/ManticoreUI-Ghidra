@@ -2,9 +2,12 @@ setup-dev:
   pip3 install -r dev-requirements.txt
 
 format:
-  black **/*.py
+  black .
+  isort .
 
-type-check:
+lint:
+  black --check .
+  isort --check .
   mypy
 
 generate:

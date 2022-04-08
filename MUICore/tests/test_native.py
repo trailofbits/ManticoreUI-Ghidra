@@ -1,14 +1,13 @@
+import glob
+import time
 import unittest
+from inspect import currentframe, getframeinfo
+from pathlib import Path
+from shutil import rmtree
+from uuid import UUID, uuid4
 
 from muicore import mui_server
 from muicore.MUICore_pb2 import *
-
-from inspect import currentframe, getframeinfo
-from pathlib import Path
-from uuid import UUID, uuid4
-from shutil import rmtree
-import glob
-import time
 
 
 class MUICoreNativeTest(unittest.TestCase):

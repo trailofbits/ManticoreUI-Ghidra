@@ -1,16 +1,15 @@
+import glob
+import os
+import time
 import unittest
 import unittest.mock
+from inspect import currentframe, getframeinfo
+from pathlib import Path
+from shutil import rmtree, which
+from uuid import UUID, uuid4
 
 from muicore import mui_server
 from muicore.MUICore_pb2 import *
-
-from inspect import currentframe, getframeinfo
-from pathlib import Path
-from uuid import UUID, uuid4
-from shutil import rmtree, which
-import glob
-import time
-import os
 
 
 class MUICoreEVMTest(unittest.TestCase):

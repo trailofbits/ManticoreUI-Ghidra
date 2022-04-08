@@ -1,37 +1,34 @@
-from concurrent import futures
-from threading import Thread
 import argparse
-from pathlib import Path
 import logging
-
-from typing import Set, Dict
+import shutil
+import uuid
+from concurrent import futures
+from inspect import currentframe, getframeinfo
+from pathlib import Path
+from threading import Thread
+from typing import Dict, Set
 
 import grpc
 from grpc._server import _Context
-from .MUICore_pb2 import *
-from .MUICore_pb2_grpc import ManticoreUIServicer, add_ManticoreUIServicer_to_server
-from .introspect_plugin import MUIIntrospectionPlugin
-
-from manticore.core.state import StateBase
-from manticore.native import Manticore
-from manticore.ethereum import ManticoreEVM
 from manticore.core.plugin import (
     InstructionCounter,
-    Visited,
-    Tracer,
     RecordSymbolicBranches,
+    Tracer,
+    Visited,
 )
-from manticore.core.worker import WorkerThread, WorkerProcess
-from manticore.utils.log import CallbackStream, ManticoreContextFilter
-from manticore.utils.enums import StateStatus, StateLists
+from manticore.core.state import StateBase
+from manticore.core.worker import WorkerProcess, WorkerThread
+from manticore.ethereum import ManticoreEVM
+from manticore.native import Manticore
+from manticore.utils.enums import StateLists, StateStatus
 from manticore.utils.helpers import deque
+from manticore.utils.log import CallbackStream, ManticoreContextFilter
 
-import uuid
-import shutil
-from inspect import currentframe, getframeinfo
-
-from .native_utils import parse_native_arguments
 from .evm_utils import setup_detectors_flags
+from .introspect_plugin import MUIIntrospectionPlugin
+from .MUICore_pb2 import *
+from .MUICore_pb2_grpc import ManticoreUIServicer, add_ManticoreUIServicer_to_server
+from .native_utils import parse_native_arguments
 
 
 class ManticoreWrapper:
@@ -177,7 +174,6 @@ class MUIServicer(ManticoreUIServicer):
 
         except Exception as e:
             print(e)
-            raise e
             return ManticoreInstance()
 
         return ManticoreInstance(uuid=manticore_wrapper.uuid)
@@ -246,7 +242,6 @@ class MUIServicer(ManticoreUIServicer):
 
         except Exception as e:
             print(e)
-            raise e
             return ManticoreInstance()
 
         return ManticoreInstance(uuid=manticore_wrapper.uuid)

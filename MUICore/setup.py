@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages, Command
+from setuptools import Command, find_packages, setup
 
 
 class GenerateCommand(Command):
