@@ -71,9 +71,11 @@ public class MUILogContentComponent extends JPanel {
 				}
 
 			});
+		stopButton.setToolTipText("Terminate Execution");
 
 		scrollLockButton.setEnabled(true);
 		scrollLockButton.setIcon(ResourceManager.loadImage("images/lock.png"));
+		scrollLockButton.setToolTipText("Toggle Auto-Scroll Lock");
 
 		logToolBar.add(Box.createGlue()); // shifts buttons to the right
 		logToolBar.add(stopButton);
