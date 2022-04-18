@@ -109,6 +109,12 @@ class MUIServicer(ManticoreUIServicer):
         """Starts a singular Manticore instance to analyze a native binary"""
         try:
             parsed = parse_native_arguments(native_arguments.additional_mcore_args)
+        except Exception as e:
+            print(e)
+            context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            context.set_details("Additional arguments could not be parsed!")
+            return ManticoreInstance()
+        try:
             m = Manticore.linux(
                 native_arguments.program_path,
                 argv=None
@@ -132,7 +138,13 @@ class MUIServicer(ManticoreUIServicer):
                 workspace_url=parsed.workspace,
                 introspection_plugin_type=MUIIntrospectionPlugin,
             )
+        except Exception as e:
+            print(e)
+            context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            context.set_details("Basic arguments are invalid!")
+            return ManticoreInstance()
 
+        try:
             m.register_plugin(InstructionCounter())
             m.register_plugin(Visited(parsed.coverage))
             m.register_plugin(Tracer())
@@ -161,6 +173,14 @@ class MUIServicer(ManticoreUIServicer):
             for addr in self.find:
                 m.add_hook(addr, find_f)
 
+        except Exception as e:
+            print(e)
+            context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            context.set_details("Hooks set are invalid!")
+            return ManticoreInstance()
+
+        try:
+
             def manticore_native_runner(mcore: Manticore):
                 mcore.run()
                 mcore.finalize()
@@ -173,7 +193,11 @@ class MUIServicer(ManticoreUIServicer):
 
         except Exception as e:
             print(e)
-            raise e
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details(
+                "Manticore failed to start or crashed during execution!"
+            )
+            return ManticoreWrapper()
 
         return ManticoreInstance(uuid=manticore_wrapper.uuid)
 
