@@ -1,9 +1,9 @@
 import glob
 import os
+import threading
 import time
 import unittest
 import unittest.mock
-import threading
 from inspect import currentframe, getframeinfo
 from pathlib import Path
 from shutil import rmtree, which
