@@ -358,13 +358,21 @@ class MUIServicer(ManticoreUIServicer):
     def StopServer(
         self, request: StopServerRequest, context: _Context
     ) -> StopServerResponse:
+        to_warn = False
         for mwrapper in self.manticore_instances.values():
             mwrapper.manticore_object.kill()
             stime = time.time()
             while mwrapper.manticore_object.is_running():
                 time.sleep(1)
                 if (time.time() - stime) > 10:
+                    to_warn = True
                     break
+
+        if to_warn:
+            warning_message = "WARNING: Not all Manticore processes were shut down successfully before timeout. There may be extra processes running even after the server has stopped."
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details(warning_message)
+            print(warning_message)
 
         self.stop_event.set()
         return StopServerResponse()
