@@ -199,7 +199,7 @@ class MUIServicer(ManticoreUIServicer):
             context.set_details(
                 "Manticore failed to start or crashed during execution!"
             )
-            return ManticoreWrapper()
+            return ManticoreInstance()
 
         return ManticoreInstance(uuid=manticore_wrapper.uuid)
 
@@ -208,20 +208,26 @@ class MUIServicer(ManticoreUIServicer):
     ) -> ManticoreInstance:
         """Starts a singular Manticore instance to analyze a solidity contract"""
         if evm_arguments.contract_path == "":
-            raise FileNotFoundError("Contract path not specified!")
+            context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            context.set_details("Contract path not specified!")
+            return ManticoreInstance()
         if not Path(evm_arguments.contract_path).is_file():
-            raise FileNotFoundError(
+            context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            context.set_details(
                 f"Contract path invalid: '{evm_arguments.contract_path}'"
             )
+            return ManticoreInstance()
 
         if evm_arguments.solc_bin:
             solc_bin_path = evm_arguments.solc_bin
         elif shutil.which("solc"):
             solc_bin_path = str(shutil.which("solc"))
         else:
-            raise Exception(
-                "solc binary neither specified in EVMArguments nor found in PATH!"
+            context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+            context.set_details(
+                f"solc binary neither specified in EVMArguments nor found in PATH!"
             )
+            return ManticoreInstance()
 
         try:
             m = ManticoreEVM()
@@ -266,7 +272,11 @@ class MUIServicer(ManticoreUIServicer):
 
         except Exception as e:
             print(e)
-            raise e
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details(
+                "Manticore failed to start or crashed during execution!"
+            )
+            return ManticoreInstance()
 
         return ManticoreInstance(uuid=manticore_wrapper.uuid)
 
