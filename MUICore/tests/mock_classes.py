@@ -1,5 +1,5 @@
-from grpc._server import _Context
 import grpc
+from grpc._server import _Context
 
 
 class MockContext(_Context):
@@ -12,7 +12,7 @@ class MockContext(_Context):
 
     def set_code(self, code: grpc.StatusCode) -> None:
         self.code = code
-    
+
     def reset(self):
         self.code: grpc.StatusCode = grpc.StatusCode.OK
         self.details: str = ""

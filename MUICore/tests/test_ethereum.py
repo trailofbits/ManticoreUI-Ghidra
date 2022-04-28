@@ -8,11 +8,11 @@ from inspect import currentframe, getframeinfo
 from pathlib import Path
 from shutil import rmtree, which
 from uuid import UUID, uuid4
+
 import grpc
 
 from muicore import mui_server
 from muicore.MUICore_pb2 import *
-
 from tests.mock_classes import MockContext
 
 
@@ -156,7 +156,7 @@ class MUICoreEVMTest(unittest.TestCase):
         t_status = self.servicer.Terminate(
             ManticoreInstance(uuid=uuid4().hex), self.context
         )
-        self.assertFalse(t_status.success)
+        self.assertEqual(self.context.code, grpc.StatusCode.FAILED_PRECONDITION)
 
     def test_get_message_list_running_manticore(self):
         mcore_instance = self.servicer.StartEVM(

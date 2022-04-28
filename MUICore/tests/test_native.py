@@ -7,9 +7,10 @@ from pathlib import Path
 from shutil import rmtree
 from uuid import UUID, uuid4
 
+import grpc
+
 from muicore import mui_server
 from muicore.MUICore_pb2 import *
-
 from tests.mock_classes import MockContext
 
 
@@ -39,26 +40,23 @@ class MUICoreNativeTest(unittest.TestCase):
                 rmtree(f, ignore_errors=True)
 
     def test_start_with_no_or_invalid_binary_path(self):
-        with self.assertRaises(FileNotFoundError) as e:
-            self.servicer.StartNative(NativeArguments(), self.context)
+        self.servicer.StartNative(NativeArguments(), self.context)
 
-        expected_exception = "[Errno 2] No such file or directory: ''"
+        self.assertEquals(self.context.code, grpc.StatusCode.INVALID_ARGUMENT)
+        self.assertEquals(self.context.details, "Basic arguments are invalid!")
 
-        self.assertEqual(str(e.exception), expected_exception)
+        self.context.reset()
 
         invalid_binary_path = str(
             self.dirname / Path("binaries") / Path("invalid_binary")
         )
-        with self.assertRaises(FileNotFoundError) as e:
-            self.servicer.StartNative(
-                NativeArguments(program_path=invalid_binary_path), self.context
-            )
 
-        expected_exception = (
-            f"[Errno 2] No such file or directory: '{invalid_binary_path}'"
+        self.servicer.StartNative(
+            NativeArguments(program_path=invalid_binary_path), self.context
         )
 
-        self.assertEqual(str(e.exception), expected_exception)
+        self.assertEquals(self.context.code, grpc.StatusCode.INVALID_ARGUMENT)
+        self.assertEquals(self.context.details, "Basic arguments are invalid!")
 
     def test_start(self):
         mcore_instance = self.servicer.StartNative(
@@ -91,8 +89,10 @@ class MUICoreNativeTest(unittest.TestCase):
                 )
             time.sleep(1)
 
-        t_status = self.servicer.Terminate(mcore_instance, self.context)
-        self.assertTrue(t_status.success)
+        self.context.reset()
+
+        self.servicer.Terminate(mcore_instance, self.context)
+        self.assertEqual(self.context.code, grpc.StatusCode.OK)
         self.assertTrue(mwrapper.manticore_object.is_killed())
 
         stime = time.time()
@@ -119,13 +119,13 @@ class MUICoreNativeTest(unittest.TestCase):
 
         t_status = self.servicer.Terminate(mcore_instance, self.context)
 
-        self.assertTrue(t_status.success)
+        self.assertEquals(self.context.code, grpc.StatusCode.OK)
 
     def test_terminate_invalid_manticore(self):
         t_status = self.servicer.Terminate(
             ManticoreInstance(uuid=uuid4().hex), self.context
         )
-        self.assertFalse(t_status.success)
+        self.assertEqual(self.context.code, grpc.StatusCode.FAILED_PRECONDITION)
 
     def test_get_message_list_running_manticore(self):
         mcore_instance = self.servicer.StartNative(
@@ -176,10 +176,11 @@ class MUICoreNativeTest(unittest.TestCase):
         message_list = self.servicer.GetMessageList(
             ManticoreInstance(uuid=uuid4().hex), self.context
         )
-        self.assertEqual(len(message_list.messages), 1)
+        self.assertEqual(self.context.code, grpc.StatusCode.FAILED_PRECONDITION)
         self.assertEqual(
-            message_list.messages[0].content, "Manticore instance not found!"
+            self.context.details, "Specified Manticore instance not found!"
         )
+        self.assertEqual(len(message_list.messages), 0)
 
     def test_get_state_list_running_manticore(self):
         mcore_instance = self.servicer.StartNative(
