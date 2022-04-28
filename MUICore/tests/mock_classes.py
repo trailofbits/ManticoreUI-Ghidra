@@ -12,3 +12,7 @@ class MockContext(_Context):
 
     def set_code(self, code: grpc.StatusCode) -> None:
         self.code = code
+    
+    def reset(self):
+        self.code: grpc.StatusCode = grpc.StatusCode.OK
+        self.details: str = ""

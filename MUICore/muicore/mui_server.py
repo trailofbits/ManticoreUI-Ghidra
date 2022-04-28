@@ -294,7 +294,6 @@ class MUIServicer(ManticoreUIServicer):
         if not (
             m_wrapper.manticore_object.is_running() and m_wrapper.thread.is_alive()
         ):
-            context.set_details("Specified Manticore instance already stopped!")
             return TerminateResponse()
         m_wrapper.manticore_object.kill()
         return TerminateResponse()

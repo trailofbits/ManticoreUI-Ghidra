@@ -8,6 +8,7 @@ from inspect import currentframe, getframeinfo
 from pathlib import Path
 from shutil import rmtree, which
 from uuid import UUID, uuid4
+import grpc
 
 from muicore import mui_server
 from muicore.MUICore_pb2 import *
@@ -40,27 +41,24 @@ class MUICoreEVMTest(unittest.TestCase):
                 rmtree(f, ignore_errors=True)
 
     def test_start_with_no_or_invalid_contract_path(self):
-        with self.assertRaises(FileNotFoundError) as e:
-            self.servicer.StartEVM(EVMArguments(solc_bin=self.solc_path), self.context)
+        self.servicer.StartEVM(EVMArguments(solc_bin=self.solc_path), self.context)
+        self.assertEqual(self.context.code, grpc.StatusCode.INVALID_ARGUMENT)
+        self.assertEqual(self.context.details, "Contract path not specified!")
 
-        expected_exception = "Contract path not specified!"
-
-        self.assertEqual(str(e.exception), expected_exception)
+        self.context.reset()
 
         invalid_contract_path = str(
             self.dirname / Path("contracts") / Path("invalid_contract")
         )
-        with self.assertRaises(FileNotFoundError) as e:
-            self.servicer.StartEVM(
-                EVMArguments(
-                    contract_path=invalid_contract_path, solc_bin=self.solc_path
-                ),
-                self.context,
-            )
+        self.servicer.StartEVM(
+            EVMArguments(contract_path=invalid_contract_path, solc_bin=self.solc_path),
+            self.context,
+        )
 
-        expected_exception = f"Contract path invalid: '{invalid_contract_path}'"
-
-        self.assertEqual(str(e.exception), expected_exception)
+        self.assertEqual(self.context.code, grpc.StatusCode.INVALID_ARGUMENT)
+        self.assertEqual(
+            self.context.details, f"Contract path invalid: '{invalid_contract_path}'"
+        )
 
     def test_start_with_no_solc_specified_or_in_path(self):
         path_to_use = os.environ["PATH"]
@@ -74,15 +72,15 @@ class MUICoreEVMTest(unittest.TestCase):
                 [dir for dir in cur_paths if dir != solc_dir]
             )
 
-        with self.assertRaises(Exception) as e:
-            with unittest.mock.patch.dict(os.environ, {"PATH": path_to_use}):
-                mcore_instance = self.servicer.StartEVM(
-                    EVMArguments(contract_path=self.contract_path),
-                    self.context,
-                )
+        with unittest.mock.patch.dict(os.environ, {"PATH": path_to_use}):
+            mcore_instance = self.servicer.StartEVM(
+                EVMArguments(contract_path=self.contract_path),
+                self.context,
+            )
 
+        self.assertEqual(self.context.code, grpc.StatusCode.INVALID_ARGUMENT)
         self.assertEqual(
-            str(e.exception),
+            self.context.details,
             "solc binary neither specified in EVMArguments nor found in PATH!",
         )
 
@@ -119,8 +117,10 @@ class MUICoreEVMTest(unittest.TestCase):
                 )
             time.sleep(1)
 
-        t_status = self.servicer.Terminate(mcore_instance, self.context)
-        self.assertTrue(t_status.success)
+        self.context.reset()
+
+        self.servicer.Terminate(mcore_instance, self.context)
+        self.assertEqual(self.context.code, grpc.StatusCode.OK)
         self.assertTrue(mwrapper.manticore_object.is_killed())
 
         stime = time.time()
@@ -136,6 +136,9 @@ class MUICoreEVMTest(unittest.TestCase):
             EVMArguments(contract_path=self.contract_path, solc_bin=self.solc_path),
             self.context,
         )
+
+        self.context.reset()
+
         mwrapper = self.servicer.manticore_instances[mcore_instance.uuid]
         mwrapper.manticore_object.kill()
         stime = time.time()
@@ -146,9 +149,8 @@ class MUICoreEVMTest(unittest.TestCase):
                 )
             time.sleep(1)
 
-        t_status = self.servicer.Terminate(mcore_instance, self.context)
-
-        self.assertTrue(t_status.success)
+        self.servicer.Terminate(mcore_instance, self.context)
+        self.assertEqual(self.context.code, grpc.StatusCode.OK)
 
     def test_terminate_invalid_manticore(self):
         t_status = self.servicer.Terminate(
@@ -207,10 +209,11 @@ class MUICoreEVMTest(unittest.TestCase):
         message_list = self.servicer.GetMessageList(
             ManticoreInstance(uuid=uuid4().hex), self.context
         )
-        self.assertEqual(len(message_list.messages), 1)
+        self.assertEqual(self.context.code, grpc.StatusCode.FAILED_PRECONDITION)
         self.assertEqual(
-            message_list.messages[0].content, "Manticore instance not found!"
+            self.context.details, "Specified Manticore instance not found!"
         )
+        self.assertEqual(len(message_list.messages), 0)
 
     def test_get_state_list_running_manticore(self):
         mcore_instance = self.servicer.StartEVM(
