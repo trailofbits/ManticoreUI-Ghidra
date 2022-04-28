@@ -285,16 +285,19 @@ class MUIServicer(ManticoreUIServicer):
     ) -> TerminateResponse:
         """Terminates the specified Manticore instance."""
         if mcore_instance.uuid not in self.manticore_instances:
-            return TerminateResponse(success=False)
+            context.set_code(grpc.StatusCode.FAILED_PRECONDITION)
+            context.set_details("Specified Manticore instance not found!")
+            return TerminateResponse()
 
         m_wrapper = self.manticore_instances[mcore_instance.uuid]
 
         if not (
             m_wrapper.manticore_object.is_running() and m_wrapper.thread.is_alive()
         ):
-            return TerminateResponse(success=True)
+            context.set_details("Specified Manticore instance already stopped!")
+            return TerminateResponse()
         m_wrapper.manticore_object.kill()
-        return TerminateResponse(success=True)
+        return TerminateResponse()
 
     def TargetAddressNative(
         self, address_request: AddressRequest, context: _Context
@@ -310,7 +313,7 @@ class MUIServicer(ManticoreUIServicer):
         elif address_request.type == AddressRequest.TargetType.CLEAR:
             self.avoid.remove(address_request.address)
             self.find.remove(address_request.address)
-        return TargetResponse(success=True)
+        return TargetResponse()
 
     def GetStateList(
         self, mcore_instance: ManticoreInstance, context: _Context
@@ -323,6 +326,8 @@ class MUIServicer(ManticoreUIServicer):
         errored_states = []
         complete_states = []
         if mcore_instance.uuid not in self.manticore_instances:
+            context.set_code(grpc.StatusCode.FAILED_PRECONDITION)
+            context.set_details("Specified Manticore instance not found!")
             return MUIStateList()
 
         m = self.manticore_instances[mcore_instance.uuid].manticore_object
@@ -345,7 +350,7 @@ class MUIServicer(ManticoreUIServicer):
                 else:
                     complete_states.append(s)
             else:
-                raise ValueError(f"Unknown status {state_desc.status}")
+                print(f"Unknown status {state_desc.status}")
 
         return MUIStateList(
             active_states=active_states,
@@ -361,9 +366,9 @@ class MUIServicer(ManticoreUIServicer):
         """Returns any new log messages for given ManticoreInstance since the previous call.
         Currently, implementation is based on TUI."""
         if mcore_instance.uuid not in self.manticore_instances:
-            return MUIMessageList(
-                messages=[MUILogMessage(content="Manticore instance not found!")]
-            )
+            context.set_code(grpc.StatusCode.FAILED_PRECONDITION)
+            context.set_details("Specified Manticore instance not found!")
+            return MUIMessageList()
 
         q = self.manticore_instances[mcore_instance.uuid].log_queue
         i = 0
@@ -379,7 +384,9 @@ class MUIServicer(ManticoreUIServicer):
     ) -> ManticoreRunningStatus:
 
         if mcore_instance.uuid not in self.manticore_instances:
-            return ManticoreRunningStatus(is_running=False)
+            context.set_code(grpc.StatusCode.FAILED_PRECONDITION)
+            context.set_details("Specified Manticore instance not found!")
+            return ManticoreRunningStatus()
 
         m_wrapper = self.manticore_instances[mcore_instance.uuid]
 
