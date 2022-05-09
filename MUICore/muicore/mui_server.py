@@ -349,7 +349,7 @@ class MUIServicer(ManticoreUIServicer):
                 else:
                     complete_states.append(s)
             else:
-                print(f"Unknown status {state_desc.status}")
+                raise ValueError(f"Unknown status {state_desc.status}")
 
         return MUIStateList(
             active_states=active_states,
