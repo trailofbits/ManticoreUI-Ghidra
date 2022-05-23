@@ -7,7 +7,7 @@ import uuid
 from concurrent import futures
 from pathlib import Path
 from threading import Event, Thread
-from typing import Dict, Optional, Set
+from typing import Any, Callable, Dict, Optional, Set
 
 import grpc
 from grpc._server import _Context
@@ -34,10 +34,11 @@ from .native_utils import parse_native_arguments
 
 
 class ManticoreWrapper:
-    def __init__(self, mcore_object: Manticore):
+    def __init__(
+        self, mcore_object: Manticore, thread_target: Callable, *thread_args: Any
+    ):
         self.uuid: str = uuid.uuid4().hex
         self.manticore_object: Manticore = mcore_object
-        self.thread: Optional[Thread] = None
         # mimics Manticore repository, reasoning for the queue size difference is provided in Manticore:
         # https://github.com/trailofbits/manticore/blob/5a258f499098394c0af25e2e3f00b1b603c2334d/manticore/core/manticore.py#L133-L135
         self.log_queue = (
@@ -48,6 +49,14 @@ class ManticoreWrapper:
         # saves a copy of all state descriptors after analysis is complete or terminated
         # but before the finalize() operation which destroys all states
         self.final_states: Optional[Dict[int, StateDescriptor]] = None
+
+        self.thread: Thread = Thread(
+            target=thread_target,
+            args=(self,) + thread_args,
+            daemon=True,
+            name=self.uuid,
+        )
+        self.thread.start()
 
     def append_log(self, msg: str) -> None:
         q = self.log_queue
@@ -195,13 +204,7 @@ class MUIServicer(ManticoreUIServicer):
                 }
                 mcore_wrapper.manticore_object.finalize()
 
-            manticore_wrapper = ManticoreWrapper(m)
-            mthread = Thread(
-                target=manticore_native_runner, args=(manticore_wrapper,), daemon=True
-            )
-            manticore_wrapper.thread = mthread
-            mthread.name = manticore_wrapper.uuid
-            mthread.start()
+            manticore_wrapper = ManticoreWrapper(m, manticore_native_runner)
             self.manticore_instances[manticore_wrapper.uuid] = manticore_wrapper
 
         except Exception as e:
@@ -284,13 +287,7 @@ class MUIServicer(ManticoreUIServicer):
                 else:
                     mcore_wrapper.manticore_object.kill()
 
-            manticore_wrapper = ManticoreWrapper(m)
-            mthread = Thread(
-                target=manticore_evm_runner, args=(manticore_wrapper, args), daemon=True
-            )
-            manticore_wrapper.thread = mthread
-            mthread.name = manticore_wrapper.uuid
-            mthread.start()
+            manticore_wrapper = ManticoreWrapper(m, manticore_evm_runner, args)
             self.manticore_instances[manticore_wrapper.uuid] = manticore_wrapper
 
         except Exception as e:
