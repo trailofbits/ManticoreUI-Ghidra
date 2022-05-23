@@ -396,11 +396,7 @@ class MUIServicer(ManticoreUIServicer):
 
         m_wrapper = self.manticore_instances[mcore_instance.uuid]
 
-        return ManticoreRunningStatus(
-            is_running=(
-                m_wrapper.manticore_object.is_running() and m_wrapper.thread.is_alive()
-            )
-        )
+        return ManticoreRunningStatus(is_running=(m_wrapper.thread.is_alive()))
 
     def StopServer(
         self, request: StopServerRequest, context: _Context
@@ -409,7 +405,7 @@ class MUIServicer(ManticoreUIServicer):
         for mwrapper in self.manticore_instances.values():
             mwrapper.manticore_object.kill()
             stime = time.time()
-            while mwrapper.manticore_object.is_running():
+            while mwrapper.thread.is_alive():
                 time.sleep(1)
                 if (time.time() - stime) > 10:
                     to_warn = True
