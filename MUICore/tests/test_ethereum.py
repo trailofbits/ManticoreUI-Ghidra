@@ -309,9 +309,9 @@ class MUICoreEVMTest(unittest.TestCase):
 
         stime = time.time()
         while mwrapper.thread.is_alive():
-            if (time.time() - stime) > 15:
+            if (time.time() - stime) > 45:
                 self.fail(
-                    f"Manticore instance {mcore_instance.uuid} failed to stop running before timeout"
+                    f"Manticore instance {mcore_instance.uuid} failed to stop running and finish generating reports before timeout"
                 )
             time.sleep(1)
 
