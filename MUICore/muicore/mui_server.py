@@ -370,8 +370,6 @@ class MUIServicer(ManticoreUIServicer):
 
             s = MUIState(**state_args)
 
-            print(s)
-
             if state_desc.status == StateStatus.running:
                 active_states.append(s)
             elif state_desc.status in (
