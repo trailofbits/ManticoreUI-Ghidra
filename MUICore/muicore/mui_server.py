@@ -368,6 +368,8 @@ class MUIServicer(ManticoreUIServicer):
             if isinstance(state_desc.parent, int):
                 state_args["parent_id"] = state_desc.parent
 
+            state_args["children_ids"] = list(state_desc.children)
+
             s = MUIState(**state_args)
 
             if state_desc.status == StateStatus.running:
