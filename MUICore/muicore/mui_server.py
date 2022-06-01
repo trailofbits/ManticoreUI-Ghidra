@@ -185,6 +185,10 @@ class MUIServicer(ManticoreUIServicer):
                     m.add_hook(hook.address, find_f)
                 elif hook.type == Hook.HookType.AVOID:
                     m.add_hook(hook.address, avoid_f)
+                elif hook.type == Hook.HookType.CUSTOM:
+                    exec(hook.func_text, {"addr":hook.address, "m":m})
+                elif hook.type == Hook.HookType.GLOBAL:
+                    exec(hook.func_text, {"m":m})
 
         except Exception as e:
             print(e)
