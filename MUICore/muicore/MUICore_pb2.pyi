@@ -116,23 +116,28 @@ class Hook(google.protobuf.message.Message):
         FIND: Hook._HookType.ValueType  # 0
         AVOID: Hook._HookType.ValueType  # 1
         CUSTOM: Hook._HookType.ValueType  # 2
+        GLOBAL: Hook._HookType.ValueType  # 3
     class HookType(_HookType, metaclass=_HookTypeEnumTypeWrapper):
         pass
 
     FIND: Hook.HookType.ValueType  # 0
     AVOID: Hook.HookType.ValueType  # 1
     CUSTOM: Hook.HookType.ValueType  # 2
+    GLOBAL: Hook.HookType.ValueType  # 3
 
     ADDRESS_FIELD_NUMBER: builtins.int
     TYPE_FIELD_NUMBER: builtins.int
+    HOOK_FUNC_FIELD_NUMBER: builtins.int
     address: builtins.int
     type: global___Hook.HookType.ValueType
+    hook_func: typing.Text
     def __init__(self,
         *,
         address: builtins.int = ...,
         type: global___Hook.HookType.ValueType = ...,
+        hook_func: typing.Text = ...,
         ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["address",b"address","type",b"type"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["address",b"address","hook_func",b"hook_func","type",b"type"]) -> None: ...
 global___Hook = Hook
 
 class NativeArguments(google.protobuf.message.Message):

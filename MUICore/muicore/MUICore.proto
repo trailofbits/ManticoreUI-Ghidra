@@ -51,10 +51,12 @@ message Hook {
         FIND = 0;
         AVOID = 1;
         CUSTOM = 2;
+        GLOBAL = 3;
     }
 
     uint64 address = 26;
     HookType type = 27;
+    string hook_func = 31;
 }
 
 message NativeArguments {
