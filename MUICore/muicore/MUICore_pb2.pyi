@@ -127,17 +127,17 @@ class Hook(google.protobuf.message.Message):
 
     ADDRESS_FIELD_NUMBER: builtins.int
     TYPE_FIELD_NUMBER: builtins.int
-    HOOK_FUNC_FIELD_NUMBER: builtins.int
+    FUNC_TEXT_FIELD_NUMBER: builtins.int
     address: builtins.int
     type: global___Hook.HookType.ValueType
-    hook_func: typing.Text
+    func_text: typing.Text
     def __init__(self,
         *,
         address: builtins.int = ...,
         type: global___Hook.HookType.ValueType = ...,
-        hook_func: typing.Text = ...,
+        func_text: typing.Text = ...,
         ) -> None: ...
-    def ClearField(self, field_name: typing_extensions.Literal["address",b"address","hook_func",b"hook_func","type",b"type"]) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["address",b"address","func_text",b"func_text","type",b"type"]) -> None: ...
 global___Hook = Hook
 
 class NativeArguments(google.protobuf.message.Message):
