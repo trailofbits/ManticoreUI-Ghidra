@@ -176,7 +176,7 @@ class MUIServicer(ManticoreUIServicer):
                 with m.locked_context() as context:
                     m.kill()
                 state.abandon()
-            
+
             def avoid_f(state: StateBase):
                 state.abandon()
 
@@ -186,9 +186,9 @@ class MUIServicer(ManticoreUIServicer):
                 elif hook.type == Hook.HookType.AVOID:
                     m.add_hook(hook.address, avoid_f)
                 elif hook.type == Hook.HookType.CUSTOM:
-                    exec(hook.func_text, {"addr":hook.address, "m":m})
+                    exec(hook.func_text, {"addr": hook.address, "m": m})
                 elif hook.type == Hook.HookType.GLOBAL:
-                    exec(hook.func_text, {"m":m})
+                    exec(hook.func_text, {"m": m})
 
         except Exception as e:
             print(e)
