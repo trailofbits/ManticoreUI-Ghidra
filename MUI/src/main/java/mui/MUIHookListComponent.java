@@ -12,6 +12,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import ghidra.program.model.address.Address;
+import ghidra.util.Msg;
+
 import muicore.MUICore.Hook;
 import muicore.MUICore.Hook.HookType;
 
@@ -68,6 +70,7 @@ public class MUIHookListComponent extends JPanel {
 				avoidNode.add(node);
 				break;
 			default:
+				Msg.warn(this, "Only FIND and AVOID hooks are currently supported!");
 				// TODO: Custom + global hook support
 				break;
 		}
