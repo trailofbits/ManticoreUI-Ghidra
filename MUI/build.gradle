@@ -138,6 +138,9 @@ tasks.whenTaskAdded { task ->
     if (task.name == 'extractIncludeProto'){
         task.getDependsOn().add(copyDependencies)
     } else if (task.name == 'generateProto'){
+        if (!project.hasProperty('KEEP_PROTOBUF_SPEC')) {
+            task.dependsOn downloadProtobufSpec
+        }
         zipSource.dependsOn task
         processResources.dependsOn task
         spotlessJava.dependsOn task
@@ -168,6 +171,10 @@ build.dependsOn uninstallPreviousMUI
 
 
 task installZip(type: Exec) {
+    if (!project.hasProperty('KEEP_SERVER_BINARY')) {
+        dependsOn downloadServerBinary
+        dependsOn downloadSolcBinary
+    }
     dependsOn buildExtension
     group = "Installation"
     description = "Installs the zip package in installed Ghidra's default extension directory"
