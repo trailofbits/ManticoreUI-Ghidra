@@ -172,8 +172,8 @@ build.dependsOn uninstallPreviousMUI
 
 task installZip(type: Exec) {
     if (!project.hasProperty('KEEP_SERVER_BINARY')) {
-        dependsOn downloadServerBinary
-        dependsOn downloadSolcBinary
+        buildExtension.dependsOn downloadServerBinary
+        buildExtension.dependsOn downloadSolcBinary
     }
     dependsOn buildExtension
     group = "Installation"
