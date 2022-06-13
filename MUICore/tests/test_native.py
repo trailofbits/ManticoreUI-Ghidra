@@ -160,6 +160,43 @@ class MUICoreNativeTest(unittest.TestCase):
 
         self.assertTrue(m.test_attribute == 0x400FDC)
 
+    def test_start_with_invalid_custom_and_global_hook(self):
+
+        self.servicer.StartNative(
+            NativeArguments(
+                program_path=str(self.binary_path),
+                hooks=[
+                    Hook(
+                        type=Hook.HookType.CUSTOM,
+                        func_text="this is an invalid hook",
+                        address=0x400FDC,
+                    ),
+                ],
+            ),
+            self.context,
+        )
+
+        self.assertEquals(self.context.code, grpc.StatusCode.INVALID_ARGUMENT)
+        self.assertEquals(self.context.details, "Hooks set are invalid!")
+
+        self.context.reset()
+
+        self.servicer.StartNative(
+            NativeArguments(
+                program_path=str(self.binary_path),
+                hooks=[
+                    Hook(
+                        type=Hook.HookType.GLOBAL,
+                        func_text="this is another invalid hook",
+                    ),
+                ],
+            ),
+            self.context,
+        )
+
+        self.assertEquals(self.context.code, grpc.StatusCode.INVALID_ARGUMENT)
+        self.assertEquals(self.context.details, "Hooks set are invalid!")
+
     def test_terminate_running_manticore(self):
         mcore_instance = self.servicer.StartNative(
             NativeArguments(program_path=self.binary_path), self.context
