@@ -10,3 +10,5 @@ MUI/lib/*
 **/mcore*/
 **/dist/
 **/.mypy_cache/
+MUI/os/linux_x86_64/*
+MUI/src/main/proto/*
