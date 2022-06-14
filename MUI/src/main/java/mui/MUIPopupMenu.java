@@ -75,7 +75,7 @@ public class MUIPopupMenu extends ListingContextAction {
 					}
 					else {
 						MUIPlugin.setup.setupHookList.addHook(
-							new MUIHookUserObject(HookType.FIND, selectedAddr.toString(), null));
+							new MUIHookUserObject(HookType.FIND, selectedAddr, null));
 						setColor(selectedAddr, Color.GREEN);
 					}
 
@@ -104,7 +104,7 @@ public class MUIPopupMenu extends ListingContextAction {
 					}
 					else {
 						MUIPlugin.setup.setupHookList.addHook(
-							new MUIHookUserObject(HookType.AVOID, selectedAddr.toString(), null));
+							new MUIHookUserObject(HookType.AVOID, selectedAddr, null));
 						setColor(selectedAddr, Color.RED);
 					}
 
@@ -132,7 +132,7 @@ public class MUIPopupMenu extends ListingContextAction {
 					if (result == JOptionPane.OK_OPTION) {
 						String func_text = textArea.getText();
 						MUIPlugin.setup.setupHookList.addHook(new MUIHookUserObject(HookType.CUSTOM,
-							selectedAddr.toString(), func_text));
+							selectedAddr, func_text));
 					}
 				}
 			};

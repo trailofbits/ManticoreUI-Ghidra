@@ -2,14 +2,22 @@ package mui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.MouseListener;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.AbstractAction;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
+import javax.swing.event.MouseInputAdapter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 import ghidra.program.model.address.Address;
 import ghidra.util.Msg;
@@ -31,6 +39,9 @@ public class MUIHookListComponent extends JPanel {
 	private DefaultMutableTreeNode globalNode;
 
 	private HashMap<String, DefaultMutableTreeNode> hookLocations;
+
+	private JPopupMenu hookListPopupMenu;
+	private MUIHookUserObject rightClickedHook;
 
 	public MUIHookListComponent() {
 		setLayout(new BorderLayout());
@@ -65,6 +76,42 @@ public class MUIHookListComponent extends JPanel {
 		hookListView.setMinimumSize(new Dimension(0, 0));
 		hookListTree.setPreferredSize(new Dimension(900, 100));
 
+		hookListPopupMenu = new JPopupMenu();
+
+		hookListPopupMenu.add(new JMenuItem(new AbstractAction("Delete Hook") {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (rightClickedHook != null) {
+					switch (rightClickedHook.type) {
+						case FIND:
+						case AVOID:
+							MUIPlugin.popup.unsetColor(new Address());
+						case CUSTOM:
+						case GLOBAL:
+							removeHookIfExists(rightClickedHook.name, rightClickedHook.type);
+					}
+				}
+			}
+
+		}));
+
+		hookListTree.addMouseListener(new MouseInputAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent e) {
+				if (SwingUtilities.isRightMouseButton(e)) {
+					TreePath path = hookListTree.getPathForLocation(e.getX(), e.getY());
+					if (path != null) {
+						DefaultMutableTreeNode node =
+							(DefaultMutableTreeNode) path.getLastPathComponent();
+						if (node.getUserObject() instanceof Hook) {
+							rightClickedHook = (MUIHookUserObject) node.getUserObject();
+
+						}
+					}
+				}
+			}
+		});
 	}
 
 	public void addHook(MUIHookUserObject hook) {
@@ -145,22 +192,6 @@ public class MUIHookListComponent extends JPanel {
 
 	private Hook nodeToMUIHook(DefaultMutableTreeNode node) {
 		MUIHookUserObject hook = (MUIHookUserObject) node.getUserObject();
-		Builder b = Hook.newBuilder().setType(hook.type);
-		switch (hook.type) {
-			case FIND:
-			case AVOID:
-				b.setAddress(
-					Long.parseLong(hook.name, 16));
-				break;
-			case CUSTOM:
-				b.setAddress(
-					Long.parseLong(hook.name, 16));
-			case GLOBAL:
-				b.setFuncText(node.getUserObject().toString());
-				break;
-			default:
-				break;
-		}
-		return b.build();
+		return hook.toMUIHook();
 	}
 }
