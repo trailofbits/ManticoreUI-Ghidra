@@ -118,7 +118,7 @@ public class MUIPlugin extends ProgramPlugin {
 				if (result == JOptionPane.OK_OPTION) {
 					String func_text = textArea.getText();
 					setup.setupHookList
-							.addHook(new MUIHookUserObject(HookType.GLOBAL, null, func_text));
+							.addHook(new MUIHookUserObject(HookType.GLOBAL, func_text));
 				}
 			}
 

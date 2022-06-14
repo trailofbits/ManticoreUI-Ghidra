@@ -19,11 +19,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import ghidra.program.model.address.Address;
-import ghidra.util.Msg;
-
 import muicore.MUICore.Hook;
-import muicore.MUICore.Hook.Builder;
 import muicore.MUICore.Hook.HookType;
 
 public class MUIHookListComponent extends JPanel {
@@ -86,10 +82,12 @@ public class MUIHookListComponent extends JPanel {
 					switch (rightClickedHook.type) {
 						case FIND:
 						case AVOID:
-							MUIPlugin.popup.unsetColor(new Address());
+							MUIPlugin.popup.unsetColor(rightClickedHook.address);
 						case CUSTOM:
 						case GLOBAL:
 							removeHookIfExists(rightClickedHook.name, rightClickedHook.type);
+						default:
+							break;
 					}
 				}
 			}
@@ -100,13 +98,13 @@ public class MUIHookListComponent extends JPanel {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e)) {
-					TreePath path = hookListTree.getPathForLocation(e.getX(), e.getY());
+					TreePath path = hookListTree.getClosestPathForLocation(e.getX(), e.getY());
 					if (path != null) {
 						DefaultMutableTreeNode node =
 							(DefaultMutableTreeNode) path.getLastPathComponent();
-						if (node.getUserObject() instanceof Hook) {
+						if (node.getUserObject() instanceof MUIHookUserObject) {
 							rightClickedHook = (MUIHookUserObject) node.getUserObject();
-
+							hookListPopupMenu.show(hookListTree, e.getX(), e.getY());
 						}
 					}
 				}
