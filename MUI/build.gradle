@@ -30,6 +30,7 @@
 // for the correction version of Gradle to use for the Ghidra installation you specify.
 
 plugins {
+    id "de.undercouch.download" version "5.1.0"
     id "com.diffplug.spotless" version "6.1.0"
     id "com.google.protobuf" version "0.8.18"
     id "java"
@@ -98,6 +99,24 @@ dependencies {
     testImplementation "io.grpc:grpc-testing:${grpcVersion}"
 }
 
+task downloadProtobufSpec(type: Download) {
+    src 'https://raw.githubusercontent.com/trailofbits/ManticoreUI-Ghidra/f560453e7f3b70bafc356daccaef15d1f1f08f00/MUICore/muicore/MUICore.proto'
+    dest 'src/main/proto/MUICore.proto'
+    onlyIfModified true
+}
+
+task downloadServerBinary(type: Download) {
+    src 'https://github.com/trailofbits/ManticoreUI-Ghidra/raw/a1e1dcfa9bdf2f05ff9e857f5afa8bf4c3496c8e/MUI/os/linux_x86_64/muicore_server'
+    dest 'os/linux_x86_64/muicore_server'
+    onlyIfModified true
+}
+
+task downloadSolcBinary(type: Download) {
+    src 'https://github.com/ethereum/solc-bin/raw/gh-pages/linux-amd64/solc-linux-amd64-v0.8.9%2Bcommit.e5eed63a'
+    dest 'os/linux_x86_64/solc'
+    onlyIfModified true
+}
+
 protobuf {
     generatedFilesBaseDir = "$projectDir/src"
     protoc {
@@ -119,6 +138,9 @@ tasks.whenTaskAdded { task ->
     if (task.name == 'extractIncludeProto'){
         task.getDependsOn().add(copyDependencies)
     } else if (task.name == 'generateProto'){
+        if (!project.hasProperty('KEEP_PROTOBUF_SPEC')) {
+            task.dependsOn downloadProtobufSpec
+        }
         zipSource.dependsOn task
         processResources.dependsOn task
         spotlessJava.dependsOn task
@@ -149,6 +171,10 @@ build.dependsOn uninstallPreviousMUI
 
 
 task installZip(type: Exec) {
+    if (!project.hasProperty('KEEP_SERVER_BINARY')) {
+        buildExtension.dependsOn downloadServerBinary
+        buildExtension.dependsOn downloadSolcBinary
+    }
     dependsOn buildExtension
     group = "Installation"
     description = "Installs the zip package in installed Ghidra's default extension directory"
